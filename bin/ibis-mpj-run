@@ -15,5 +15,5 @@ if [ -z "$IBIS_HOME" ];  then
     exit 1
 fi
 
-export CLASSPATH=$MPJ_HOME/lib/mpj.jar:$CLASSPATH"
+export CLASSPATH="$MPJ_HOME/lib/mpj.jar:$CLASSPATH"
 $IBIS_HOME/bin/ibis-run "$@"
