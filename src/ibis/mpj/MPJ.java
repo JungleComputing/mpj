@@ -232,8 +232,8 @@ public class MPJ {
 
             IbisCapabilities s = new IbisCapabilities(
                 IbisCapabilities.CLOSEDWORLD,
-                IbisCapabilities.MEMBERSHIP,
-                IbisCapabilities.ELECTIONS);
+                IbisCapabilities.MEMBERSHIP_TOTALLY_ORDERED,
+                IbisCapabilities.ELECTIONS_STRICT);
 
             porttype = new PortType(
                     PortType.SERIALIZATION_OBJECT, PortType.COMMUNICATION_RELIABLE, PortType.RECEIVE_EXPLICIT,
