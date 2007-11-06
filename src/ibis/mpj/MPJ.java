@@ -231,7 +231,7 @@ public class MPJ {
             regEvtHandler = new RegEvtHandler();
 
             IbisCapabilities s = new IbisCapabilities(
-                IbisCapabilities.CLOSEDWORLD,
+                IbisCapabilities.CLOSED_WORLD,
                 IbisCapabilities.MEMBERSHIP_TOTALLY_ORDERED,
                 IbisCapabilities.ELECTIONS_STRICT);
 
