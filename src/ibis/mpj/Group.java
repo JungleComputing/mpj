@@ -39,7 +39,7 @@ public class Group {
             return table.size();
         }
         return MPJ.UNDEFINED;
-     }
+    }
 
 
 
@@ -223,27 +223,27 @@ public class Group {
         if ((group1 == null) || (group2 == null)) {
             return (null);
         }
- 
+
         Group iGroup = new Group();
-        
-        
+
+
         for (int i = 0; i < group2.size(); i++) {
-        	boolean check = false;
-        	IbisIdentifier a = group2.table.elementAt(i);
-        	for (int j = 0; j < group1.size();  j++) {
-        		IbisIdentifier b = group1.table.elementAt(j);
-        		
-        		if (a.equals(b)) {
-        			check = true;
-        			break;
-        		}
-        	}
-        	if (check) {
-        		iGroup.addId(a);
-        	}
+            boolean check = false;
+            IbisIdentifier a = group2.table.elementAt(i);
+            for (int j = 0; j < group1.size();  j++) {
+                IbisIdentifier b = group1.table.elementAt(j);
+
+                if (a.equals(b)) {
+                    check = true;
+                    break;
+                }
+            }
+            if (check) {
+                iGroup.addId(a);
+            }
         }
         return(iGroup);
-        
+
 
     }
 
@@ -303,18 +303,18 @@ public class Group {
         if (ranks == null) {
             return(null);			
         }
- 
+
         Group iGroup = new Group();
         for (int i = 0; i < ranks.length; i++) {
-        	if ((ranks[i] >= 0) && (ranks[i] < this.size())) {
-        		IbisIdentifier a = this.table.elementAt(ranks[i]);
-        		iGroup.addId(a);
-        	}
+            if ((ranks[i] >= 0) && (ranks[i] < this.size())) {
+                IbisIdentifier a = this.table.elementAt(ranks[i]);
+                iGroup.addId(a);
+            }
         }
         return (iGroup);
-        
+
     }
-    
+
 
 
     /**
@@ -327,22 +327,22 @@ public class Group {
     public Group excl(int[] ranks) throws MPJException {
         Group eGroup = new Group();
         eGroup.table = new Vector<IbisIdentifier>(this.table);
-    	if (ranks == null) {
+        if (ranks == null) {
             return(eGroup);			
-    	}
-    	for (int i = 0; i < ranks.length; i++) {
-    		if ((ranks[i] >= 0) && (ranks[i] < this.size())) {
-    			eGroup.table.removeElementAt(ranks[i]);
-    		}
-    	}
-    	
-    	if (eGroup.table.isEmpty()) {
-    		return (null);
-    	}
-    	
-    	return(eGroup);
-    	
-    	
+        }
+        for (int i = 0; i < ranks.length; i++) {
+            if ((ranks[i] >= 0) && (ranks[i] < this.size())) {
+                eGroup.table.removeElementAt(ranks[i]);
+            }
+        }
+
+        if (eGroup.table.isEmpty()) {
+            return (null);
+        }
+
+        return(eGroup);
+
+
     }
 
 
@@ -361,46 +361,46 @@ public class Group {
         if ((ranks == null) || (ranks.length == 0)) {
             return(null);
         }
- 
+
         Group iGroup = new Group();
-        
+
         for (int i=0; i < ranks.length; i++) {
-        	
-        	
-        	int j = ranks[i][0];
-        	
-        	if(ranks[i][2] > 0) {
-        		
-        		while(j <= ranks[i][1]) {
-        			
-        			if ((j >= 0) && (j < this.size())) {
-        				iGroup.addId(this.table.elementAt(j));
-        				
-        			}
-        			j += ranks[i][2]; 
-        		}
-        	}
-        	else {
-        		while(j >= ranks[i][1]) {
-        			
-        			if ((j >= 0) && (j < this.size())) {
-        				iGroup.addId(this.table.elementAt(j));
-        				
-        			}
-        			j += ranks[i][2]; 
-        		}
-        		
-        	}
+
+
+            int j = ranks[i][0];
+
+            if(ranks[i][2] > 0) {
+
+                while(j <= ranks[i][1]) {
+
+                    if ((j >= 0) && (j < this.size())) {
+                        iGroup.addId(this.table.elementAt(j));
+
+                    }
+                    j += ranks[i][2]; 
+                }
+            }
+            else {
+                while(j >= ranks[i][1]) {
+
+                    if ((j >= 0) && (j < this.size())) {
+                        iGroup.addId(this.table.elementAt(j));
+
+                    }
+                    j += ranks[i][2]; 
+                }
+
+            }
         }
 
         if (iGroup.table.isEmpty()) {
-        	return(null);
+            return(null);
         }
-        
+
         return (iGroup);
-        
+
     }
-    
+
 
 
 
@@ -419,54 +419,58 @@ public class Group {
             eGroup.table = new Vector<IbisIdentifier>(this.table);
             return(eGroup);			
         }
- 
+
         Group eGroup = new Group();
         Vector<Integer> exc = new Vector<Integer>();
-        
+
         for (int i = 0; i < ranks.length; i++) {
-        	
-        	int min, max, step;
-        	
-        	if (ranks[i][2] < 0) {
-        		min = ranks[i][1];
-        		max = ranks[i][0]; 
-        		step = Math.abs(ranks[i][2]);	
-        	}
-        	else {
-        		min = ranks[i][0];
-        		max = ranks[i][1]; 
-        		step = ranks[i][2];	
-        	}
-        	
-        	
-        	int j = min;
-        	
-        	while (j <= max) {
-        		exc.add(Integer.valueOf(j));
-        		
-        		j += step;
-        	}
-        	
 
-            for (int k = 0; k < this.size(); k++) {
-                boolean exclude = false;
-                for (Integer in : exc) {
-                    if (k == in.intValue()) {
-                        exclude = true;
-                        break;
-                    }
-                }
+            int min, max, step;
 
-                if(!exclude) {
-                    eGroup.addId(this.table.elementAt(k));
-                }
+            if (ranks[i][2] < 0) {
+                min = ranks[i][1];
+                max = ranks[i][0]; 
+                step = Math.abs(ranks[i][2]);	
+            }
+            else {
+                min = ranks[i][0];
+                max = ranks[i][1]; 
+                step = ranks[i][2];	
+            }
+
+            if (step == 0) {
+                step = 1;
+            }
+
+            int j = min;
+
+            while (j <= max) {
+                exc.add(Integer.valueOf(j));
+
+                j += step;
             }
         }
-        if (eGroup.table.isEmpty()) {
-        	return(null);
+
+
+        for (int k = 0; k < this.size(); k++) {
+            boolean exclude = false;
+            for (Integer in : exc) {
+                if (k == in.intValue()) {
+                    exclude = true;
+                    break;
+                }
+            }
+
+            if(!exclude) {
+                eGroup.addId(this.table.elementAt(k));
+            }
         }
-      	return (eGroup);
-              
+
+        if (eGroup.table.isEmpty()) {
+            return(null);
+        }
+        return (eGroup);
+
     }
 
 }
