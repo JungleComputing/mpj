@@ -3,7 +3,7 @@
     default="jar"
     basedir=".">
 
-    <property name="mpj"         location="../.."/>
+    <property name="mpj"         location=".."/>
 
     <property name="tmp"         value="tmp"/>
     <property name="src"         value="src"/>

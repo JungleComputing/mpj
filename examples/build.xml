@@ -1,50 +1,76 @@
 <project
-    name="MPJ examples"
+    name="MPJ misc"
     default="jar"
     basedir=".">
 
-    <description>
-	Ibis MPJ examples build.
-    </description>
+    <property name="mpj"         location=".."/>
 
-    <!--
-	Compile only
-    -->
-    <target name="compile"
-	    description="Compile only">
-	<ant target="compile" dir="misc"/>
-	<ant target="compile" dir="jgfBenchSuite"/>
-	<ant target="compile" dir="tests"/>
+    <property name="tmp"         value="tmp"/>
+    <property name="src"         value="src"/>
+    <property name="lib"         value="lib"/>
+
+    <target name="set-classpath" unless="classpath.initialized">
+	<path id="default.classpath">
+	    <pathelement path="${tmp}"/>
+	    <fileset dir="${mpj}/lib">
+		<include name="*.jar"/>
+	    </fileset>
+	</path>
+	<echo	message="Now set default.classpath to ${default.classpath}"
+		level="verbose"/>
+	<property name="classpath.initialized" value="true"/>
     </target>
 
-    <!--
-        Build
-    -->
+    <target name="init" depends="set-classpath">
+        <tstamp />
+        <mkdir dir="${tmp}" />
+        <mkdir dir="${lib}" />
+    </target>
+
+    <target name="compile" depends="clean,init"
+	    description="Compile application without any bytecode rewriting">
+	    <javac destdir="${tmp}"
+		debug="on"
+		srcdir="${src}"
+		source="1.5"
+		target="1.5"
+		classpathref="default.classpath">
+	    <!--
+	    <compilerarg value="-Xlint:unchecked"/>
+	    -->
+            <include name="**/*.java" />
+        </javac>
+    </target>
+
+    <target name="clean" description="Clean up the build">
+        <delete dir="${tmp}" />
+        <delete dir="${lib}" />
+    </target>
+
+    <target name="ibisc">
+	<java   classname="ibis.compile.Ibisc"
+		taskname="Ibisc"
+		failonerror="true"
+		dir="${tmp}"
+		fork="true">
+		<arg line="."/>
+	    <classpath refid="default.classpath"/>
+	</java>
+    </target>
+
     <target name="build"
-	    description="build completely, without creating jars">
-	<ant target="build" dir="misc"/>
-	<ant target="build" dir="jgfBenchSuite"/>
-	<ant target="build" dir="tests"/>
-    </target>
+	    depends="compile,ibisc"
+	    description="Compile with Ibis-serialization rewriting"/>
 
-    <!--
-        Jars
-    -->
     <target name="jar"
-	    description="build completely, creating jars">
-	<ant target="jar" dir="misc"/>
-	<ant target="jar" dir="jgfBenchSuite"/>
-	<ant target="jar" dir="tests"/>
-    </target>
-
-    <!--
-        Clean
-    -->
-    <target name="clean"
-	    description="cleanup">
-	<ant target="clean" dir="misc"/>
-	<ant target="clean" dir="jgfBenchSuite"/>
-	<ant target="clean" dir="tests"/>
+	depends="build"
+	description="Build a Jar file for an application">
+        <basename file="." property="application-name" />
+	<jar destfile="${lib}/${application-name}.jar"
+	    basedir="${tmp}"
+	    includes="**/*.class">
+        </jar>
+        <delete dir="${tmp}" />
     </target>
 
 </project>

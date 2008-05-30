@@ -114,10 +114,15 @@
         <delete dir="${javadoc}" />
 	<delete dir="${sources}" />
 	<ant dir="examples" inheritAll="false" target="clean" />
+	<ant dir="tests" inheritAll="false" target="clean" />
+	<ant dir="benchmarks" inheritAll="false" target="clean" />
 	<ant dir="docs" inheritAll="false" target="clean" />
     </target>
 
     <target name="dist" depends="build,docs">
+	<ant dir="examples" inheritAll="false" />
+	<ant dir="tests" inheritAll="false" />
+	<ant dir="benchmarks" inheritAll="false" />
         <delete file="${dist-name}.zip" />
         <delete dir="${sources}" />
 
@@ -136,7 +141,7 @@
         <zip destfile="${dist-name}.zip">
             <zipfileset dir="."
                         prefix="${dist-name}"
-                        includes="javadoc/**,docs/*.pdf,lib/**,notices/**,sources/**,BUGS.txt,LICENSE.txt,HISTORY.txt,README.txt,INSTALL.txt,ibis.properties.example,log4j.properties,smartsockets.properties.example,examples/**,benchmarks/**"/>
+			includes="javadoc/**,docs/*.pdf,lib/**,notices/**,sources/**,BUGS.txt,LICENSE.txt,HISTORY.txt,README.txt,INSTALL.txt,ibis.properties.example,log4j.properties,smartsockets.properties.example,examples/**,benchmarks/**,tests/**"/>
             <zipfileset dir="."
                         prefix="${dist-name}"
                         filemode="755"
