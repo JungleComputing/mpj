@@ -18,14 +18,6 @@
 	    file="usersguide.tex"
 	    tofile="${tmp}/usersguide.tex">
 	</copy>
-	<copy
-	    file="normal.eps"
-	    tofile="${tmp}/normal.eps">
-	</copy>
-	<copy
-	    file="rmi-abstract.eps"
-	    tofile="${tmp}/rmi-abstract.eps">
-	</copy>
 	<exec   dir="${tmp}"
 	    executable="latex"
 	    vmlauncher="false">

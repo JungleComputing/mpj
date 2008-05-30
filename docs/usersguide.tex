@@ -1,6 +1,6 @@
 \documentclass[a4paper,10pt]{article}
 
-\usepackage{graphicx}
+%\usepackage{graphicx}
 \usepackage{url}
 \usepackage{times}
 \usepackage{color}
@@ -14,53 +14,86 @@
 
 \maketitle
 
-TODOTODO
-
 \section{Introduction}
 
-\section{Compiling the example}
+The MPJ programming interface has been defined by the Java Grande forum to
+provide MPI-like message passing for Java applications. Ibis MPJ is a
+pure-Java implementation of this interface, and delivers high-performance
+communication, while being deployable on various platforms,
+from Myrinet-based clusters to grids.
 
-The TSP example application for RMI is
-provided with the Ibis RMI distribution, in the \texttt{examples} directory,
+\subsection{Virtual Topologies}
+
+Depending on the underlying algorithm logical communication structures, 
+like hypercubes or graphs, may appear, called virtual topologie in MPJ. 
+At the moment, virtual topologies are not supported by Ibis MPJ. Only
+linear rank numbering is supported.
+
+\subsection{Intercommunication}
+
+It is not possible, that two processes, both members of different groups, 
+can exchange messages. Ibis MPJ does not support MPI-like inter- 
+communication at the moment. To achieve intercommunication, a new group, 
+e.g. derived from the group of \texttt{MPJ.WORLD\_COMM}, has to be constructed 
+containing the processes that are supposed to communicate to each other.
+
+\subsection(Derived Datatypes and Multidimensional Arrays}
+
+Since Java provides derived datatypes natively, by using Java objects, 
+there is no real need to implement derived datatypes in Ibis MPJ. 
+Nevertheless contigous derived datatypes are supported to obtain the 
+functionality of the reduce operations \texttt{MPJ.MINLOC}
+and \texttt{MPJ.MAXLOC}, which 
+need at least a pair of values inside a given array. At the moment 
+Ibis MPJ supports one-dimensional arrays. Mutlidimensional arrays may 
+be sent as an object, but in place receive is not possible in this case.
+
+\section{Compiling an example}
+
+The SOR example application for MPJ is
+provided with the Ibis MPJ distribution, in the \texttt{examples} directory,
 which also contains various other examples.
 For convenience, the examples are already compiled.
 
 If you change the example, you will need to recompile it. This
 requires the build system \texttt{ant}\footnote{\url{http://ant.apache.org}}.
 Running \texttt{ant} in the examples directory compiles the examples,
-and rewrites the class files for use with Ibis RMI.
+and rewrites the class files for use with Ibis MPJ.
 
 If, for some reason, it is not convenient to use \emph{ant} to compile
 your application, or you have only class files or jar files available
-for parts of your application, it is also possible to first compile
+for parts of your application, it is also possible to compile
 your application to class files or jar files, and then process those
-using the \emph{rmic} script. This script can be found in the Ibis RMI
+using the \emph{mpjc} script. This script can be found in the Ibis MPJ
 bin directory. It takes either directories, class files, or jar files
 as parameter, and processes those, possibly rewriting them. In case
 of a directory, all class files and jar files in that directory or
 its subdirectories are processed.  The command sequence
 
 \begin{verbatim}
-$ cd $RMI_HOME/examples
+$ cd $MPJ_HOME/examples
 $ mkdir tmp
 $ javac -d tmp -g \
-     -classpath ../external/ipl/ibis-poolinfo-2.1.1.jar \
+     -classpath ../lib/mpj-2.1.jar \
      src/*/*.java
-$ ../bin/rmic -cp tmp tmp
+$ ../bin/mpjc -cp tmp tmp
 $ mkdir lib
-$ ( cd tmp ; jar c . ) > lib/rmi-examples.jar
+$ ( cd tmp ; jar c . ) > lib/mpj-examples.jar
 $ rm -rf tmp
 \end{verbatim}
 
 creates a \texttt{lib} directory and stores the resulting class files there,
-in a jar-file called \texttt{rmi-examples.jar}.
-The \texttt{RMI\_HOME} environment variable must be set to the location of
-the Ibis RMI installation.
+in a jar-file called \texttt{mpj-examples.jar}.
+The \texttt{MPJ\_HOME} environment variable must be set to the location of
+the Ibis MPJ installation.
 
-\section{An Ibis RMI run}
+Running \texttt{mpjc} is not obligatory, but it may improve 
+serialization performance, i.e. the writing and reading of Java objects.
+
+\section{An Ibis MPJ run}
 
 Before discussing
-the running of an Ibis RMI application, we will discuss services that are
+the running of an Ibis MPJ application, we will discuss services that are
 needed by the Ibis communication library.
 
 \subsection{The pool}
@@ -85,12 +118,12 @@ Ibises to route traffic over the server if no direct connection is
 possible between two instances due to firewalls or NAT boxes. This is
 done using the Smartsockets library of the Ibis project.
 
-The Ibis server is started with the \texttt{rmi-server} script which is
-located in the \texttt{bin} directory of the Ibis RMI distribution.  Before
-starting an Ibis RMI application, an Ibis server needs to be running on a
-machine that is accessible from all nodes participating in the Ibis RMI run.
+The Ibis server is started with the \texttt{mpj-server} script which is
+located in the \texttt{bin} directory of the Ibis MPJ distribution.  Before
+starting an Ibis MPJ application, an Ibis server needs to be running on a
+machine that is accessible from all nodes participating in the Ibis MPJ run.
 The server listens to a TCP port. The port number can be specified using
-the \texttt{--port} command line option to the \texttt{rmi-server}
+the \texttt{--port} command line option to the \texttt{mpj-server}
 script.  For a complete list of all options, use the \texttt{--help}
 option of the script. One useful option is the  \texttt{--events}
 option, which makes the registry print out events.
@@ -101,18 +134,18 @@ option, which makes the registry print out events.
 The Ibis server is a single point which needs to be reachable from every
 Ibis instance. Since sometimes this is not possible due to firewalls,
 additional \emph{hubs} can be started to route traffic, creating a
-routing infrastructure for the Ibis RMI instances. These hubs can be started
-by using rmi-server script with the \texttt{--hub-only} option. In
+routing infrastructure for the Ibis MPJ instances. These hubs can be started
+by using mpj-server script with the \texttt{--hub-only} option. In
 addition, each hub needs to know the location of as many of the other
 hubs as possible. This information can be provided by using the
 \texttt{--hub-addresses} option. See the \texttt{--help} option of the
-rmi-server script for more information.
+mpj-server script for more information.
 
 \subsection{Running the example: preliminaries}
 
-When the Ibis server is running, the Ibis RMI application itself can be
+When the Ibis server is running, the Ibis MPJ application itself can be
 started.  There are a number of requirements that need to be met before
-Ibis (and thus Ibis RMI) can be started correctly.
+Ibis (and thus Ibis MPJ) can be started correctly.
 In this section we will discuss these in detail.
 
 Several of the steps below require the usage of \emph{system properties}.
@@ -127,21 +160,21 @@ A properties file is a file containing one property per line, usually of
 the format \texttt{property = value}. Properties of Ibis can be set in
 such a file as if they were set on the command line directly.
 
-Ibis and Ibis RMI will look for a file named \texttt{ibis.properties} in the
+Ibis and Ibis MPJ will look for a file named \texttt{ibis.properties} in the
 current working directory, on the class path, and at a location specified
 with the \texttt{ibis.properties.file} system property.
 
 \subsubsection{Add jar files to the classpath}
 
-The Ibis RMI implementation is provided in a single jar file: rmi.jar,
-appended with the version of Ibis RMI, for instance \texttt{rmi-2.1.jar}.
-Ibis RMI interfaces to Ibis using the Ibis Portability Layer, or
-\emph{IPL}. Both Ibis RMI and the IPL depend on various other libraries.
-All jar files in \$RMI\_HOME/lib need to be on the classpath.
+The Ibis MPJ implementation is provided in a single jar file: mpj.jar,
+appended with the version of Ibis MPJ, for instance \texttt{mpj-2.1.jar}.
+Ibis MPJ interfaces to Ibis using the Ibis Portability Layer, or
+\emph{IPL}. Both Ibis MPJ and the IPL depend on various other libraries.
+All jar files in \$MPJ\_HOME/lib need to be on the classpath.
 
 \subsubsection{Configure Log4j}
 
-Ibis and Ibis RMI use the Log4J library of the Apache project to print debugging
+Ibis and Ibis MPJ use the Log4J library of the Apache project to print debugging
 information, warnings, and error messages. This library must be
 initialized. A configuration file can be specified using the
 \texttt{log4j.configuration} system property. For example, to use a file
@@ -185,17 +218,17 @@ correctly. This size must be set using the \texttt{ibis.pool.size} property.
 This property is normally not needed. When it is needed, but not provided, Ibis
 will print an error. 
 
-\subsubsection{The rmi-run script}
+\subsubsection{The mpj-run script}
 
-To simplify running an Ibis RMI application, a \texttt{rmi-run} script is
+To simplify running an Ibis MPJ application, a \texttt{mpj-run} script is
 provided with the distribution. This script can be
 used as follows
 
 \begin{center}
-\texttt{rmi-run} \emph{java-flags class parameters}
+\texttt{mpj-run} \emph{java-flags class parameters}
 \end{center}
 
-The script performs the first two steps needed to run an Ibis RMI application.
+The script performs the first two steps needed to run an Ibis MPJ application.
 It adds all required jar files
 to the class path, and configures log4j.
 It then runs \texttt{java} with any
@@ -203,8 +236,8 @@ command line options given to it. Therefore, any additional options for
 Java, the main class and any application parameters must be provided as
 if \texttt{java} was called directly.
 
-The \texttt{rmi-run} script needs the location of the Ibis RMI
-distribution. This must be provided using the RMI\_HOME environment
+The \texttt{mpj-run} script needs the location of the Ibis MPJ
+distribution. This must be provided using the MPJ\_HOME environment
 variable.
 
 \subsection{Running the example on Unix-like systems}
@@ -212,15 +245,15 @@ variable.
 This section is specific for Unix-like systems. In particular, the
 commands presented are for a Bourne shell or bash.
 
-We will now run the example. All code below assumes the RMI\_HOME
-environment variable is set to the location of the Ibis RMI distribution.
+We will now run the example. All code below assumes the MPJ\_HOME
+environment variable is set to the location of the Ibis MPJ distribution.
 
 First, we will need an Ibis server. Start a shell and
-run the \texttt{rmi-server} script:
+run the \texttt{mpj-server} script:
 \noindent
 {\small
 \begin{verbatim}
-$ $RMI_HOME/bin/rmi-server --events
+$ $MPJ_HOME/bin/mpj-server --events
 \end{verbatim}
 }
 \noindent
@@ -228,60 +261,52 @@ $ $RMI_HOME/bin/rmi-server --events
 By providing the \texttt{--events} option the server
 prints information on when Ibis instances join and leave the pool.
 
-Next, we will start the application two times. One instance will act as both
-an "RMI server" and an "RMI client", the other one will just be an "RMI client".
-Ibis RMI will determine who is who automatically. Therefore we can using the
-same command line for both instances.
+Next, we will start the application two times.
 Run the following command in two different shells:
 
 \noindent
 {\small
 \begin{verbatim}
-$ CLASSPATH=$RMI_HOME/examples/lib/rmi-examples.jar \
-    $RMI_HOME/bin/rmi-run \
+$ CLASSPATH=$MPJ_HOME/examples/lib/mpj-examples.jar \
+    $MPJ_HOME/bin/mpj-run \
     -Dibis.server.address=localhost \
     -Dibis.pool.size=2 -Dibis.pool.name=test \
-    tsp.Main $RMI_HOME/examples/src/tsp/table_15.1
+    sor.SOR 512
 \end{verbatim}
 }
 \noindent
 
 This sets the CLASSPATH environment variable to the jar file of the
-application, and calls rmi-run. You should now have two running
+application, and calls mpj-run. You should now have two running
 instances of your application. One of them should print:
 
 \noindent
 {\small
 \begin{verbatim}
-I am 130.37.193.40
-Getting registry on 130.37.193.40
-Got registry on 130.37.193.40
-Distance table read
-2184 Jobs generated
-Minimum route = 3162
-Calculation Time = 13996 ms; Parallel time 13708 ms
-TSP-RMI took 13.996 seconds
+Running 512 x 512 SOR
+SOR took 14.050 seconds
+Used 1190 iterations, diff is 0.001645, allowed diff is 0.001646
 \end{verbatim}
 }
 \noindent
 
 or something similar.
 
-As said, the rmi-run script is only provided for convenience. To run
-the application without rmi-run, the command below can be used.
+As said, the mpj-run script is only provided for convenience. To run
+the application without mpj-run, the command below can be used.
 Note that this only works with Java 6. For Java 1.5, you need to
-explicitly add all jar files in \$RMI\_HOME/lib to the classpath.
+explicitly add all jar files in \$MPJ\_HOME/lib to the classpath.
 
 \noindent
 {\small
 \begin{verbatim}
 $ java \
     -cp \
-    $RMI_HOME/lib/'*':$RMI_HOME/examples/lib/rmi-examples.jar \
+    $MPJ_HOME/lib/'*':$MPJ_HOME/examples/lib/mpj-examples.jar \
     -Dibis.server.address=localhost \
     -Dibis.pool.name=test -Dibis.pool.size=2 \
-    -Dlog4j.configuration=file:$RMI_HOME/log4j.properties \
-    tsp.Main $RMI_HOME/examples/src/tsp/table_15.1
+    -Dlog4j.configuration=file:$MPJ_HOME/log4j.properties \
+    sor.SOR 512
 \end{verbatim}
 }
 \noindent
@@ -289,83 +314,75 @@ $ java \
 \subsection{Running the example on Windows systems}
 
 We will now run the example on a Windows XP system.
-All code below assumes the RMI\_HOME
-environment variable is set to the location of the Ibis RMI distribution.
+All code below assumes the MPJ\_HOME
+environment variable is set to the location of the Ibis MPJ distribution.
 
 To set environment variable on Windows, right-click on the 'My Computer' icon,
 'Properties', 'Advanced' tab, 'Environment Variables' button. There, you
 can add variables to either the User variables or the System variables.
 
 First, we will need an Ibis server. Start a command prompt window and
-run the \texttt{rmi-server} script:
+run the \texttt{mpj-server} script:
 \noindent
 {\small
 \begin{verbatim}
-C:\DOCUME~1\Temp> "%RMI_HOME%"\bin\rmi-server --events
+C:\DOCUME~1\Temp> "%MPJ_HOME%"\bin\mpj-server --events
 \end{verbatim}
 }
 \noindent
 
-Note the quoting, which is needed when RMI\_HOME contains spaces.
+Note the quoting, which is needed when MPJ\_HOME contains spaces.
 
 By providing the \texttt{--events} option the server
 prints information on when Ibis instances join and leave the pool.
 
-Next, we will start the application two times. One instance will act as both an
-"RMI server" and an "RMI client", the other one will be an "RMI client".
-Ibis RMI will determine who is who automatically. Therefore we can using the
-same command line for both server and client.
+Next, we will start the application two times.
 Run the following commands in two different shells:
 
 \noindent
 {\small
 \begin{verbatim}
-C:\DOCUME~1\Temp> cd %RMI_HOME%\examples
-C:...> set CLASSPATH=lib\rmi-examples.jar
-C:...> "%RMI_HOME%"\bin\rmi-run
+C:\DOCUME~1\Temp> cd %MPJ_HOME%\examples
+C:...> set CLASSPATH=lib\mpj-examples.jar
+C:...> "%MPJ_HOME%"\bin\mpj-run
     "-Dibis.server.address=localhost"
     "-Dibis.pool.size=2" "-Dibis.pool.name=test"
-    tsp.Main src\tsp\table_15.1
+    sor.SOR 512
 \end{verbatim}
 }
 \noindent
 
 This sets the CLASSPATH environment variable to the jar file of the
-application, and calls rmi-run. You should now have two running
+application, and calls mpj-run. You should now have two running
 instances of your application. One of them should print:
 
 \noindent
 {\small
 \begin{verbatim}
-I am 130.37.193.40
-Getting registry on 130.37.193.40
-Got registry on 130.37.193.40
-Distance table read
-2184 Jobs generated
-Minimum route = 3162
-Calculation Time = 13996 ms; Parallel time 13708 ms
-TSP-RMI took 13.996 seconds
+Running 512 x 512 SOR
+SOR took 14.050 seconds
+Used 1190 iterations, diff is 0.001645, allowed diff is 0.001646
 \end{verbatim}
 }
 \noindent
 
 or something similar.
 
-As said, the rmi-run script is only provided for convenience. To run
-the application without rmi-run, the commands below can be used.
+As said, the mpj-run script is only provided for convenience. To run
+the application without mpj-run, the commands below can be used.
 Note that this only works with Java 6. For Java 1.5, you need to
-explicitly add all jar files in \%RMI\_HOME\%$\backslash$lib to the classpath.
+explicitly add all jar files in \%MPJ\_HOME\%$\backslash$lib to the classpath.
 
 \noindent
 {\small
 \begin{verbatim}
-C:\DOCUME~1\Temp> cd %RMI_HOME%\examples
+C:\DOCUME~1\Temp> cd %MPJ_HOME%\examples
 C:...> java
-    -cp "%RMI_HOME%\lib\*";lib\rmi-examples.jar
+    -cp "%MPJ_HOME%\lib\*";lib\mpj-examples.jar
     -Dibis.server.address=localhost
     -Dibis.pool.name=test -Dibis.pool.size=2
-    -Dlog4j.configuration=file:"%RMI_HOME%"\log4j.properties
-    tsp.Main src\tsp\table_15.1
+    -Dlog4j.configuration=file:"%MPJ_HOME%"\log4j.properties
+    sor.SOR 512
 \end{verbatim}
 }
 \noindent
@@ -377,4 +394,3 @@ the documentation and software available for Ibis, including papers, and
 slides of presentations.
 
 \end{document}
-

@@ -65,8 +65,7 @@
     <target name="jar"
 	depends="build"
 	description="Build a Jar file for an application">
-        <basename file="." property="application-name" />
-	<jar destfile="${lib}/${application-name}.jar"
+	<jar destfile="${lib}/mpj-benchmarks.jar"
 	    basedir="${tmp}"
 	    includes="**/*.class">
         </jar>
