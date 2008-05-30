@@ -3,14 +3,9 @@
 	Build file for Ibis MPJ implementation
     </description>
 
-    <property name="version" value="-2.0" />
+    <property name="version" value="-2.1" />
 
     <property name="dist-name" value="${ant.project.name}${version}" />
-
-    <!-- Import environment properties -->
-
-    <property environment="env" />
-    <property name="ibis" location="${env.IPL_HOME}" />
 
     <target name="build"
             description="Build with included IPL"
@@ -30,17 +25,18 @@
     <!-- copy external dependancies to lib, including provided IPL -->
     <target name="copy-included-ipl">
         <mkdir dir="${lib}" />
-
         <copy todir="${lib}">
-            <fileset dir="${external}/ibis" />
+            <fileset dir="${external}/ipl" />
         </copy>
     </target>
 
     <!-- copy external dependancies to lib, including IPL 
          specified by $IPL_HOME -->
     <target name="copy-external-ipl">
+	<!-- Import environment properties -->
+	<property environment="env" />
+	<property name="ibis" location="${env.IPL_HOME}" />
         <mkdir dir="${lib}" />
-
         <copy todir="${lib}">
             <fileset dir="${ibis}/lib" />
         </copy>
@@ -86,11 +82,11 @@
         </java>
 
         <!-- Create jar file -->
-        <jar destfile="${lib}/${dist-name}.jar" basedir="${tmp}" includes="**/*.class">
+	<jar destfile="${lib}/${dist-name}.jar"
+	    basedir="${tmp}"
+	    includes="**/*.class">
         </jar>
         <delete dir="${tmp}" />
-
-        <!-- Copy external libraries to lib directory -->
     </target>
 
     <!-- Generate javadoc -->
@@ -107,14 +103,21 @@
         </javadoc>
     </target>
 
+    <target name="docs" description="Create manuals">
+	<ant dir="docs" inheritAll="false" />
+    </target>
+
     <!-- Clean up everything -->
     <target name="clean" description="Clean up">
         <delete dir="${tmp}" />
         <delete dir="${lib}" />
         <delete dir="${javadoc}" />
+	<delete dir="${sources}" />
+	<ant dir="examples" inheritAll="false" target="clean" />
+	<ant dir="docs" inheritAll="false" target="clean" />
     </target>
 
-    <target name="dist" depends="build">
+    <target name="dist" depends="build,docs">
         <delete file="${dist-name}.zip" />
         <delete dir="${sources}" />
 

@@ -1,0 +1,76 @@
+<project
+    name="MPJ JavaGrande Forum Benchmark Suite"
+    default="jar"
+    basedir=".">
+
+    <property name="mpj"         location="../.."/>
+
+    <property name="tmp"         value="tmp"/>
+    <property name="src"         value="src"/>
+    <property name="lib"         value="lib"/>
+
+    <target name="set-classpath" unless="classpath.initialized">
+	<path id="default.classpath">
+	    <pathelement path="${tmp}"/>
+	    <fileset dir="${mpj}/lib">
+		<include name="*.jar"/>
+	    </fileset>
+	</path>
+	<echo	message="Now set default.classpath to ${default.classpath}"
+		level="verbose"/>
+	<property name="classpath.initialized" value="true"/>
+    </target>
+
+    <target name="init" depends="set-classpath">
+        <tstamp />
+        <mkdir dir="${tmp}" />
+        <mkdir dir="${lib}" />
+    </target>
+
+    <target name="compile" depends="clean,init"
+	    description="Compile application without any bytecode rewriting">
+	    <javac destdir="${tmp}"
+		debug="on"
+		srcdir="${src}"
+		source="1.5"
+		target="1.5"
+		classpathref="default.classpath">
+	    <!--
+	    <compilerarg value="-Xlint:unchecked"/>
+	    -->
+            <include name="**/*.java" />
+        </javac>
+    </target>
+
+    <target name="clean" description="Clean up the build">
+        <delete dir="${tmp}" />
+        <delete dir="${lib}" />
+    </target>
+
+    <target name="ibisc">
+	<java   classname="ibis.compile.Ibisc"
+		taskname="Ibisc"
+		failonerror="true"
+		dir="${tmp}"
+		fork="true">
+		<arg line="."/>
+	    <classpath refid="default.classpath"/>
+	</java>
+    </target>
+
+    <target name="build"
+	    depends="compile,ibisc"
+	    description="Compile with Ibis-serialization rewriting"/>
+
+    <target name="jar"
+	depends="build"
+	description="Build a Jar file for an application">
+        <basename file="." property="application-name" />
+	<jar destfile="${lib}/${application-name}.jar"
+	    basedir="${tmp}"
+	    includes="**/*.class">
+        </jar>
+        <delete dir="${tmp}" />
+    </target>
+
+</project>
