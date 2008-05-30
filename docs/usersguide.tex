@@ -50,7 +50,7 @@ be sent as an object, but in place receive is not possible in this case.
 
 \section{Compiling an example}
 
-The SOR example application for MPJ is
+The Sor example application for MPJ is
 provided with the Ibis MPJ distribution, in the \texttt{examples} directory,
 which also contains various other examples.
 For convenience, the examples are already compiled.
@@ -271,7 +271,7 @@ $ CLASSPATH=$MPJ_HOME/examples/lib/mpj-examples.jar \
     $MPJ_HOME/bin/mpj-run \
     -Dibis.server.address=localhost \
     -Dibis.pool.size=2 -Dibis.pool.name=test \
-    sor.SOR 512
+    sor.Sor 512
 \end{verbatim}
 }
 \noindent
@@ -306,7 +306,7 @@ $ java \
     -Dibis.server.address=localhost \
     -Dibis.pool.name=test -Dibis.pool.size=2 \
     -Dlog4j.configuration=file:$MPJ_HOME/log4j.properties \
-    sor.SOR 512
+    sor.Sor 512
 \end{verbatim}
 }
 \noindent
@@ -347,7 +347,7 @@ C:...> set CLASSPATH=lib\mpj-examples.jar
 C:...> "%MPJ_HOME%"\bin\mpj-run
     "-Dibis.server.address=localhost"
     "-Dibis.pool.size=2" "-Dibis.pool.name=test"
-    sor.SOR 512
+    sor.Sor 512
 \end{verbatim}
 }
 \noindent
@@ -382,7 +382,7 @@ C:...> java
     -Dibis.server.address=localhost
     -Dibis.pool.name=test -Dibis.pool.size=2
     -Dlog4j.configuration=file:"%MPJ_HOME%"\log4j.properties
-    sor.SOR 512
+    sor.Sor 512
 \end{verbatim}
 }
 \noindent
