@@ -28,9 +28,10 @@
 
 package section2;
 
-import lufact.*;
-import jgfutil.*; 
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
+import jgfutil.JGFInstrumentor;
+import lufact.JGFLUFactBench;
 
 public class JGFLUFactBenchSizeC{ 
 

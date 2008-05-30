@@ -15,7 +15,8 @@
 package ccl;
 
 
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
 
 class scatterv {
   static public void test() throws MPJException {

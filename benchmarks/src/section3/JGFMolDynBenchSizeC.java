@@ -29,9 +29,10 @@
 package section3;
 
 
-import moldyn.*;
-import jgfutil.*;
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
+import jgfutil.JGFInstrumentor;
+import moldyn.JGFMolDynBench;
 
 public class JGFMolDynBenchSizeC{ 
 

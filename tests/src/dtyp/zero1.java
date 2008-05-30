@@ -51,7 +51,10 @@
 package dtyp;
 
 
-import ibis.mpj.*;
+import ibis.mpj.Datatype;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
+import ibis.mpj.Status;
  
 class zero1 {
   static public void test() throws MPJException {

@@ -28,9 +28,13 @@
 
 
 package sparsematmult;
-import jgfutil.*; 
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
+
 import java.util.Random;
-import ibis.mpj.*;
+
+import jgfutil.JGFInstrumentor;
+import jgfutil.JGFSection2;
 
 public class JGFSparseMatmultBench extends SparseMatmult implements JGFSection2{ 
 

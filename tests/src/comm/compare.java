@@ -50,7 +50,10 @@
 
 package comm;
 
-import ibis.mpj.*;
+import ibis.mpj.Comm;
+import ibis.mpj.Intracomm;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
 
 class compare {
   static public void test() throws MPJException {

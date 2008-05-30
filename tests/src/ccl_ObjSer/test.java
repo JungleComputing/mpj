@@ -3,7 +3,7 @@
 package ccl_ObjSer;
 
 
-import java.io.*;
+import java.io.Serializable;
 class test implements Serializable{
 
   public int a = 112;

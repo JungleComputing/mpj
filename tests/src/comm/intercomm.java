@@ -50,7 +50,12 @@
 
 package comm;
 
-import ibis.mpj.*;
+import ibis.mpj.Group;
+import ibis.mpj.Intercomm;
+import ibis.mpj.Intracomm;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
+import ibis.mpj.Status;
 
 class intercomm {
 

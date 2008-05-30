@@ -28,8 +28,10 @@
 
 
 package lufact; 
-import jgfutil.*; 
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
+import jgfutil.JGFInstrumentor;
+import jgfutil.JGFSection2;
 
 public class JGFLUFactBench extends Linpack implements JGFSection2{
 

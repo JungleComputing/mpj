@@ -51,7 +51,9 @@
 
 package group;
 
-import ibis.mpj.*;
+import ibis.mpj.Group;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
  
 class range {
   static public void test() throws MPJException {

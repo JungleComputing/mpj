@@ -53,7 +53,10 @@ package group;
 
 
 
-import ibis.mpj.*;
+import ibis.mpj.Comm;
+import ibis.mpj.Group;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
 
 class group {
   static public void test() throws MPJException {

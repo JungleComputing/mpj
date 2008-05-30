@@ -35,9 +35,8 @@
 
 package moldyn;
 
-import java.util.*;
-import java.text.NumberFormat;
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
 
 public class md {
 

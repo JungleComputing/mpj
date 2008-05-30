@@ -10,9 +10,10 @@
 
 package sor;
 
-import java.text.DecimalFormat;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
 
-import ibis.mpj.*;
+import java.text.DecimalFormat;
 
 public class Sor {
 

@@ -22,7 +22,9 @@
 
 package dtyp_ObjSer;
 
-import ibis.mpj.*;
+import ibis.mpj.Datatype;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
 
 class hvecO {
   static public void test() throws MPJException {

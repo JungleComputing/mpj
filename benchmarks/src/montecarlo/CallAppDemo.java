@@ -30,7 +30,7 @@
 
 package montecarlo;
 
-import ibis.mpj.*;
+import ibis.mpj.MPJException;
 
 /**
   * Wrapper code to invoke the Application demonstrator.

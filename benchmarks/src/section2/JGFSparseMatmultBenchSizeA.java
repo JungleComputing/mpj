@@ -28,9 +28,10 @@
 
 package section2;
 
-import sparsematmult.*; 
-import jgfutil.*; 
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
+import jgfutil.JGFInstrumentor;
+import sparsematmult.JGFSparseMatmultBench;
 
 public class JGFSparseMatmultBenchSizeA{ 
 

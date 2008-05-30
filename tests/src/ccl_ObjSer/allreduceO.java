@@ -9,28 +9,8 @@
 package ccl_ObjSer;
 
 
-import ibis.mpj.*;
-/*import java.io.*;
-class complexNum implements Serializable{
-  float realPart;
-  float imaginPart;
-}
-
-class complexAdd extends User_function{
-  public void Call(Object invec, int inoffset, Object outvec, int outoffset,
-                   int count, Datatype datatype){
-    Object [] in_array = (Object[])invec;
-    Object [] out_array = (Object[])outvec;
-
-    for (int i = 0; i < count; i++){
-      complexNum ocd = (complexNum)out_array[outoffset + i];
-      complexNum icd = (complexNum)in_array[inoffset + i];
-
-      ocd.realPart += icd.realPart;
-      ocd.imaginPart += icd.imaginPart;
-    }
-  }
-}*/
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
 
 class allreduceO {
   static public void test() throws MPJException {

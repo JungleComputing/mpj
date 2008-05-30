@@ -18,7 +18,8 @@
 package dtyp;
 
 
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
 
 class type_size {
   static public void test() throws MPJException {

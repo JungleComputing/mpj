@@ -30,11 +30,10 @@
 
 package montecarlo;
 
-import jgfutil.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
 
-import java.util.*;
-import java.awt.*;
-import ibis.mpj.*;
+import java.util.Vector;
 
 /**
   * Code, a test-harness for invoking and driving the Applications

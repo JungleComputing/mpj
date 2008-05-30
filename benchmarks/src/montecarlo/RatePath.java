@@ -30,8 +30,12 @@
 
 package montecarlo;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Vector;
 
 /**
   * Class for recording the values in the time-dependent path of a security.

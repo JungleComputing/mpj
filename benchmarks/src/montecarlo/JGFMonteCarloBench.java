@@ -29,9 +29,10 @@
 
 package montecarlo; 
 
-import java.io.*;
-import jgfutil.*; 
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
+import jgfutil.JGFInstrumentor;
+import jgfutil.JGFSection3;
 
 public class JGFMonteCarloBench extends CallAppDemo implements JGFSection3 {
 

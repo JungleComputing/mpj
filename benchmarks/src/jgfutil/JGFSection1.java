@@ -28,7 +28,7 @@
 
 
 package jgfutil; 
-import ibis.mpj.*;
+import ibis.mpj.MPJException;
 
 public interface JGFSection1 {
 

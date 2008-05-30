@@ -32,7 +32,8 @@
 
 package raytracer; 
 
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
 
 public class RayTracer { 
 

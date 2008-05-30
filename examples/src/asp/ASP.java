@@ -9,9 +9,11 @@
 
 package asp;
 
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
+
 import java.text.DecimalFormat;
 import java.util.Random;
-import ibis.mpj.*;
 
 public class ASP {
     private static int MAX_DISTANCE = 42;

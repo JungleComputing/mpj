@@ -10,8 +10,8 @@ package ccl_ObjSer;
 
 
 
-import ibis.mpj.*;
-import java.io.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
 
 
 class scanO {

@@ -16,7 +16,9 @@
 
 package ccl;
 
-import ibis.mpj.*;
+import ibis.mpj.Comm;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
 
 class allreduce_maxminloc {
   static public void test() throws MPJException {

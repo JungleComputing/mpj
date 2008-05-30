@@ -9,7 +9,8 @@
 package ccl_ObjSer;
 
 
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
 
 
 

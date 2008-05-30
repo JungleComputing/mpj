@@ -17,7 +17,9 @@
 
 package dtyp;
 
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
+import ibis.mpj.Status;
 
 class pack {
   static public void test() throws MPJException {

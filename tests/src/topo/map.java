@@ -17,7 +17,9 @@
 package topo;
 
 
-import ibis.mpj.*;
+import ibis.mpj.Cartcomm;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
  
  
 class map {

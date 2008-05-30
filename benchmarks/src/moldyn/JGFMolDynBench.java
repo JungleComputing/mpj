@@ -29,9 +29,10 @@
 
 package moldyn; 
 
-import java.io.*;
-import jgfutil.*; 
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
+import jgfutil.JGFInstrumentor;
+import jgfutil.JGFSection3;
 
 public class JGFMolDynBench extends md implements JGFSection3 {
 

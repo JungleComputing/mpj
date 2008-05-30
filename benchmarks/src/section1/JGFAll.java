@@ -28,8 +28,9 @@
 
 package section1;
 
-import jgfutil.*; 
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
+import jgfutil.JGFInstrumentor;
 
 public class JGFAll{ 
 

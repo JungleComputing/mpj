@@ -22,7 +22,9 @@
 
 package dtyp;
 
-import ibis.mpj.*;
+import ibis.mpj.Datatype;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
 
 class hvec {
   static public void test() throws MPJException {

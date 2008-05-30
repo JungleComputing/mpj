@@ -3,7 +3,9 @@
 
 package ccl_ObjSer;
 
-import ibis.mpj.*;
+import ibis.mpj.Datatype;
+import ibis.mpj.MPJException;
+import ibis.mpj.Op;
 
 public class complexAdd extends Op {
 

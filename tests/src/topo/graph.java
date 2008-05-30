@@ -52,7 +52,9 @@
 package topo;
 
 
-import ibis.mpj.*;
+import ibis.mpj.Graphcomm;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
 
 
 class graph {

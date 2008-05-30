@@ -52,7 +52,9 @@
 package pt2pt;
 
 
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
+import ibis.mpj.Status;
 class getcount {
   static public void test() throws MPJException {
     int me,count;

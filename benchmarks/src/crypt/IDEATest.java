@@ -42,9 +42,12 @@
 
 package crypt;
 
-import java.util.*;
-import jgfutil.*; 
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
+
+import java.util.Random;
+
+import jgfutil.JGFInstrumentor;
 
 class IDEATest
 {

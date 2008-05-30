@@ -61,8 +61,8 @@ Translated to C by Bonnie Toy 5/88
 */
 
 package lufact; 
-import jgfutil.*; 
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
 
 public class Linpack {
 

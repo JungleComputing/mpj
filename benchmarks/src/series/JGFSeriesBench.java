@@ -28,8 +28,9 @@
 
 
 package series;
-import jgfutil.*; 
-import ibis.mpj.*;
+import ibis.mpj.MPJException;
+import jgfutil.JGFInstrumentor;
+import jgfutil.JGFSection2;
 
 public class JGFSeriesBench extends SeriesTest implements JGFSection2{ 
 

@@ -28,9 +28,13 @@
 
 
 package sor;
-import jgfutil.*; 
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
+
 import java.util.Random;
-import ibis.mpj.*;
+
+import jgfutil.JGFInstrumentor;
+import jgfutil.JGFSection2;
 
 public class JGFSORBench extends SOR implements JGFSection2{ 
 

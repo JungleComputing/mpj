@@ -29,9 +29,10 @@
 package section3;
 
 
-import montecarlo.*;
-import jgfutil.*;
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
+import jgfutil.JGFInstrumentor;
+import montecarlo.JGFMonteCarloBench;
 
 public class JGFMonteCarloBenchSizeB{ 
 

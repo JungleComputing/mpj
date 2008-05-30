@@ -10,8 +10,7 @@
 
 package section1;
 
-import java.io.*;
-import jgfutil.*; 
+import java.io.Serializable;
 
 class obj_double implements Serializable {
 

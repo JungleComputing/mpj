@@ -14,7 +14,8 @@
 
 package ccl;
 
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
  
 class gatherv {
   static public void test() throws MPJException {

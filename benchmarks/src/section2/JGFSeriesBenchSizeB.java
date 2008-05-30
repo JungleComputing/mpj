@@ -28,9 +28,10 @@
 
 package section2;
 
-import series.*; 
-import jgfutil.*; 
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
+import jgfutil.JGFInstrumentor;
+import series.JGFSeriesBench;
 
 public class JGFSeriesBenchSizeB{ 
 

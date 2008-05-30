@@ -50,7 +50,8 @@
 
 package env;
 
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
 
 class abort {
   static public void main(String[] args) throws MPJException {

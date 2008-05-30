@@ -29,7 +29,7 @@
 
 package jgfutil; 
 
-import ibis.mpj.*;
+import ibis.mpj.MPJException;
 
 public interface JGFSection3 {
   public void JGFsetsize(int size);

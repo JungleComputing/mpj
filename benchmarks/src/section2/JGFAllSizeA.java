@@ -28,13 +28,14 @@
 
 package section2;
 
-import crypt.*;
-import series.*;
-import lufact.*;
-import sor.*;
-import sparsematmult.*;
-import jgfutil.*; 
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
+import jgfutil.JGFInstrumentor;
+import lufact.JGFLUFactBench;
+import series.JGFSeriesBench;
+import sor.JGFSORBench;
+import sparsematmult.JGFSparseMatmultBench;
+import crypt.JGFCryptBench;
 
 public class JGFAllSizeA{ 
 

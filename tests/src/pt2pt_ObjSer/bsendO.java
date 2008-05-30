@@ -55,7 +55,9 @@
 
 package pt2pt_ObjSer;
 
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
+import ibis.mpj.Status;
 
 class bsendO {
   static public void main(String[] args) throws MPJException {

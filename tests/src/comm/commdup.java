@@ -50,7 +50,9 @@
 
 package comm;
 
-import ibis.mpj.*;
+import ibis.mpj.Comm;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
 
 class commdup {
   static public void test() throws MPJException {

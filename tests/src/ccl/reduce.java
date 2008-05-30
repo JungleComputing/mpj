@@ -50,7 +50,8 @@
 
 package ccl;
 
-import ibis.mpj.*;
+import ibis.mpj.MPJ;
+import ibis.mpj.MPJException;
 
 
 class reduce {
