@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# This script is a convenience script to start the Ibis MPJ registry server
+# from the MPJ installation, specified in the $MPJ environment variable.
+
+# Check MPJ.
+if [ -z "$MPJ" ];  then
+    echo "please set MPJ to the location of your Ibis MPJ installation" 1>&2
+    exit 1
+fi
+
+exec "$MPJ"/bin/mpj-run -Xmx256M ibis.server.Server "$@"
