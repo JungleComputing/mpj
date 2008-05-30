@@ -1,11 +1,12 @@
 /* $Id$ */
 
 package ibis.mpj;
+
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
- *
+ * 
  * Extends OutputStream with read of array of primitives and readSingleInt
  */
 
@@ -42,10 +43,9 @@ public class StoreInputStream extends InputStream {
         System.arraycopy(buf.byte_store, byte_count, b, off, left);
         byte_count += left;
         return left;
-     }
+    }
 
     public final int available() throws IOException {
         return 0;
     }
 }
-

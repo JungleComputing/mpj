@@ -1,6 +1,7 @@
 /* $Id$ */
 
 package ibis.mpj;
+
 import java.io.IOException;
 
 /**
@@ -34,7 +35,7 @@ public class StoreArrayInputStream extends ibis.io.DataInputStream {
         // Let serialization stream decide.
         return -1;
     }
-    
+
     public void reset() {
         boolean_count = 0;
         byte_count = 0;
@@ -121,18 +122,17 @@ public class StoreArrayInputStream extends ibis.io.DataInputStream {
     }
 
     public void readArray(double[] a, int off, int len) {
-        //        System.err.println("stream read double array, off = " + off + " len = " + len);
+        // System.err.println("stream read double array, off = " + off + " len =
+        // " + len);
         System.arraycopy(buf.double_store, double_count, a, off, len);
         double_count += len;
     }
 
-    /*    
-          public void readArray(double[] a, int off, int len) {
-          System.err.println("stream read double array, off = " + off + " len = " + len);
-          buf.readArray(a, off, len);
-          double_count += len;
-          }
-          */  
+    /*
+     * public void readArray(double[] a, int off, int len) {
+     * System.err.println("stream read double array, off = " + off + " len = " +
+     * len); buf.readArray(a, off, len); double_count += len; }
+     */
     public int read() {
         if (buf.byte_store.length <= byte_count) {
             return -1;
@@ -141,9 +141,11 @@ public class StoreArrayInputStream extends ibis.io.DataInputStream {
     }
 
     public int read(byte[] b) {
-        if (byte_count >= buf.byte_store.length) return -1;
+        if (byte_count >= buf.byte_store.length)
+            return -1;
         if (byte_count + b.length > buf.byte_store.length) {
-            System.arraycopy(buf.byte_store, byte_count, b, 0, buf.byte_store.length - byte_count);
+            System.arraycopy(buf.byte_store, byte_count, b, 0,
+                    buf.byte_store.length - byte_count);
             int rval = buf.byte_store.length - byte_count;
             byte_count = buf.byte_store.length;
             return rval;
@@ -153,9 +155,11 @@ public class StoreArrayInputStream extends ibis.io.DataInputStream {
     }
 
     public int read(byte[] b, int off, int len) {
-        if (byte_count >= buf.byte_store.length) return -1;
+        if (byte_count >= buf.byte_store.length)
+            return -1;
         if (byte_count + len > buf.byte_store.length) {
-            System.arraycopy(buf.byte_store, byte_count, b, off, buf.byte_store.length - byte_count);
+            System.arraycopy(buf.byte_store, byte_count, b, off,
+                    buf.byte_store.length - byte_count);
             int rval = buf.byte_store.length - byte_count;
             byte_count = buf.byte_store.length;
             return rval;
@@ -169,7 +173,7 @@ public class StoreArrayInputStream extends ibis.io.DataInputStream {
     }
 
     public void resetBytesRead() {
-    	// not implemented
+        // not implemented
     }
 
     public int available() throws IOException {
@@ -177,6 +181,6 @@ public class StoreArrayInputStream extends ibis.io.DataInputStream {
     }
 
     public void close() throws IOException {
-    	// nothing here
+        // nothing here
     }
 }

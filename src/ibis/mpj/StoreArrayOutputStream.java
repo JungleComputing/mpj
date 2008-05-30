@@ -1,6 +1,7 @@
 /* $Id$ */
 
 package ibis.mpj;
+
 import ibis.io.DataOutputStream;
 
 import java.io.IOException;
@@ -16,8 +17,8 @@ final class StoreArrayOutputStream extends DataOutputStream {
     public int bufferSize() {
         // Let serialization stream decide/
         return -1;
-    }       
-        
+    }
+
     public void writeByte(byte b) {
         buf.writeByte(b);
     }
@@ -95,7 +96,7 @@ final class StoreArrayOutputStream extends DataOutputStream {
     }
 
     public void flush() throws IOException {
-    	// nothing here
+        // nothing here
     }
 
     public boolean finished() {

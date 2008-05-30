@@ -1,15 +1,22 @@
-
 /* $Id$ */
 package ibis.mpj;
+
 final class StoreBuffer {
     /* We have to copy, serialization reuses the buffers */
     int booleanLen = 0;
+
     int byteLen = 0;
+
     int charLen = 0;
+
     int shortLen = 0;
+
     int doubleLen = 0;
+
     int intLen = 0;
+
     int floatLen = 0;
+
     int longLen = 0;
 
     boolean[] boolean_store = null;

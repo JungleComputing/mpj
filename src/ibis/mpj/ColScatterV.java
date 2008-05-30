@@ -10,22 +10,32 @@ package ibis.mpj;
  */
 public class ColScatterV {
     private Object sendbuf = null;
+
     private int sendoffset = 0;
+
     private int[] sendcount = null;
+
     private int[] displs = null;
+
     private Datatype sendtype = null;
+
     private Object recvbuf = null;
+
     private int recvoffset = 0;
+
     private int recvcount = 0;
+
     private Datatype recvtype = null;
+
     private int root = 0;
+
     private Intracomm comm = null;
+
     private int tag = 0;
 
-    public ColScatterV(Object sendbuf, int sendoffset, int[] sendcount, int[] displs,
-            Datatype sendtype,	
-            Object recvbuf, int recvoffset, int recvcount, Datatype recvtype,
-            int root, Intracomm comm, int tag) {
+    public ColScatterV(Object sendbuf, int sendoffset, int[] sendcount,
+            int[] displs, Datatype sendtype, Object recvbuf, int recvoffset,
+            int recvcount, Datatype recvtype, int root, Intracomm comm, int tag) {
 
         this.sendbuf = sendbuf;
         this.sendoffset = sendoffset;
@@ -41,14 +51,12 @@ public class ColScatterV {
         this.tag = tag;
     }
 
-
-    //	flat tree algorithm,
-    //	so we don't need to publish the sendcount[]-array
+    // flat tree algorithm,
+    // so we don't need to publish the sendcount[]-array
     //
     protected void call() throws MPJException {
         int rank = this.comm.rank();
         int size = this.comm.size();
-
 
         if (root < 0 || root >= size) {
             throw new MPJException("root rank " + root + " is invalid.");
@@ -58,17 +66,20 @@ public class ColScatterV {
 
             for (int i = 0; i < size; i++) {
 
-
                 if (i != rank)
-                    this.comm.send(sendbuf, this.sendoffset + this.displs[i] * sendtype.extent(), sendcount[i], sendtype, i, this.tag);
+                    this.comm.send(sendbuf, this.sendoffset + this.displs[i]
+                            * sendtype.extent(), sendcount[i], sendtype, i,
+                            this.tag);
 
             }
-            this.comm.localcopy2types(sendbuf, this.sendoffset + displs[rank] * sendtype.extent(), sendcount[rank], sendtype,
-                    recvbuf, recvoffset, recvcount, recvtype); 
-            //this.comm.recv(recvbuf, recvoffset, recvcount, recvtype, root, this.tag);
-        }
-        else {
-            this.comm.recv(recvbuf, recvoffset, recvcount, recvtype, root, this.tag);
+            this.comm.localcopy2types(sendbuf, this.sendoffset + displs[rank]
+                    * sendtype.extent(), sendcount[rank], sendtype, recvbuf,
+                    recvoffset, recvcount, recvtype);
+            // this.comm.recv(recvbuf, recvoffset, recvcount, recvtype, root,
+            // this.tag);
+        } else {
+            this.comm.recv(recvbuf, recvoffset, recvcount, recvtype, root,
+                    this.tag);
         }
 
     }

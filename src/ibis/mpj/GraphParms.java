@@ -10,8 +10,9 @@ package ibis.mpj;
  */
 public class GraphParms {
 
-    //Return type for Graphcomm.get()
+    // Return type for Graphcomm.get()
 
     public int[] index;
+
     public int[] edges;
 }

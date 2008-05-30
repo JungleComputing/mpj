@@ -11,13 +11,13 @@ package ibis.mpj;
 
 public class ColBarrier {
     private Intracomm comm = null;
+
     private int tag = 0;
+
     public ColBarrier(Intracomm comm, int tag) {
         this.comm = comm;
         this.tag = tag;
     }
-
-
 
     // flat tree algorithm
     protected void call() throws MPJException {
@@ -31,14 +31,13 @@ public class ColBarrier {
                 this.comm.send(sendbuf, 0, 0, MPJ.BYTE, 0, this.tag);
 
                 this.comm.recv(sendbuf, 0, 0, MPJ.BYTE, 0, this.tag);
-            }
-            else {
+            } else {
 
                 for (int i = 1; i < this.comm.size(); i++) {
                     this.comm.recv(sendbuf, 0, 0, MPJ.BYTE, i, this.tag);
                 }
 
-                for (int i=1; i < this.comm.size(); i++) {
+                for (int i = 1; i < this.comm.size(); i++) {
                     this.comm.send(sendbuf, 0, 0, MPJ.BYTE, i, this.tag);
                 }
             }

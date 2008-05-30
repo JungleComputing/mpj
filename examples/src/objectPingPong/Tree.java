@@ -2,19 +2,24 @@
 
 package objectPingPong;
 
-import java.io.IOException;
 import java.io.Serializable;
 
 public final class Tree implements Serializable {
 
-    public static final int PAYLOAD = 4*4;
+    private static final long serialVersionUID = 1L;
+
+    public static final int PAYLOAD = 4 * 4;
 
     Tree left;
+
     Tree right;
 
     int i;
+
     int i1;
+
     int i2;
+
     int i3;
 
     public Tree(int size) {

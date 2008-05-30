@@ -9,12 +9,12 @@ import ibis.ipl.IbisIdentifier;
 
 import java.util.HashMap;
 
-
 /**
  * Collection of all MPJ connections.
  */
 public class ConnectionTable {
     private final HashMap<IbisIdentifier, Connection> conTable;
+
     public ConnectionTable() {
         this.conTable = new HashMap<IbisIdentifier, Connection>();
 

@@ -10,59 +10,54 @@ package ibis.mpj;
  */
 public class Intercomm extends Comm {
 
-
     /**
      * <strong> NOT IMPLEMENTED YET. </strong>
+     * 
      * @throws MPJException
      */
     public Intercomm() throws MPJException {
-    	// not implemented yet
+        // not implemented yet
     }
 
     /**
      * <strong> NOT IMPLEMENTED YET. </strong>
      */
     public Object clone() {
-        return(null);
+        return (null);
     }
 
     /**
-     * <strong> NOT IMPLEMENTED YET. </strong>
-     * Size of remote group.
+     * <strong> NOT IMPLEMENTED YET. </strong> Size of remote group.
      * 
      * @return number of processes in remote group of this communicator
      * @throws MPJException
      */
     public int remoteSize() throws MPJException {
-        return(0);
+        return (0);
     }
 
     /**
-     * <strong> NOT IMPLEMENTED YET. </strong>
-     * Return the remote group.
+     * <strong> NOT IMPLEMENTED YET. </strong> Return the remote group.
      * 
      * @return remote group of this communicator
      * @throws MPJException
      */
     public Group remoteGroup() throws MPJException {
-        return(null);
-        //return(this.group());
+        return (null);
+        // return(this.group());
     }
 
-
     /**
-     * <strong> NOT IMPLEMENTED YET. </strong>
-     * Create an intra communicator from the union of the two group in the inter
-     * communicator.
+     * <strong> NOT IMPLEMENTED YET. </strong> Create an intra communicator from
+     * the union of the two group in the inter communicator.
      * 
-     * @param high true if local group has higher ranks in combined group
+     * @param high
+     *            true if local group has higher ranks in combined group
      * @return new inter communicator
      * @throws MPJException
      */
     public Intracomm merge(boolean high) throws MPJException {
-        return(null);
+        return (null);
     }
-
-
 
 }

@@ -7,9 +7,13 @@ import ibis.ipl.RegistryEventHandler;
 class RegEvtHandler implements RegistryEventHandler {
 
     IbisIdentifier myId;
+
     int nInstances;
+
     int myRank;
+
     private int joinCount;
+
     IbisIdentifier[] identifiers;
 
     public synchronized void joined(IbisIdentifier ident) {
@@ -35,11 +39,11 @@ class RegEvtHandler implements RegistryEventHandler {
         identifiers = new IbisIdentifier[nInstances];
         myId = ibis.identifier();
         ibis.registry().enableEvents();
-        synchronized(this) {
+        synchronized (this) {
             while (joinCount < nInstances) {
                 try {
                     wait();
-                } catch(Exception e) {
+                } catch (Exception e) {
                     // ignored
                 }
             }

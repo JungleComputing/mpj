@@ -11,24 +11,26 @@ package ibis.mpj;
 public class Status {
 
     private int index;
-    private int source;
-    private int tag;
-    private int count;
-    private int size;
 
+    private int source;
+
+    private int tag;
+
+    private int count;
+
+    private int size;
 
     /**
      * @return source of the received message
      * @throws MPJException
      */
     public int getSource() throws MPJException {
-        return source;	
+        return source;
     }
 
     protected void setSource(int src) {
         source = src;
     }
-
 
     /**
      * @return tag of the received message
@@ -43,8 +45,9 @@ public class Status {
     }
 
     /**
-     * This method con be applied to any status object returned by Request.waitAny, Request.testAny,
-     * Request.waitSome, or Request.testSome.
+     * This method con be applied to any status object returned by
+     * Request.waitAny, Request.testAny, Request.waitSome, or Request.testSome.
+     * 
      * @return index of the operation that completed
      * @throws MPJException
      */
@@ -65,14 +68,15 @@ public class Status {
     }
 
     /**
-     * @param datatype datatype of each item in receive buffer
+     * @param datatype
+     *            datatype of each item in receive buffer
      * @return number of received entries
      * @throws MPJException
      */
 
-    public int getCount(Datatype datatype) throws MPJException{ 
+    public int getCount(Datatype datatype) throws MPJException {
         if (datatype == null) {
-            return(this.count);
+            return (this.count);
         }
         return (this.count * datatype.extent());
     }
@@ -81,12 +85,11 @@ public class Status {
         this.count = count;
     }
 
-    public boolean testCancelled() throws MPJException { 
-        return(false);
-    } 
+    public boolean testCancelled() throws MPJException {
+        return (false);
+    }
 
-
-    public int getElements(Datatype datatype) throws MPJException { 
-        return(0);
+    public int getElements(Datatype datatype) throws MPJException {
+        return (0);
     }
 }

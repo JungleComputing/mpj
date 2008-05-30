@@ -10,8 +10,9 @@ package ibis.mpj;
  */
 public class ShiftParms {
 
-    //Return type of Cartcomm.shift()
+    // Return type of Cartcomm.shift()
 
     public int rankSource;
+
     public int rankDest;
 }

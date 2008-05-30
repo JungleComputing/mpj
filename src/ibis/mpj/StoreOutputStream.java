@@ -1,6 +1,7 @@
 /* $Id$ */
 
 package ibis.mpj;
+
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -21,11 +22,11 @@ final class StoreOutputStream extends OutputStream {
     }
 
     public void close() throws IOException {
-    	// nothing here
+        // nothing here
     }
 
     public void flush() throws IOException {
-    	// nothing here
+        // nothing here
     }
 
     public void write(byte[] b) throws IOException {
@@ -43,4 +44,3 @@ final class StoreOutputStream extends OutputStream {
         buf.write(b);
     }
 }
-

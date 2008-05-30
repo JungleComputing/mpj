@@ -13,6 +13,7 @@ import java.util.Vector;
 public class MPJObjectQueue {
 
     private Vector<MPJObject> queue;
+
     private boolean lock;
 
     protected MPJObjectQueue() {
@@ -33,13 +34,12 @@ public class MPJObjectQueue {
         int i = 0;
 
         for (MPJObject o : queue) {
-            if (((o.getTag() == tag) || 
-                        ((tag == MPJ.ANY_TAG) && (o.getTag() >= 0))) && 
-                    (o.getContextId() == contextId)) {
+            if (((o.getTag() == tag) || ((tag == MPJ.ANY_TAG) && (o.getTag() >= 0)))
+                    && (o.getContextId() == contextId)) {
 
                 obj = o;
                 break;
-                    }
+            }
             i++;
         }
 
@@ -50,19 +50,19 @@ public class MPJObjectQueue {
         return obj;
     }
 
-    protected synchronized Status probe(int contextId, int tag) throws MPJException{
+    protected synchronized Status probe(int contextId, int tag)
+            throws MPJException {
         MPJObject obj = null;
         Status status = null;
 
-        //System.out.println("checking ObjectQueue.");
+        // System.out.println("checking ObjectQueue.");
 
         for (MPJObject o : queue) {
-            if (((o.getTag() == tag) || 
-                        ((tag == MPJ.ANY_TAG) && (o.getTag() >= 0))) && 
-                    (o.getContextId() == contextId)) {
+            if (((o.getTag() == tag) || ((tag == MPJ.ANY_TAG) && (o.getTag() >= 0)))
+                    && (o.getContextId() == contextId)) {
                 obj = o;
                 break;
-                    }
+            }
         }
 
         if (obj != null) {
@@ -70,70 +70,59 @@ public class MPJObjectQueue {
             if (obj.getObjectData() != null) {
                 status.setTag(obj.getTag());
 
-                if(obj.getObjectData() instanceof byte[]) {
-                    status.setCount(((byte[])obj.getObjectData()).length);
+                if (obj.getObjectData() instanceof byte[]) {
+                    status.setCount(((byte[]) obj.getObjectData()).length);
                     status.setSize(status.getCount(null));
-                    return(status);
-                } 
-                else if(obj.getObjectData() instanceof char[]) {
-                    status.setCount(((char[])obj.getObjectData()).length);
+                    return (status);
+                } else if (obj.getObjectData() instanceof char[]) {
+                    status.setCount(((char[]) obj.getObjectData()).length);
                     status.setSize(status.getCount(null));
-                    return(status);
-                } 
-                else if(obj.getObjectData() instanceof short[]) {
-                    status.setCount(((short[])obj.getObjectData()).length);
+                    return (status);
+                } else if (obj.getObjectData() instanceof short[]) {
+                    status.setCount(((short[]) obj.getObjectData()).length);
                     status.setSize(status.getCount(null));
-                    return(status);
-                } 
-                else if(obj.getObjectData() instanceof boolean[]) {
-                    status.setCount(((boolean[])obj.getObjectData()).length);
+                    return (status);
+                } else if (obj.getObjectData() instanceof boolean[]) {
+                    status.setCount(((boolean[]) obj.getObjectData()).length);
                     status.setSize(status.getCount(null));
-                    return(status);
-                } 
-                else if(obj.getObjectData() instanceof int[]) {
-                    status.setCount(((int[])obj.getObjectData()).length);
+                    return (status);
+                } else if (obj.getObjectData() instanceof int[]) {
+                    status.setCount(((int[]) obj.getObjectData()).length);
                     status.setSize(status.getCount(null));
-                    return(status);
-                } 
-                else if(obj.getObjectData() instanceof long[]) {
-                    status.setCount(((long[])obj.getObjectData()).length);
+                    return (status);
+                } else if (obj.getObjectData() instanceof long[]) {
+                    status.setCount(((long[]) obj.getObjectData()).length);
                     status.setSize(status.getCount(null));
-                    return(status);
-                } 
-                else if(obj.getObjectData() instanceof float[]) {
-                    status.setCount(((float[])obj.getObjectData()).length);
+                    return (status);
+                } else if (obj.getObjectData() instanceof float[]) {
+                    status.setCount(((float[]) obj.getObjectData()).length);
                     status.setSize(status.getCount(null));
-                    return(status);
-                } 
-                else if(obj.getObjectData() instanceof double[]) {
-                    status.setCount(((double[])obj.getObjectData()).length);
+                    return (status);
+                } else if (obj.getObjectData() instanceof double[]) {
+                    status.setCount(((double[]) obj.getObjectData()).length);
                     status.setSize(status.getCount(null));
-                    return(status);
-                } 
-                else {
-                    status.setCount(((Object[])obj.getObjectData()).length);
+                    return (status);
+                } else {
+                    status.setCount(((Object[]) obj.getObjectData()).length);
                     status.setSize(status.getCount(null));
-                    return(status);
-                } 
-
+                    return (status);
+                }
 
             }
         }
-        return(status);
+        return (status);
     }
-
 
     protected synchronized void lock() {
         this.lock = true;
     }
 
     protected boolean isLocked() {
-        return(this.lock);
+        return (this.lock);
     }
 
     protected synchronized void release() {
         this.lock = false;
     }
-
 
 }

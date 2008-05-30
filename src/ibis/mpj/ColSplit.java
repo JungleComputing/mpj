@@ -5,7 +5,6 @@
  */
 package ibis.mpj;
 
-
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -16,15 +15,19 @@ import java.util.Comparator;
 public class ColSplit {
 
     private int colour = 0;
-    private int key = 0;
-    private Intracomm comm = null;
-    //	private int tag = 0;
 
-    public ColSplit(int colour, int key, Intracomm comm, int tag) throws MPJException {
+    private int key = 0;
+
+    private Intracomm comm = null;
+
+    // private int tag = 0;
+
+    public ColSplit(int colour, int key, Intracomm comm, int tag)
+            throws MPJException {
         this.colour = colour;
         this.key = key;
         this.comm = comm;
-        //		this.tag = tag;	
+        // this.tag = tag;
     }
 
     protected Intracomm call() throws MPJException {
@@ -38,59 +41,61 @@ public class ColSplit {
             gatheredTable[i] = new SplitItem();
         }
 
-
-        this.comm.allgather(localItem, 0, 1, MPJ.OBJECT, gatheredTable, 0, 1, MPJ.OBJECT);
-
+        this.comm.allgather(localItem, 0, 1, MPJ.OBJECT, gatheredTable, 0, 1,
+                MPJ.OBJECT);
 
         if (gatheredTable[rank].colour == MPJ.UNDEFINED) {
-            return(null);
+            return (null);
         }
         Arrays.sort(gatheredTable, new SplitComp());
-        
-        
+
         Group oldGroup = this.comm.group();
-        
-        int count =0;
+
+        int count = 0;
         int[] newRanks = new int[size];
         for (int i = 0; i < size; i++) {
-        	
-        	if (gatheredTable[i].colour == colour) {
-        		count++;
-        		
-        		newRanks[count-1] = gatheredTable[i].rank;
-        		
-        	}
+
+            if (gatheredTable[i].colour == colour) {
+                count++;
+
+                newRanks[count - 1] = gatheredTable[i].rank;
+
+            }
         }
-        
+
         int[] newRanksSized = new int[count];
         System.arraycopy(newRanks, 0, newRanksSized, 0, count);
-        
+
         Group newGroup = oldGroup.incl(newRanksSized);
-        
+
         Intracomm newComm = new Intracomm();
-        
+
         int[] newContextId = new int[1];
         int[] redContextId = new int[1];
         newContextId[0] = MPJ.getNewContextId();
-        
-        this.comm.allreduce(newContextId, 0, redContextId, 0, 1, MPJ.INT, MPJ.MAX);
-        
+
+        this.comm.allreduce(newContextId, 0, redContextId, 0, 1, MPJ.INT,
+                MPJ.MAX);
+
         MPJ.setNewContextId(redContextId[0]);
         newComm.contextId = redContextId[0];
-        
+
         newComm.group = newGroup;
-        
-        return(newComm);
+
+        return (newComm);
     }
 }
 
 class SplitItem implements Serializable {
-    /** 
+    /**
      * Generated
      */
     private static final long serialVersionUID = 4733437597501895765L;
+
     public int colour = 0;
+
     public int key = 0;
+
     public int rank = 0;
 
     public SplitItem() {
@@ -110,11 +115,11 @@ class SplitComp implements Comparator<SplitItem>, java.io.Serializable {
 
     public int compare(SplitItem o1, SplitItem o2) {
         if (o1.key < o2.key) {
-            return(-1);
+            return (-1);
         }
         if (o1.key == o2.key) {
-            return(0);
+            return (0);
         }
-        return(1);
+        return (1);
     }
 }
