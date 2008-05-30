@@ -1,7 +1,7 @@
 /* $Id$ */
 
 /****************************************************************************
-}
+ }
  MESSAGE PASSING INTERFACE TEST CASE SUITE
 
  Copyright IBM Corp. 1995
@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,27 +31,27 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
  Object version :
-    Sang Lim(slim@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    07/18/98
-****************************************************************************
-*/
+ Sang Lim(slim@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 07/18/98
+ ****************************************************************************
+ */
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package pt2pt_ObjSer;
 
@@ -59,44 +59,52 @@ import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
 import ibis.mpj.Request;
 import ibis.mpj.Status;
- 
 
 class test3O {
-  static public void main(String[] args) throws MPJException {
+    static public void main(String[] args) throws MPJException {
 
-    int i,done;
-    test  in[] = new test[1];
-    test out[] = new test[1];
-    int myself,tasks;
-    Request req1,req2;
-    Status status;
- 
-    MPJ.init(args);
-    myself = MPJ.COMM_WORLD.rank();
-    tasks =MPJ.COMM_WORLD.size(); 
+        int i, done;
+        test in[] = new test[1];
+        test out[] = new test[1];
+        int myself, tasks;
+        Request req1, req2;
+        Status status;
 
-    in[0]    = new test();
-    out[0]   = new test();
-    in[0].a  = -1;
-    out[0].a = 1;
+        MPJ.init(args);
+        myself = MPJ.COMM_WORLD.rank();
+        tasks = MPJ.COMM_WORLD.size();
 
-    if(myself < 2)  {
-      if(myself == 0)  {
-	req1 = MPJ.COMM_WORLD.isend(out,0,1,MPJ.OBJECT,1,1);
-	req2 = MPJ.COMM_WORLD.irecv(in,0,1,MPJ.OBJECT,1,2);
-        for(;;) { status = req1.test(); if(status!=null) break; } 
-        for(;;) { status = req2.test(); if(status!=null) break; } 	
-      } else if(myself == 1) { 
-	MPJ.COMM_WORLD.send(out,0,1,MPJ.OBJECT,0,2);
-	MPJ.COMM_WORLD.recv(in,0,1,MPJ.OBJECT,0,1);
-      }
-      if(in[0].a != 1) 
-	System.out.println
-	  ("ERROR IN TASK "+myself+", in[0]="+in[0]);
+        in[0] = new test();
+        out[0] = new test();
+        in[0].a = -1;
+        out[0].a = 1;
+
+        if (myself < 2) {
+            if (myself == 0) {
+                req1 = MPJ.COMM_WORLD.isend(out, 0, 1, MPJ.OBJECT, 1, 1);
+                req2 = MPJ.COMM_WORLD.irecv(in, 0, 1, MPJ.OBJECT, 1, 2);
+                for (;;) {
+                    status = req1.test();
+                    if (status != null)
+                        break;
+                }
+                for (;;) {
+                    status = req2.test();
+                    if (status != null)
+                        break;
+                }
+            } else if (myself == 1) {
+                MPJ.COMM_WORLD.send(out, 0, 1, MPJ.OBJECT, 0, 2);
+                MPJ.COMM_WORLD.recv(in, 0, 1, MPJ.OBJECT, 0, 1);
+            }
+            if (in[0].a != 1)
+                System.out.println("ERROR IN TASK " + myself + ", in[0]="
+                        + in[0]);
+        }
+
+        MPJ.COMM_WORLD.barrier();
+        if (myself == 0)
+            System.out.println("Test3O TEST COMPLETE\n");
+        MPJ.finish();
     }
-
-    MPJ.COMM_WORLD.barrier();
-    if(myself == 0)  System.out.println("Test3O TEST COMPLETE\n");
-    MPJ.finish();
-  }
 }

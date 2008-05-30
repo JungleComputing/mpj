@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,23 +31,23 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
-****************************************************************************
-*/
+ ****************************************************************************
+ */
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package pt2pt;
 
@@ -56,164 +56,147 @@ import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
 import ibis.mpj.Status;
 
-
 class probe {
-  static public void test() throws MPJException {
+    static public void test() throws MPJException {
 
-    int me,i,cnt,src,tag,tasks;
-    int data[] = new int[1];
-    Intracomm comm;
-    Status status;
- 
-    comm = MPJ.COMM_WORLD;
-    me = comm.rank();
-    tasks = comm.size(); 
+        int me, i, cnt, src, tag, tasks;
+        int data[] = new int[1];
+        Intracomm comm;
+        Status status;
 
+        comm = MPJ.COMM_WORLD;
+        me = comm.rank();
+        tasks = comm.size();
 
-    /* probe for specific source, tag */
-    if(me > 0) {
-      data[0] = me;
-      comm.send(data,0,1,MPJ.INT,0,me);
-    } else  {
-      for(i=1;i<tasks;i++)  {
-	status = comm.probe(i,i);
+        /* probe for specific source, tag */
+        if (me > 0) {
+            data[0] = me;
+            comm.send(data, 0, 1, MPJ.INT, 0, me);
+        } else {
+            for (i = 1; i < tasks; i++) {
+                status = comm.probe(i, i);
 
-	src = status.getSource();
-	if(src != i)
-	  System.out.println
-	    ("ERROR in MPJ_Probe(1): src = "+src+", should be "+i);
+                src = status.getSource();
+                if (src != i)
+                    System.out.println("ERROR in MPJ_Probe(1): src = " + src
+                            + ", should be " + i);
 
+                tag = status.getTag();
+                if (tag != i)
+                    System.out.println("ERROR in MPJ_Probe(1): tag = " + tag
+                            + ", should be " + i);
 
-	tag = status.getTag();
-	if(tag != i)
-	  System.out.println
-	    ("ERROR in MPJ_Probe(1): tag = "+tag+", should be "+i);
+                cnt = status.getCount(MPJ.INT);
+                if (cnt != 1) {
+                    System.out.println("ERROR in MPJ_Probe(1): cnt = " + cnt
+                            + ", should be 1");
+                    System.exit(0);
+                }
 
+                status = comm.recv(data, 0, cnt, MPJ.INT, src, tag);
+                if (data[0] != i)
+                    System.out.println("ERROR in MPJ_Recv(1), data = "
+                            + data[0] + ", should be " + i);
+            }
+        }
 
-	cnt = status.getCount(MPJ.INT);
-	if(cnt != 1) {
-	  System.out.println
-	    ("ERROR in MPJ_Probe(1): cnt = "+cnt+", should be 1");
-	  System.exit(0);   
-	}
+        /* probe for specific source, tag = MPJ_ANY_TAG */
+        if (me > 0) {
+            data[0] = me;
+            comm.send(data, 0, 1, MPJ.INT, 0, me);
+        } else {
+            for (i = 1; i < tasks; i++) {
+                status = comm.probe(i, MPJ.ANY_TAG);
 
+                src = status.getSource();
+                if (src != i)
+                    System.out.println("ERROR in MPJ_Probe(2): src = " + src
+                            + ", should be " + i);
 
-	status = comm.recv(data,0,cnt,MPJ.INT,src,tag);
-	if(data[0] != i) 
-	  System.out.println
-	    ("ERROR in MPJ_Recv(1), data = "+data[0]+", should be "+i);
-      }
+                tag = status.getTag();
+                if (tag != i)
+                    System.out.println("ERROR in MPJ_Probe(2): tag = " + tag
+                            + ", should be " + i);
+
+                cnt = status.getCount(MPJ.INT);
+                if (cnt != 1)
+                    System.out.println("ERROR in MPJ_Probe(2): cnt = " + cnt
+                            + ", should be 1");
+
+                status = comm.recv(data, 0, cnt, MPJ.INT, src, tag);
+                if (data[0] != i)
+                    System.out.println("ERROR in MPJ_Recv(2), data = "
+                            + data[0] + ", should be " + i);
+            }
+        }
+
+        /* probe for specific tag, source = MPJ_ANY_SOURCE */
+        if (me > 0) {
+            data[0] = me;
+            comm.send(data, 0, 1, MPJ.INT, 0, me);
+        } else {
+            for (i = 1; i < tasks; i++) {
+                status = comm.probe(MPJ.ANY_SOURCE, i);
+
+                src = status.getSource();
+                if (src != i)
+                    System.out.println("ERROR in MPJ_Probe(3): src = " + src
+                            + ", should be " + i);
+
+                tag = status.getTag();
+                if (tag != i)
+                    System.out.println("ERROR in MPJ_Probe(3): tag = " + tag
+                            + ", should be " + i);
+
+                cnt = status.getCount(MPJ.INT);
+                if (cnt != 1)
+                    System.out.println("ERROR in MPJ_Probe(3): cnt = " + cnt
+                            + ", should be 1");
+
+                status = comm.recv(data, 0, cnt, MPJ.INT, src, tag);
+                if (data[0] != i)
+                    System.out.println("ERROR in MPJ_Recv(3), data = "
+                            + data[0] + ", should be " + i);
+            }
+        }
+
+        /* probe for source = MPI_ANY_SOURCE, tag = MPI_ANY_TAG */
+        if (me > 0) {
+            data[0] = me;
+            comm.send(data, 0, 1, MPJ.INT, 0, me);
+        } else {
+            for (i = 1; i < tasks; i++) {
+                status = comm.probe(MPJ.ANY_SOURCE, MPJ.ANY_TAG);
+
+                src = status.getSource();
+                tag = status.getTag();
+                if (src != tag)
+                    System.out.println("ERROR in MPJ_Probe(4): tag = " + tag
+                            + ", should be " + src);
+
+                cnt = status.getCount(MPJ.INT);
+                if (cnt != 1)
+                    System.out.println("ERROR in MPJ_Probe(4): cnt = " + cnt
+                            + ", should be 1");
+
+                status = comm.recv(data, 0, cnt, MPJ.INT, src, tag);
+                if (data[0] != src)
+                    System.out.println("ERROR in MPJ_Recv(4), data = " + data
+                            + ", should be " + src);
+            }
+        }
+
+        comm.barrier();
+        if (me == 0)
+            System.out.println("Probe TEST COMPLETE\n");
+
     }
- 
 
-    /* probe for specific source, tag = MPJ_ANY_TAG */
-    if(me > 0) {
-      data[0] = me;
-      comm.send(data,0,1,MPJ.INT,0,me);
-    } else  {
-      for(i=1;i<tasks;i++)  {
-	status = comm.probe(i,MPJ.ANY_TAG);
+    static public void main(String[] args) throws MPJException {
+        MPJ.init(args);
 
+        test();
 
-	src = status.getSource();
-	if(src != i)
-	  System.out.println
-	    ("ERROR in MPJ_Probe(2): src = "+src+", should be "+i);
-
-
-	tag =status.getTag(); 
-	if(tag != i)
-	  System.out.println
-	    ("ERROR in MPJ_Probe(2): tag = "+tag+", should be "+i);
-
-
-	cnt = status.getCount(MPJ.INT);
-	if(cnt != 1) 
-	  System.out.println
-	    ("ERROR in MPJ_Probe(2): cnt = "+cnt+", should be 1");
-
-
-	status = comm.recv(data,0,cnt,MPJ.INT,src,tag);
-	if(data[0] != i) 
-	  System.out.println
-	    ("ERROR in MPJ_Recv(2), data = "+data[0]+", should be "+i);
-      }
+        MPJ.finish();
     }
- 
-
-    /* probe for specific tag, source = MPJ_ANY_SOURCE */
-    if(me > 0) {
-      data[0] = me;
-      comm.send(data,0,1,MPJ.INT,0,me);   
-    } else  {
-      for(i=1;i<tasks;i++)  {
-	status = comm.probe(MPJ.ANY_SOURCE,i);
-	
-
-	src = status.getSource();
-	if(src != i)
-	  System.out.println
-	    ("ERROR in MPJ_Probe(3): src = "+src+", should be "+i);	    
-
-
-	tag =status.getTag();
-	if(tag != i)
-	  System.out.println
-            ("ERROR in MPJ_Probe(3): tag = "+tag+", should be "+i);
-
-
-	cnt = status.getCount(MPJ.INT);
-	if(cnt != 1) 
-	  System.out.println
-	    ("ERROR in MPJ_Probe(3): cnt = "+cnt+", should be 1");
-
-
-        status = comm.recv(data,0,cnt,MPJ.INT,src,tag);
-	if(data[0] != i) 
-	  System.out.println
-            ("ERROR in MPJ_Recv(3), data = "+data[0]+", should be "+i);
-      }      
-    }
- 
-
-    /* probe for source = MPI_ANY_SOURCE, tag = MPI_ANY_TAG */
-    if(me > 0) {
-      data[0] = me;
-      comm.send(data,0,1,MPJ.INT,0,me);
-    } else  {
-      for(i=1;i<tasks;i++)  {
-        status = comm.probe(MPJ.ANY_SOURCE,MPJ.ANY_TAG);	
-
-        src = status.getSource();
-        tag =status.getTag();
-	if(src != tag)
-	  System.out.println
-            ("ERROR in MPJ_Probe(4): tag = "+tag+", should be "+src);
-
-
-        cnt = status.getCount(MPJ.INT);
-	if(cnt != 1) System.out.println
-            ("ERROR in MPJ_Probe(4): cnt = "+cnt+", should be 1");
-
-
-        status = comm.recv(data,0,cnt,MPJ.INT,src,tag);	
-	if(data[0] != src)
-	  System.out.println
-            ("ERROR in MPJ_Recv(4), data = "+data+", should be "+src);
-      }
-    }
- 
-    comm.barrier();
-    if(me == 0) System.out.println("Probe TEST COMPLETE\n");
-     
-  
-  }
-
-  static public void main(String[] args) throws MPJException {
-    MPJ.init(args);
-    
-    test();
-    
-    MPJ.finish();
-  }
 }

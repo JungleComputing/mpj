@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,23 +31,23 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
-****************************************************************************
-*/
+ ****************************************************************************
+ */
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package pt2pt;
 
@@ -55,73 +55,72 @@ import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
 import ibis.mpj.Request;
 import ibis.mpj.Status;
- 
 
 class testall {
-  static public void test() throws MPJException {
-    int me,tasks,i;
-    int mebuf[] = new int[1];
-    boolean flag;
+    static public void test() throws MPJException {
+        int me, tasks, i;
+        int mebuf[] = new int[1];
+        boolean flag;
 
+        me = MPJ.COMM_WORLD.rank();
+        tasks = MPJ.COMM_WORLD.size();
 
-    me = MPJ.COMM_WORLD.rank();
-    tasks =MPJ.COMM_WORLD.size(); 
+        int data[] = new int[tasks];
+        Request req[] = new Request[tasks];
+        Status status[] = new Status[tasks];
 
-    int data[] = new int[tasks];
-    Request   req[] = new Request[tasks];
-    Status status[] = new Status[tasks]; 
+        mebuf[0] = me;
+        if (me > 0)
+            MPJ.COMM_WORLD.send(mebuf, 0, 1, MPJ.INT, 0, 1);
+        else {
+            // req[0] = MPJ.REQUEST_NULL;
+            for (i = 1; i < tasks; i++)
+                req[i] = MPJ.COMM_WORLD.irecv(data, i, 1, MPJ.INT, i, 1);
 
-    mebuf[0] = me;
-    if(me > 0) 
-      MPJ.COMM_WORLD.send(mebuf,0,1,MPJ.INT,0,1);
-    else {
-      //req[0] = MPJ.REQUEST_NULL;  
-      for(i=1;i<tasks;i++)  
-	req[i] = MPJ.COMM_WORLD.irecv(data,i,1,MPJ.INT,i,1);
+            flag = false;
+            while (flag == false) {
+                for (i = 1; i < tasks; i++) {
+                    if (req[i].isVoid())
+                        System.out
+                                .println("ERROR(2) in MPJ_Testall: incorrect status");
+                }
+                status = Request.testAll(req);
+                if (status == null)
+                    flag = false;
+                else
+                    flag = true;
+            }
 
+            for (i = 1; i < tasks; i++) {
+                if (!req[i].isVoid())
+                    System.out
+                            .println("ERROR(3) in Testall: request not set to NULL");
+                if (status[i].getSource() != i)
+                    System.out
+                            .println("ERROR(4) in Testall: request prematurely set to NULL");
+                if (data[i] != i)
+                    System.out
+                            .println("ERROR(5) in MPJ_Testall: incorrect data");
+            }
 
-      flag = false; 
-      while(flag == false)  {
-	for(i=1;i<tasks;i++)  {
-	  if(req[i].isVoid())
-	    System.out.println("ERROR(2) in MPJ_Testall: incorrect status");
-	}
-	status = Request.testAll(req);
-	if(status == null) flag = false;
-	else               flag = true;
-      }
+            status = Request.testAll(req);
+            if (status == null)
+                System.out
+                        .println("ERROR(6) in MPJ_Testall: status(flag) is not set");
 
+        }
 
-      for(i=1;i<tasks;i++)  {
-	if(!req[i].isVoid())
-	  System.out.println("ERROR(3) in Testall: request not set to NULL");
-	if(status[i].getSource() != i)
-	  System.out.println
-	    ("ERROR(4) in Testall: request prematurely set to NULL");
-	if(data[i] != i)
-	  System.out.println("ERROR(5) in MPJ_Testall: incorrect data");
-      }
-      
-
-      status = Request.testAll(req);
-      if(status == null)
-	System.out.println
-	  ("ERROR(6) in MPJ_Testall: status(flag) is not set");
-
+        MPJ.COMM_WORLD.barrier();
+        if (me == 0)
+            System.out.println("Testall TEST COMPLETE\n");
 
     }
 
+    static public void main(String[] args) throws MPJException {
+        MPJ.init(args);
 
-    MPJ.COMM_WORLD.barrier();
-    if(me == 0)  System.out.println("Testall TEST COMPLETE\n");
-  
-  }
+        test();
 
-  static public void main(String[] args) throws MPJException {
-    MPJ.init(args);
-
-    test();
-        
-    MPJ.finish();
-  }
+        MPJ.finish();
+    }
 }

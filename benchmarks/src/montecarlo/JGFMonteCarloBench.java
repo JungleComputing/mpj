@@ -1,33 +1,32 @@
 /* $Id$ */
 
 /**************************************************************************
-*                                                                         *
-*             Java Grande Forum Benchmark Suite - MPJ Version 1.0         *
-*                                                                         *
-*                            produced by                                  *
-*                                                                         *
-*                  Java Grande Benchmarking Project                       *
-*                                                                         *
-*                                at                                       *
-*                                                                         *
-*                Edinburgh Parallel Computing Centre                      *
-*                                                                         * 
-*                email: epcc-javagrande@epcc.ed.ac.uk                     *
-*                                                                         *
-*                                                                         *
-*      This version copyright (c) The University of Edinburgh, 2001.      *
-*                         All rights reserved.                            *
-*                                                                         *
-**************************************************************************/
+ *                                                                         *
+ *             Java Grande Forum Benchmark Suite - MPJ Version 1.0         *
+ *                                                                         *
+ *                            produced by                                  *
+ *                                                                         *
+ *                  Java Grande Benchmarking Project                       *
+ *                                                                         *
+ *                                at                                       *
+ *                                                                         *
+ *                Edinburgh Parallel Computing Centre                      *
+ *                                                                         * 
+ *                email: epcc-javagrande@epcc.ed.ac.uk                     *
+ *                                                                         *
+ *                                                                         *
+ *      This version copyright (c) The University of Edinburgh, 2001.      *
+ *                         All rights reserved.                            *
+ *                                                                         *
+ **************************************************************************/
 /**************************************************************************
-* Ported to MPJ:                                                          *
-* Markus Bornemann                                                        * 
-* Vrije Universiteit Amsterdam Department of Computer Science             *
-* 19/06/2005                                                              *
-**************************************************************************/
+ * Ported to MPJ:                                                          *
+ * Markus Bornemann                                                        * 
+ * Vrije Universiteit Amsterdam Department of Computer Science             *
+ * 19/06/2005                                                              *
+ **************************************************************************/
 
-
-package montecarlo; 
+package montecarlo;
 
 import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
@@ -36,96 +35,97 @@ import jgfutil.JGFSection3;
 
 public class JGFMonteCarloBench extends CallAppDemo implements JGFSection3 {
 
-  public static int nprocess;
-  public static int rank;
+    public static int nprocess;
 
-  public JGFMonteCarloBench(int nprocess, int rank) {
-        this.nprocess=nprocess;
-        this.rank=rank;
-  }
+    public static int rank;
 
-
-  public void JGFsetsize(int size){
-    this.size = size;
-  }
-
-  public void JGFinitialise(){
-
-      initialise();
-
-  }
-
-  public void JGFapplication() throws MPJException{ 
-
-    MPJ.COMM_WORLD.barrier();
-    if(rank==0) {
-      JGFInstrumentor.startTimer("Section3:MonteCarlo:Run");  
+    public JGFMonteCarloBench(int nprocess, int rank) {
+        JGFMonteCarloBench.nprocess = nprocess;
+        JGFMonteCarloBench.rank = rank;
     }
 
-    runiters();
-
-    MPJ.COMM_WORLD.barrier();
-    if(rank==0) {
-      JGFInstrumentor.stopTimer("Section3:MonteCarlo:Run");  
+    public void JGFsetsize(int size) {
+        this.size = size;
     }
 
- 
-    if(rank==0) {
-      presults();
+    public void JGFinitialise() {
+
+        initialise();
+
     }
 
-  } 
+    public void JGFapplication() throws MPJException {
 
+        MPJ.COMM_WORLD.barrier();
+        if (rank == 0) {
+            JGFInstrumentor.startTimer("Section3:MonteCarlo:Run");
+        }
 
-  public void JGFvalidate(){
-   double refval[] = {-0.0333976656762814,-0.03215796752868655};
-   double dev = Math.abs(AppDemo.JGFavgExpectedReturnRateMC - refval[size]);
-   if (dev > 1.0e-12 ){
-     System.out.println("Validation failed");
-     System.out.println(" expectedReturnRate= " + AppDemo.JGFavgExpectedReturnRateMC + "  " + dev + "  " + size);
-    }
-  }
+        runiters();
 
-  public void JGFtidyup(){    
+        MPJ.COMM_WORLD.barrier();
+        if (rank == 0) {
+            JGFInstrumentor.stopTimer("Section3:MonteCarlo:Run");
+        }
 
-    System.gc();
-  }
+        if (rank == 0) {
+            presults();
+        }
 
-
-  public void JGFrun(int size) throws MPJException{
-
-    if(rank==0) {
-      JGFInstrumentor.addTimer("Section3:MonteCarlo:Total", "Solutions",size);
-      JGFInstrumentor.addTimer("Section3:MonteCarlo:Run", "Samples",size);
     }
 
-    JGFsetsize(size); 
-
-    MPJ.COMM_WORLD.barrier();
-    if(rank==0) {
-      JGFInstrumentor.startTimer("Section3:MonteCarlo:Total");
+    public void JGFvalidate() {
+        double refval[] = { -0.0333976656762814, -0.03215796752868655 };
+        double dev = Math
+                .abs(AppDemo.JGFavgExpectedReturnRateMC - refval[size]);
+        if (dev > 1.0e-12) {
+            System.out.println("Validation failed");
+            System.out.println(" expectedReturnRate= "
+                    + AppDemo.JGFavgExpectedReturnRateMC + "  " + dev + "  "
+                    + size);
+        }
     }
 
-    JGFinitialise(); 
-    JGFapplication(); 
+    public void JGFtidyup() {
 
-    if(rank==0) {
-      JGFvalidate();
-    } 
-    JGFtidyup(); 
-
-    MPJ.COMM_WORLD.barrier();
-    if(rank==0) {
-      JGFInstrumentor.stopTimer("Section3:MonteCarlo:Total");
-
-      JGFInstrumentor.addOpsToTimer("Section3:MonteCarlo:Run", (double) input[1] );
-      JGFInstrumentor.addOpsToTimer("Section3:MonteCarlo:Total", 1);
-
-      JGFInstrumentor.printTimer("Section3:MonteCarlo:Run"); 
-      JGFInstrumentor.printTimer("Section3:MonteCarlo:Total"); 
+        System.gc();
     }
-  }
 
+    public void JGFrun(int size) throws MPJException {
+
+        if (rank == 0) {
+            JGFInstrumentor.addTimer("Section3:MonteCarlo:Total", "Solutions",
+                    size);
+            JGFInstrumentor
+                    .addTimer("Section3:MonteCarlo:Run", "Samples", size);
+        }
+
+        JGFsetsize(size);
+
+        MPJ.COMM_WORLD.barrier();
+        if (rank == 0) {
+            JGFInstrumentor.startTimer("Section3:MonteCarlo:Total");
+        }
+
+        JGFinitialise();
+        JGFapplication();
+
+        if (rank == 0) {
+            JGFvalidate();
+        }
+        JGFtidyup();
+
+        MPJ.COMM_WORLD.barrier();
+        if (rank == 0) {
+            JGFInstrumentor.stopTimer("Section3:MonteCarlo:Total");
+
+            JGFInstrumentor.addOpsToTimer("Section3:MonteCarlo:Run",
+                    (double) input[1]);
+            JGFInstrumentor.addOpsToTimer("Section3:MonteCarlo:Total", 1);
+
+            JGFInstrumentor.printTimer("Section3:MonteCarlo:Run");
+            JGFInstrumentor.printTimer("Section3:MonteCarlo:Total");
+        }
+    }
 
 }
- 

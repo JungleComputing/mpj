@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,23 +31,23 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
-****************************************************************************
-*/
+ ****************************************************************************
+ */
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package pt2pt;
 
@@ -56,36 +56,36 @@ import ibis.mpj.MPJException;
 import ibis.mpj.Status;
 
 class seq {
-  static public void test() throws MPJException {
-      
-    int i,me,tasks;
-    int data[] = new int[1];
-    Status status;
+    static public void test() throws MPJException {
 
-    final int ITER = 30;
+        int i, me, tasks;
+        int data[] = new int[1];
+        Status status;
 
-    me = MPJ.COMM_WORLD.rank();
-    tasks =MPJ.COMM_WORLD.size(); 
+        final int ITER = 30;
 
-    if(me == 0)  {
-      for(i=0;i<(tasks-1)*ITER;i++)  
-	MPJ.COMM_WORLD.recv(data,0,1,MPJ.INT,MPJ.ANY_SOURCE,1);
-    } else {
-      for(i=0;i<ITER;i++)
-	MPJ.COMM_WORLD.send(data,0,1,MPJ.INT,0,1);
+        me = MPJ.COMM_WORLD.rank();
+        tasks = MPJ.COMM_WORLD.size();
+
+        if (me == 0) {
+            for (i = 0; i < (tasks - 1) * ITER; i++)
+                MPJ.COMM_WORLD.recv(data, 0, 1, MPJ.INT, MPJ.ANY_SOURCE, 1);
+        } else {
+            for (i = 0; i < ITER; i++)
+                MPJ.COMM_WORLD.send(data, 0, 1, MPJ.INT, 0, 1);
+        }
+
+        MPJ.COMM_WORLD.barrier();
+        if (me == 0)
+            System.out.println("Seq TEST COMPLETE\n");
+
     }
 
+    static public void main(String[] args) throws MPJException {
+        MPJ.init(args);
 
-    MPJ.COMM_WORLD.barrier();
-    if(me == 0)  System.out.println("Seq TEST COMPLETE\n");
+        test();
 
-  }
-  
-  static public void main(String[] args) throws MPJException {
-    MPJ.init(args);
-
-    test();
-    
-    MPJ.finish();     
-  }
+        MPJ.finish();
+    }
 }

@@ -1,12 +1,11 @@
 /* $Id$ */
 
 /**************************************************************************
-* Ported to MPJ:                                                          *
-* Markus Bornemann                                                        * 
-* Vrije Universiteit Amsterdam Department of Computer Science             *
-* 19/06/2005                                                              *
-**************************************************************************/
-
+ * Ported to MPJ:                                                          *
+ * Markus Bornemann                                                        * 
+ * Vrije Universiteit Amsterdam Department of Computer Science             *
+ * 19/06/2005                                                              *
+ **************************************************************************/
 
 package section1;
 
@@ -14,11 +13,12 @@ import java.io.Serializable;
 
 class obj_double implements Serializable {
 
-  double x;
+    private static final long serialVersionUID = 1L;
 
-  public obj_double(double x) {
-   this.x = x;
-  }
+    double x;
+
+    public obj_double(double x) {
+        this.x = x;
+    }
 
 }
-

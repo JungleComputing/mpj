@@ -1,41 +1,43 @@
 /* $Id$ */
 
 /**************************************************************************
-*                                                                         *
-*         Java Grande Forum Benchmark Suite - MPJ Version 1.0             *
-*                                                                         *
-*                            produced by                                  *
-*                                                                         *
-*                  Java Grande Benchmarking Project                       *
-*                                                                         *
-*                                at                                       *
-*                                                                         *
-*                Edinburgh Parallel Computing Centre                      *
-*                                                                         * 
-*                email: epcc-javagrande@epcc.ed.ac.uk                     *
-*                                                                         *
-*                                                                         *
-*      This version copyright (c) The University of Edinburgh, 2001.      *
-*                         All rights reserved.                            *
-*                                                                         *
-**************************************************************************/
+ *                                                                         *
+ *         Java Grande Forum Benchmark Suite - MPJ Version 1.0             *
+ *                                                                         *
+ *                            produced by                                  *
+ *                                                                         *
+ *                  Java Grande Benchmarking Project                       *
+ *                                                                         *
+ *                                at                                       *
+ *                                                                         *
+ *                Edinburgh Parallel Computing Centre                      *
+ *                                                                         * 
+ *                email: epcc-javagrande@epcc.ed.ac.uk                     *
+ *                                                                         *
+ *                                                                         *
+ *      This version copyright (c) The University of Edinburgh, 2001.      *
+ *                         All rights reserved.                            *
+ *                                                                         *
+ **************************************************************************/
 /**************************************************************************
-* Ported to MPJ:                                                          *
-* Markus Bornemann                                                        * 
-* Vrije Universiteit Amsterdam Department of Computer Science             *
-* 19/06/2005                                                              *
-**************************************************************************/
+ * Ported to MPJ:                                                          *
+ * Markus Bornemann                                                        * 
+ * Vrije Universiteit Amsterdam Department of Computer Science             *
+ * 19/06/2005                                                              *
+ **************************************************************************/
 
+package jgfutil;
 
-package jgfutil; 
 import ibis.mpj.MPJException;
 
 public interface JGFSection1 {
 
-   public final int INITSIZE = 10000;
-   public final int MAXSIZE = 1000000000;
-   public final double TARGETTIME = 1.0; 
+    public final int INITSIZE = 10000;
 
-   public void JGFrun() throws MPJException; 
+    public final int MAXSIZE = 1000000000;
+
+    public final double TARGETTIME = 1.0;
+
+    public void JGFrun() throws MPJException;
 
 }

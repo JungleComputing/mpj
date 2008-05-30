@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,23 +31,23 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    09/10/99
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 09/10/99
 
-****************************************************************************
-*/
+ ****************************************************************************
+ */
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package pt2pt;
 
@@ -57,55 +57,59 @@ import ibis.mpj.MPJException;
 import ibis.mpj.Status;
 
 class iprobe {
-  static public void test() throws MPJException {
+    static public void test() throws MPJException {
 
-    int me,cnt,src,tag;
-    int data[] = new int[1];
-    boolean flag;
-    Intracomm comm;
-    Status status;
-	
-    comm = MPJ.COMM_WORLD;
-    me = comm.rank();
-	
+        int me, cnt, src, tag;
+        int data[] = new int[1];
+        boolean flag;
+        Intracomm comm;
+        Status status;
 
-    if(me == 0) {
-      data[0] = 7;
-      comm.send(data,0,1,MPJ.INT,1,1);
-    } 
-    else if(me == 1)  {
-      for(;;)  {
-	status = comm.iprobe(0,1);		
-	if(status != null) break;
-      }
-	    
-      src = status.getSource();
-      if(src != 0)
-	System.out.println("ERROR in MPJ_Probe: src = "+src+", should be 0");
-	    
-      tag = status.getTag();
-      if(tag != 1)
-	System.out.println("ERROR in MPJ_Probe: tag = "+tag+", should be 1");
-	    
-      cnt = status.getCount(MPJ.INT);
-      if(cnt != 1) 
-	System.out.println("ERROR in MPJ_Probe: cnt = "+cnt+", should be 1");
-	    
-      status = comm.recv(data,0,cnt,MPJ.INT,src,tag);
-      if(data[0] != 7) 
-	System.out.println("ERROR in MPJ_Recv, data[0] = "+data[0]+" should be 7");
+        comm = MPJ.COMM_WORLD;
+        me = comm.rank();
+
+        if (me == 0) {
+            data[0] = 7;
+            comm.send(data, 0, 1, MPJ.INT, 1, 1);
+        } else if (me == 1) {
+            for (;;) {
+                status = comm.iprobe(0, 1);
+                if (status != null)
+                    break;
+            }
+
+            src = status.getSource();
+            if (src != 0)
+                System.out.println("ERROR in MPJ_Probe: src = " + src
+                        + ", should be 0");
+
+            tag = status.getTag();
+            if (tag != 1)
+                System.out.println("ERROR in MPJ_Probe: tag = " + tag
+                        + ", should be 1");
+
+            cnt = status.getCount(MPJ.INT);
+            if (cnt != 1)
+                System.out.println("ERROR in MPJ_Probe: cnt = " + cnt
+                        + ", should be 1");
+
+            status = comm.recv(data, 0, cnt, MPJ.INT, src, tag);
+            if (data[0] != 7)
+                System.out.println("ERROR in MPJ_Recv, data[0] = " + data[0]
+                        + " should be 7");
+        }
+
+        comm.barrier();
+        if (me == 0)
+            System.out.println("Iprobe TEST COMPLETE\n");
+
     }
-	
-    comm.barrier();
-    if(me == 0) System.out.println("Iprobe TEST COMPLETE\n");
-     
-  }
-  
-  static public void main(String[] args) throws MPJException {
-    MPJ.init(args);
-    
-    test();
-    
-    MPJ.finish();
-  }
+
+    static public void main(String[] args) throws MPJException {
+        MPJ.init(args);
+
+        test();
+
+        MPJ.finish();
+    }
 }

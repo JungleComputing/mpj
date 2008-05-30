@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,70 +31,69 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
-****************************************************************************/
+ ****************************************************************************/
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package ccl;
 
 import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
 
-
 class bcast {
-  static public void test() throws MPJException {
+    static public void test() throws MPJException {
 
-    final int MAXLEN = 10000; 
+        final int MAXLEN = 10000;
 
-    int root,i,j,k;
-    int out[] = new int[MAXLEN];
-    int myself,tasks;
-    double time;
- 
+        int root, i, j, k;
+        int out[] = new int[MAXLEN];
+        int myself, tasks;
+        double time;
 
-    myself = MPJ.COMM_WORLD.rank();
-    tasks = MPJ.COMM_WORLD.size();
+        myself = MPJ.COMM_WORLD.rank();
+        tasks = MPJ.COMM_WORLD.size();
 
+        root = tasks - 1;
+        for (j = 1; j <= MAXLEN; j *= 10) {
+            if (myself == root)
+                for (i = 0; i < j; i++)
+                    out[i] = i;
+            MPJ.COMM_WORLD.bcast(out, 0, j, MPJ.INT, root);
 
-    root = tasks-1;
-    for(j=1;j<=MAXLEN;j*=10)  {
-      if(myself == root)
-	for(i=0;i<j;i++)  out[i] = i;
-      MPJ.COMM_WORLD.bcast(out,0,j,MPJ.INT,root);
-      
-      for(k=0;k<j;k++) {
-	if(out[k] != k) {  
-	  System.out.println("bad answer ("+(out[k])+") at index "+
-			     k+" of "+j+" (should be "+k+")");
-	  break; 
-	}
-      }
+            for (k = 0; k < j; k++) {
+                if (out[k] != k) {
+                    System.out.println("bad answer (" + (out[k])
+                            + ") at index " + k + " of " + j + " (should be "
+                            + k + ")");
+                    break;
+                }
+            }
+        }
+
+        MPJ.COMM_WORLD.barrier();
+        if (myself == 0)
+            System.out.println("Bcast TEST COMPLETE\n");
+
     }
 
+    static public void main(String[] args) throws MPJException {
+        MPJ.init(args);
 
-    MPJ.COMM_WORLD.barrier();
-    if(myself == 0)  System.out.println("Bcast TEST COMPLETE\n");
-  
-  }  
+        test();
 
-  static public void main(String[] args) throws MPJException {
-    MPJ.init(args);
-    
-    test();    
-    
-    MPJ.finish();
-  }
+        MPJ.finish();
+    }
 }

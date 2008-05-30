@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
  
-****************************************************************************
+ ****************************************************************************
  
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,80 +31,76 @@
  different than that implied by the test case we would appreciate feedback.
  
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
-****************************************************************************/
+ ****************************************************************************/
 
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package ccl;
 
-
 import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
- 
+
 class gather {
-  static public void test() throws MPJException {
-    
-    final int MAXLEN = 10;
- 
-    int root,i,j,k;
-    int myself,tasks;
- 
+    static public void test() throws MPJException {
 
-    myself = MPJ.COMM_WORLD.rank();
-    tasks = MPJ.COMM_WORLD.size();
- 
-    int out[] = new int[MAXLEN];
-    int in[]  = new int[MAXLEN*tasks];
+        final int MAXLEN = 10;
 
+        int root, i, j, k;
+        int myself, tasks;
 
-    for(j=1,root=0;j<=MAXLEN;j*=10,root=(root+1)%tasks)  {
-      
-      for(i=0;i<j;i++)  out[i] = i;
-   
-   
-      MPJ.COMM_WORLD.gather(out,0,j,MPJ.INT,in,0,j,MPJ.INT,root);
-      
-      if(myself == root)  {
-   	for(i=0;i<tasks;i++)  {
-          for(k=0;k<j;k++) {
-            if(in[i*j+k] != k) {  
-             
-	      System.out.println("bad answer ("+(in[i*j+k])+") at index "+
-                                 (i*j+k)+" of "+(j*tasks)+ 
-                                 "(should be "+k+")"); 
-              break; 
-            } 
-          }
+        myself = MPJ.COMM_WORLD.rank();
+        tasks = MPJ.COMM_WORLD.size();
+
+        int out[] = new int[MAXLEN];
+        int in[] = new int[MAXLEN * tasks];
+
+        for (j = 1, root = 0; j <= MAXLEN; j *= 10, root = (root + 1) % tasks) {
+
+            for (i = 0; i < j; i++)
+                out[i] = i;
+
+            MPJ.COMM_WORLD.gather(out, 0, j, MPJ.INT, in, 0, j, MPJ.INT, root);
+
+            if (myself == root) {
+                for (i = 0; i < tasks; i++) {
+                    for (k = 0; k < j; k++) {
+                        if (in[i * j + k] != k) {
+
+                            System.out.println("bad answer (" + (in[i * j + k])
+                                    + ") at index " + (i * j + k) + " of "
+                                    + (j * tasks) + "(should be " + k + ")");
+                            break;
+                        }
+                    }
+                }
+            }
         }
-      } 
+
+        MPJ.COMM_WORLD.barrier();
+        if (myself == 0)
+            System.out.println("Gather TEST COMPLETE\n");
+
     }
 
+    static public void main(String[] args) throws MPJException {
+        MPJ.init(args);
 
+        test();
 
-    MPJ.COMM_WORLD.barrier();
-    if(myself == 0)  System.out.println("Gather TEST COMPLETE\n");
-  
-  }
-  
-  static public void main(String[] args) throws MPJException {
-    MPJ.init(args);
-
-    test();
-    
-    MPJ.finish();
-  }
+        MPJ.finish();
+    }
 }

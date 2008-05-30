@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,22 +31,22 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
-****************************************************************************/
+ ****************************************************************************/
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package comm;
 
@@ -55,52 +55,47 @@ import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
 
 class split {
-  static public void test() throws MPJException {
-    int i,me,tasks,color,key;
-    int mebuf[] = new int[1];
-    int ranks[] = new int[128];
+    static public void test() throws MPJException {
+        int i, me, tasks, color, key;
+        int mebuf[] = new int[1];
+        int ranks[] = new int[128];
 
+        tasks = MPJ.COMM_WORLD.size();
+        if (tasks % 2 == 1) {
+            System.out.println("MUST HAVE EVEN NUMBER OF TASKS");
+            System.exit(0);
+        }
+        me = MPJ.COMM_WORLD.rank();
 
-    tasks = MPJ.COMM_WORLD.size();
-    if(tasks%2 == 1) { 
-      System.out.println("MUST HAVE EVEN NUMBER OF TASKS"); 
-      System.exit(0); 
+        color = me % 2;
+        key = me;
+        Intracomm newcomm = MPJ.COMM_WORLD.split(color, key);
+
+        mebuf[0] = me;
+
+        newcomm.allgather(mebuf, 0, 1, MPJ.INT, ranks, 0, 1, MPJ.INT);
+
+        if (me % 2 == 0) {
+            for (i = 0; i < tasks / 2; i++)
+                if (ranks[i] != 2 * i)
+                    System.out.println("ERROR in MPJ.Comm_split: wrong tasks");
+        }
+        if (me % 2 != 0) {
+            for (i = 0; i < tasks / 2; i++)
+                if (ranks[i] != 2 * i + 1)
+                    System.out.println("ERROR in MPJ.Comm_split: wrong tasks");
+        }
+
+        MPJ.COMM_WORLD.barrier();
+        if (me == 0)
+            System.out.println("Split TEST COMPLETE\n");
     }
-    me = MPJ.COMM_WORLD.rank();
-    
-    color = me%2;
-    key = me;
-    Intracomm newcomm = MPJ.COMM_WORLD.split(color,key);
 
+    static public void main(String[] args) throws MPJException {
+        MPJ.init(args);
 
-    
-    mebuf[0] = me;
-   
-    newcomm.allgather(mebuf,0,1,MPJ.INT,ranks,0,1,MPJ.INT);
+        test();
 
-    if(me%2 == 0) {
-      for(i=0;i<tasks/2;i++)
-	if(ranks[i] != 2*i)  
-	  System.out.println("ERROR in MPJ.Comm_split: wrong tasks");
+        MPJ.finish();
     }
-    if(me%2 != 0) {
-      for(i=0;i<tasks/2;i++)
-	if(ranks[i] != 2*i+1)  
-	  System.out.println("ERROR in MPJ.Comm_split: wrong tasks");
-    }
-    
-
-    MPJ.COMM_WORLD.barrier();
-    if(me == 0)  System.out.println("Split TEST COMPLETE\n");
-  }
-  
-  static public void main(String[] args) throws MPJException {
-    MPJ.init(args);
-  
-    test();
-      
-    MPJ.finish();
-  }
 }
-
-

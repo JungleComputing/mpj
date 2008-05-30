@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,22 +31,22 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
-****************************************************************************/
+ ****************************************************************************/
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package ccl;
 
@@ -54,45 +54,39 @@ import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
 
 class barrier {
-  static public void test() throws MPJException {
-    
-    int me,tasks,i;
+    static public void test() throws MPJException {
 
-    me = MPJ.COMM_WORLD.rank();
-    tasks = MPJ.COMM_WORLD.size();
+        int me, tasks, i;
 
-    if(tasks < 2)  { 
-      System.out.println("MUST RUN WITH AT LEAST 2 TASKS"); 
-      System.exit(0); 
+        me = MPJ.COMM_WORLD.rank();
+        tasks = MPJ.COMM_WORLD.size();
+
+        if (tasks < 2) {
+            System.out.println("MUST RUN WITH AT LEAST 2 TASKS");
+            System.exit(0);
+        }
+
+        for (i = 0; i < 250000 * me; i++)
+            ;
+
+        // System.out.println
+        // (" TASK "+me+" BEFORE BARRIER, TIME = "+(MPI.Wtime()));
+
+        MPJ.COMM_WORLD.barrier();
+
+        // System.out.println
+        // (" TASK "+me+" AFTER BARRIER, TIME = "+(MPI.Wtime()));
+
+        if (me == 0)
+            System.out.println("Barrier TEST COMPLETE\n");
+
     }
 
-    for(i=0;i<250000*me;i++) ;
-    
-    //System.out.println
-    //  (" TASK "+me+" BEFORE BARRIER, TIME = "+(MPI.Wtime()));
+    static public void main(String[] args) throws MPJException {
+        MPJ.init(args);
 
+        test();
 
-    MPJ.COMM_WORLD.barrier();
-    
-    //System.out.println
-    //  (" TASK "+me+" AFTER  BARRIER, TIME = "+(MPI.Wtime()));
-
-    if(me == 0)  System.out.println("Barrier TEST COMPLETE\n");
-  
-  }
-  
-  static public void main(String[] args) throws MPJException {
-    MPJ.init(args);
-
-    test();
-        
-    MPJ.finish();
-  }
+        MPJ.finish();
+    }
 }
-
-
-
-
-
-
-

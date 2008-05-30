@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,23 +31,23 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
-****************************************************************************
-*/
+ ****************************************************************************
+ */
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package topo;
 
@@ -56,107 +56,100 @@ import ibis.mpj.Comm;
 import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
 
-
 class sub {
-  static public void test() throws MPJException {
-    int dims[] = new int[2];
-    boolean periods[] = new boolean[2];
-    int me,tasks,i;    
-    int size,rank;
-    int      cnt=0;
-    
-    me = MPJ.COMM_WORLD.rank();
-    tasks =MPJ.COMM_WORLD.size(); 
+    static public void test() throws MPJException {
+        int dims[] = new int[2];
+        boolean periods[] = new boolean[2];
+        int me, tasks, i;
+        int size, rank;
+        int cnt = 0;
 
-    if(tasks != 6)  {
-      System.out.println("MUST RUN WITH 6 TASKS");
-      System.exit(0);
+        me = MPJ.COMM_WORLD.rank();
+        tasks = MPJ.COMM_WORLD.size();
+
+        if (tasks != 6) {
+            System.out.println("MUST RUN WITH 6 TASKS");
+            System.exit(0);
+        }
+        Comm comms[] = new Comm[20];
+
+        dims[0] = 2;
+        dims[1] = 3;
+        Cartcomm comm = MPJ.COMM_WORLD.createCart(dims, periods, false);
+        comms[cnt++] = comm;
+
+        int[] dims2 = comm.get().dims;
+
+        boolean remain[] = new boolean[2];
+        remain[0] = false;
+        remain[1] = true;
+        Cartcomm subcomm = comm.sub(remain);
+        comms[cnt++] = subcomm;
+        size = subcomm.size();
+        if (size != 3)
+            System.out.println("ERROR in MPJ_Cart_sub (1): size = " + size
+                    + ", should be 3");
+
+        rank = subcomm.rank();
+        if (rank != me % 3)
+            System.out.println("ERROR in MPJ_Cart_sub (2): rank =" + rank
+                    + ", should be " + me);
+
+        remain[0] = false;
+        remain[1] = false;
+        subcomm = comm.sub(remain);
+        comms[cnt++] = subcomm;
+        size = subcomm.size();
+        if (size != 1)
+            System.out.println("ERROR in MPJ_Cart_sub (3): size = " + size
+                    + ", should be 1");
+
+        rank = subcomm.rank();
+        if (rank != 0)
+            System.out.println("ERROR in MPJ_Cart_sub (4): rank =" + rank
+                    + ", should be 0");
+
+        remain[0] = true;
+        remain[1] = true;
+        subcomm = comm.sub(remain);
+        comms[cnt++] = subcomm;
+        size = subcomm.size();
+        if (size != tasks)
+            System.out.println("ERROR in MPJ_Cart_sub (5): size = " + size
+                    + ", should be " + tasks);
+
+        rank = subcomm.rank();
+        if (rank != me)
+            System.out.println("ERROR in MPJ_Cart_sub (6): rank =" + rank
+                    + ", should be " + me);
+
+        remain[0] = true;
+        remain[1] = false;
+        subcomm = comm.sub(remain);
+        comms[cnt++] = subcomm;
+        size = subcomm.size();
+        if (size != 2)
+            System.out.println("ERROR in MPJ_Cart_sub (7): size = " + size
+                    + ", should be 2");
+
+        rank = subcomm.rank();
+        if (rank != me / 3)
+            System.out.println("ERROR in MPJ_Cart_sub (8): rank =" + rank
+                    + ", should be " + (me / 3));
+
+        MPJ.COMM_WORLD.barrier();
+
+        if (me == 0)
+            System.out.println("Sub TEST COMPLETE\n");
+
     }
-    Comm comms[] = new Comm[20];
 
+    static public void main(String[] args) throws MPJException {
 
-    dims[0] = 2;  dims[1] = 3;
-    Cartcomm comm = MPJ.COMM_WORLD.createCart(dims,periods,false);
-    comms[cnt++] = comm;
+        MPJ.init(args);
 
-    int[] dims2 = comm.get().dims;
+        test();
 
-    boolean remain[] = new boolean[2];
-    remain[0] = false;  remain[1] = true;
-    Cartcomm subcomm = comm.sub(remain);
-    comms[cnt++] = subcomm;
-    size = subcomm.size();
-    if(size != 3)
-      System.out.println
-	("ERROR in MPJ_Cart_sub (1): size = "+size+", should be 3");
-
-
-    rank = subcomm.rank();
-    if(rank != me%3)
-      System.out.println
-	("ERROR in MPJ_Cart_sub (2): rank ="+rank+", should be "+me);
-
-
-    remain[0] = false;  remain[1] = false;
-    subcomm = comm.sub(remain);
-    comms[cnt++] = subcomm;
-    size = subcomm.size();    
-    if(size != 1)
-      System.out.println
-	("ERROR in MPJ_Cart_sub (3): size = "+size+", should be 1");
-
-
-    rank = subcomm.rank();
-    if(rank != 0)
-      System.out.println
-	("ERROR in MPJ_Cart_sub (4): rank ="+rank+", should be 0");
-
-
-    remain[0] = true;  remain[1] = true;
-    subcomm = comm.sub(remain);
-    comms[cnt++] = subcomm;
-    size = subcomm.size();
-    if(size != tasks)
-      System.out.println
-	("ERROR in MPJ_Cart_sub (5): size = "+size+", should be "+tasks);
-
-
-    rank = subcomm.rank();
-    if(rank != me)
-      System.out.println
-	("ERROR in MPJ_Cart_sub (6): rank ="+rank+", should be "+me);
-
-
-    remain[0] = true;  remain[1] = false;
-    subcomm = comm.sub(remain);
-    comms[cnt++] = subcomm;
-    size = subcomm.size();
-    if(size != 2)
-      System.out.println
-	("ERROR in MPJ_Cart_sub (7): size = "+size+", should be 2");
-
-
-    rank = subcomm.rank();
-    if(rank != me/3)
-      System.out.println
-	("ERROR in MPJ_Cart_sub (8): rank ="+rank+", should be "+(me/3));
-
-
- 
-
-    MPJ.COMM_WORLD.barrier();
-
-    if(me == 0)  System.out.println("Sub TEST COMPLETE\n");
-
-  }
-  
-  static public void main(String[] args) throws MPJException {
-
-    MPJ.init(args);
-
-    test();
-    
-    MPJ.finish();
-  }
+        MPJ.finish();
+    }
 }
-  

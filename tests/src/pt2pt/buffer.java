@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,27 +31,25 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
-****************************************************************************
-*/
+ ****************************************************************************
+ */
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package pt2pt;
-
-
 
 import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
@@ -59,52 +57,56 @@ import ibis.mpj.Request;
 import ibis.mpj.Status;
 
 class buffer {
-  static public void test() throws MPJException {
+    static public void test() throws MPJException {
 
-    int len,tasks,me,i,size,flag;
-    int SIZE = 100000;
-    int data[] = new int[SIZE];
-    int sizeofint = 4;
-    
-    // MPJ does not have bsend overhead
-    //int over = MPI.BSEND_OVERHEAD ;  // Checks constant correctly
-    int over = 0;                      // initialized before MPI.Init().
+        int len, tasks, me, i, size, flag;
+        int SIZE = 100000;
+        int data[] = new int[SIZE];
+        int sizeofint = 4;
 
-    Status status;
-    Request request;
-//    Errhandler warn;
- 
-                         
-    me=MPJ.COMM_WORLD.rank();
-    
-    if(me==0) {
+        // MPJ does not have bsend overhead
+        // int over = MPI.BSEND_OVERHEAD ; // Checks constant correctly
+        int over = 0; // initialized before MPI.Init().
 
-      byte buf[] = new byte[MPJ.COMM_WORLD.packSize(SIZE, MPJ.INT) + over] ;
-      MPJ.bufferAttach(buf);        
-      for(i=0;i<SIZE;i++)  data[i] = i;
-     
-      request = MPJ.COMM_WORLD.ibsend(data,0,SIZE,MPJ.INT,1,1);
-      //MPJ.COMM_WORLD.bsend(data,0,SIZE,MPJ.INT,1,1);
-      status = request.test();
-    } else if(me == 1) {
-      for(i=0;i<4000000;i++);
+        Status status;
+        Request request;
+        // Errhandler warn;
 
-      MPJ.COMM_WORLD.recv(data,0,SIZE,MPJ.INT,0,1);
-      for(i=0;i<SIZE;i++)
-	if(data[i] != i) { System.out.println("ERROR i = " + i + " is "+data[i]); break; }
+        me = MPJ.COMM_WORLD.rank();
+
+        if (me == 0) {
+
+            byte buf[] = new byte[MPJ.COMM_WORLD.packSize(SIZE, MPJ.INT) + over];
+            MPJ.bufferAttach(buf);
+            for (i = 0; i < SIZE; i++)
+                data[i] = i;
+
+            request = MPJ.COMM_WORLD.ibsend(data, 0, SIZE, MPJ.INT, 1, 1);
+            // MPJ.COMM_WORLD.bsend(data,0,SIZE,MPJ.INT,1,1);
+            status = request.test();
+        } else if (me == 1) {
+            for (i = 0; i < 4000000; i++)
+                ;
+
+            MPJ.COMM_WORLD.recv(data, 0, SIZE, MPJ.INT, 0, 1);
+            for (i = 0; i < SIZE; i++)
+                if (data[i] != i) {
+                    System.out.println("ERROR i = " + i + " is " + data[i]);
+                    break;
+                }
+        }
+
+        MPJ.COMM_WORLD.barrier();
+        if (me == 0)
+            System.out.println("Buffer TESTS COMPLETE\n");
+
     }
-    
-    MPJ.COMM_WORLD.barrier();
-    if(me == 0)  System.out.println("Buffer TESTS COMPLETE\n");
-  
-  }
 
-  static public void main(String[] args) throws MPJException {
-    MPJ.init(args);    
+    static public void main(String[] args) throws MPJException {
+        MPJ.init(args);
 
-    test();
-    
-    MPJ.finish();
-  }
+        test();
+
+        MPJ.finish();
+    }
 }
-

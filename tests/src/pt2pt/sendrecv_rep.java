@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,23 +31,23 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    09/10/99
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 09/10/99
 
-****************************************************************************
-*/
+ ****************************************************************************
+ */
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package pt2pt;
 
@@ -56,61 +56,63 @@ import ibis.mpj.MPJException;
 import ibis.mpj.Status;
 
 class sendrecv_rep {
-  static public void test() throws MPJException {
-  	
-    int src,dest,sendtag,recvtag,tasks,me,i;
-    int buf[] = new int[1000];
-    Status status;
-	
+    static public void test() throws MPJException {
 
-    tasks = MPJ.COMM_WORLD.size();
-    me = MPJ.COMM_WORLD.rank();
+        int src, dest, sendtag, recvtag, tasks, me, i;
+        int buf[] = new int[1000];
+        Status status;
 
-    if(me < 2)  {
-      src = dest = 1-me;
-      sendtag = me;
-      recvtag = src;
-      for(i=0;i<100;i++)  buf[i] = me;
+        tasks = MPJ.COMM_WORLD.size();
+        me = MPJ.COMM_WORLD.rank();
 
-      status = MPJ.COMM_WORLD.sendrecvReplace(buf,0,100,MPJ.INT,dest,sendtag,src,recvtag);
+        if (me < 2) {
+            src = dest = 1 - me;
+            sendtag = me;
+            recvtag = src;
+            for (i = 0; i < 100; i++)
+                buf[i] = me;
 
-      for(i=0;i<100;i++) 
-	if(buf[i] != src)  
-	  System.out.println("ERROR in MPJ_Sendrecv: incorrect data");
-      if(status.getSource() != src)  
-	System.out.println("ERROR in MPJ_Sendrecv: incorrect source");
-      if(status.getTag() != recvtag)  
-	System.out.println("ERROR in MPJ_Sendrecv: incorrect tag");
+            status = MPJ.COMM_WORLD.sendrecvReplace(buf, 0, 100, MPJ.INT, dest,
+                    sendtag, src, recvtag);
+
+            for (i = 0; i < 100; i++)
+                if (buf[i] != src)
+                    System.out.println("ERROR in MPJ_Sendrecv: incorrect data");
+            if (status.getSource() != src)
+                System.out.println("ERROR in MPJ_Sendrecv: incorrect source");
+            if (status.getTag() != recvtag)
+                System.out.println("ERROR in MPJ_Sendrecv: incorrect tag");
+        }
+
+        src = (me == 0) ? tasks - 1 : me - 1;
+        dest = (me == tasks - 1) ? 0 : me + 1;
+        sendtag = me;
+        recvtag = src;
+        for (i = 0; i < 100; i++)
+            buf[i] = me;
+
+        status = MPJ.COMM_WORLD.sendrecvReplace(buf, 0, 100, MPJ.INT, dest,
+                sendtag, src, recvtag);
+
+        for (i = 0; i < 100; i++)
+            if (buf[i] != src)
+                System.out.println("ERROR in MPJ_Sendrecv: incorrect data\n");
+        if (status.getSource() != src)
+            System.out.println("ERROR in MPJ_Sendrecv: incorrect source\n");
+        if (status.getTag() != recvtag)
+            System.out.println("ERROR in MPJ_Sendrecv: incorrect tag\n");
+
+        MPJ.COMM_WORLD.barrier();
+        if (me == 0)
+            System.out.println("Sendrecv_rep TEST COMPLETE\n");
+
     }
 
-    src = (me==0) ? tasks-1 : me-1;
-    dest = (me==tasks-1) ? 0 : me+1;
-    sendtag = me;
-    recvtag = src;
-    for(i=0;i<100;i++) buf[i] = me; 
+    static public void main(String[] args) throws MPJException {
+        MPJ.init(args);
 
-    status = MPJ.COMM_WORLD.sendrecvReplace(buf,0,100,MPJ.INT,dest,sendtag,src,recvtag);
+        test();
 
-    for(i=0;i<100;i++) 
-      if(buf[i] != src)  
-	System.out.println("ERROR in MPJ_Sendrecv: incorrect data\n");
-    if(status.getSource() != src)  
-      System.out.println("ERROR in MPJ_Sendrecv: incorrect source\n");
-    if(status.getTag() != recvtag)  
-      System.out.println("ERROR in MPJ_Sendrecv: incorrect tag\n");
-	
-
-    MPJ.COMM_WORLD.barrier();
-    if(me == 0)  System.out.println("Sendrecv_rep TEST COMPLETE\n");
-   
-  }
-  
-  static public void main(String[] args) throws MPJException {
-    MPJ.init(args);
-
-    test();
-    	
-    MPJ.finish();
-  }
+        MPJ.finish();
+    }
 }
-

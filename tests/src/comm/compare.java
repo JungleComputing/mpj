@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,22 +31,22 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
-****************************************************************************/
+ ****************************************************************************/
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package comm;
 
@@ -56,56 +56,49 @@ import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
 
 class compare {
-  static public void test() throws MPJException {
-    Intracomm comm1,comm2;
-    int me,result,color,key;
+    static public void test() throws MPJException {
+        Intracomm comm1, comm2;
+        int me, result, color, key;
 
-    me = MPJ.COMM_WORLD.rank();
- 
-    comm1 = (Intracomm) MPJ.COMM_WORLD.clone();
+        me = MPJ.COMM_WORLD.rank();
 
-    result = Comm.compare(comm1,comm1);
-    if(result != MPJ.IDENT)
-      System.out.println
-	("ERROR in MPJ_Comm_compare, result = "+result+
-	 ", should be "+(MPJ.IDENT)+"(MPJ_IDENT)");
-    
+        comm1 = (Intracomm) MPJ.COMM_WORLD.clone();
 
-    result = Comm.compare(MPJ.COMM_WORLD,comm1);
-    if(result != MPJ.CONGRUENT)
-      System.out.println
-	("ERROR in MPJ_Comm_compare, result = "+result+
-	 ", should be "+(MPJ.CONGRUENT)+"(MPJ_CONGRUENT)");
-    
+        result = Comm.compare(comm1, comm1);
+        if (result != MPJ.IDENT)
+            System.out.println("ERROR in MPJ_Comm_compare, result = " + result
+                    + ", should be " + (MPJ.IDENT) + "(MPJ_IDENT)");
 
-    color = 1;
-    key = -me;
-    comm2 = comm1.split(color,key);
-    result = Comm.compare(comm1,comm2);
-    if(result != MPJ.SIMILAR)
-      System.out.println
-	("ERROR in MPJ_Comm_compare, result = "+result+
-	 ", should be "+(MPJ.SIMILAR)+"(MPJ_SIMILAR)");
-    
+        result = Comm.compare(MPJ.COMM_WORLD, comm1);
+        if (result != MPJ.CONGRUENT)
+            System.out.println("ERROR in MPJ_Comm_compare, result = " + result
+                    + ", should be " + (MPJ.CONGRUENT) + "(MPJ_CONGRUENT)");
 
-    color = me;
-    comm2 = comm1.split(color,key);
-    result = Comm.compare(comm1,comm2);
-    if(result != MPJ.UNEQUAL)
-      System.out.println
-	("ERROR in MPJ_Comm_compare, result = "+result+
-	 ", should be "+(MPJ.UNEQUAL)+"(MPJ_UNEQUAL)"); 
+        color = 1;
+        key = -me;
+        comm2 = comm1.split(color, key);
+        result = Comm.compare(comm1, comm2);
+        if (result != MPJ.SIMILAR)
+            System.out.println("ERROR in MPJ_Comm_compare, result = " + result
+                    + ", should be " + (MPJ.SIMILAR) + "(MPJ_SIMILAR)");
 
+        color = me;
+        comm2 = comm1.split(color, key);
+        result = Comm.compare(comm1, comm2);
+        if (result != MPJ.UNEQUAL)
+            System.out.println("ERROR in MPJ_Comm_compare, result = " + result
+                    + ", should be " + (MPJ.UNEQUAL) + "(MPJ_UNEQUAL)");
 
-    if(me == 0)  System.out.println("Compare TEST COMPLETE\n");
-  
-  }
-  
-  static public void main(String[] args) throws MPJException {
-    MPJ.init(args);
+        if (me == 0)
+            System.out.println("Compare TEST COMPLETE\n");
 
-    test();
-    
-    MPJ.finish();
-  }
+    }
+
+    static public void main(String[] args) throws MPJException {
+        MPJ.init(args);
+
+        test();
+
+        MPJ.finish();
+    }
 }

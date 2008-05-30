@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,23 +31,23 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
-****************************************************************************
-*/
+ ****************************************************************************
+ */
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package pt2pt;
 
@@ -56,60 +56,57 @@ import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
 import ibis.mpj.Request;
 import ibis.mpj.Status;
- 
+
 class interf {
-  static public void test() throws MPJException {
- 
-    int me,tasks;
-    int val1[] = new int[1];
-    int val2[] = new int[1];
+    static public void test() throws MPJException {
 
-    Status status;
-    Request request1,request2;
+        int me, tasks;
+        int val1[] = new int[1];
+        int val2[] = new int[1];
 
+        Status status;
+        Request request1, request2;
 
+        me = MPJ.COMM_WORLD.rank();
+        tasks = MPJ.COMM_WORLD.size();
 
-    me = MPJ.COMM_WORLD.rank();
-    tasks = MPJ.COMM_WORLD.size(); 
+        Intracomm my_comm = (Intracomm) MPJ.COMM_WORLD.clone();
 
-    Intracomm my_comm = (Intracomm) MPJ.COMM_WORLD.clone();
+        if (me == 0) {
+            val1[0] = 1;
+            MPJ.COMM_WORLD.send(val1, 0, 1, MPJ.INT, 1, 1);
 
-    if(me==0)  {
-      val1[0] = 1;
-      MPJ.COMM_WORLD.send(val1,0,1,MPJ.INT,1,1);
+            val2[0] = 2;
+            my_comm.send(val2, 0, 1, MPJ.INT, 1, 1);
+        } else if (me == 1) {
+            request1 = my_comm.irecv(val1, 0, 1, MPJ.INT, 0, 1);
+            // my_comm.recv(val1,0,1,MPJ.INT,0,1);
+            request2 = MPJ.COMM_WORLD.irecv(val2, 0, 1, MPJ.INT, 0, 1);
+            // MPJ.COMM_WORLD.recv(val2,0,1,MPJ.INT,0,1);
 
-      val2[0] = 2;
-      my_comm.send(val2,0,1,MPJ.INT,1,1);
-    } 
-    else if(me == 1)  {      
-      request1 = my_comm.irecv(val1,0,1,MPJ.INT,0,1);
-      //my_comm.recv(val1,0,1,MPJ.INT,0,1);
-      request2 = MPJ.COMM_WORLD.irecv(val2,0,1,MPJ.INT,0,1);
-      // MPJ.COMM_WORLD.recv(val2,0,1,MPJ.INT,0,1);
-     
-      status = request1.Wait();
+            status = request1.Wait();
 
-      status = request2.Wait();
+            status = request2.Wait();
 
-      if(val1[0] != 2 || val2[0] != 1) { 
-	System.out.println
-	  ("ERROR, messages were exchanged between different communicators--");
-	System.out.println("val1[0]="+val1[0]+", val2[0]="+val2[0]); 
-      }
+            if (val1[0] != 2 || val2[0] != 1) {
+                System.out
+                        .println("ERROR, messages were exchanged between different communicators--");
+                System.out.println("val1[0]=" + val1[0] + ", val2[0]="
+                        + val2[0]);
+            }
+        }
+
+        my_comm.barrier();
+        if (me == 0)
+            System.out.println("Interf TEST COMPLETE.\n");
     }
 
-    my_comm.barrier();
-    if(me == 0)  System.out.println("Interf TEST COMPLETE.\n"); 
-  }
+    static public void main(String[] args) throws MPJException {
+        MPJ.init(args);
 
-  static public void main(String[] args) throws MPJException {
-    MPJ.init(args);    
-    
-    test();
-     
-    MPJ.finish();
+        test();
 
-  }
+        MPJ.finish();
+
+    }
 }
-
-

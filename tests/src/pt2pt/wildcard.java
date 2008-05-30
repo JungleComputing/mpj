@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,69 +31,68 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
-****************************************************************************
-*/
+ ****************************************************************************
+ */
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package pt2pt;
+
 import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
 import ibis.mpj.Status;
- 
 
 class wildcard {
-  static public void test() throws MPJException {
-    int me,tasks,i,tag,expected;
-    int val[] = new int[1];
-    Status status;
-    final int ITER = 10;
+    static public void test() throws MPJException {
+        int me, tasks, i, tag, expected;
+        int val[] = new int[1];
+        Status status;
+        final int ITER = 10;
 
-    me = MPJ.COMM_WORLD.rank();
-    tasks = MPJ.COMM_WORLD.size(); 
+        me = MPJ.COMM_WORLD.rank();
+        tasks = MPJ.COMM_WORLD.size();
 
+        if (me == 0) {
+            for (i = 0; i < (tasks - 1) * ITER; i++) {
+                status = MPJ.COMM_WORLD.recv(val, 0, 1, MPJ.INT,
+                        MPJ.ANY_SOURCE, i / (tasks - 1));
+                expected = status.getSource() * 1000 + status.getTag();
+                if (val[0] != expected)
+                    System.out.println("ERROR, val[0] = " + (val[0])
+                            + ", should be " + expected);
+            }
+        } else {
+            for (i = 0; i < ITER; i++) {
+                tag = i;
+                val[0] = me * 1000 + tag;
+                MPJ.COMM_WORLD.send(val, 0, 1, MPJ.INT, 0, tag);
+            }
+        }
 
-    if(me == 0)  {
-      for(i=0;i<(tasks-1)*ITER;i++)  {
-	status = MPJ.COMM_WORLD.recv(val,0,1,MPJ.INT,
-				     MPJ.ANY_SOURCE,i/(tasks-1));
-	expected = status.getSource()*1000+status.getTag();
-	if(val[0] != expected)
-	  System.out.println
-	    ("ERROR, val[0] = "+(val[0])+", should be "+expected);
-      }
-    } else {
-      for(i=0;i<ITER;i++)  {
-	tag = i;
-	val[0] = me*1000 + tag;
-	MPJ.COMM_WORLD.send(val,0,1,MPJ.INT,0,tag);
-      }
+        MPJ.COMM_WORLD.barrier();
+        if (me == 0)
+            System.out.println("Wildcard TEST COMPLETE\n");
+
     }
-    
 
-    MPJ.COMM_WORLD.barrier();
-    if(me == 0)  System.out.println("Wildcard TEST COMPLETE\n");
-  
-  }
-  
-  static public void main(String[] args) throws MPJException {
-    MPJ.init(args);
+    static public void main(String[] args) throws MPJException {
+        MPJ.init(args);
 
-    test();
-     
-    MPJ.finish();
-  }
+        test();
+
+        MPJ.finish();
+    }
 }

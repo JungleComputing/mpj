@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,69 +31,71 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
  Object version :
-    Sang Lim(slim@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    07/29/98
-****************************************************************************
-*/
+ Sang Lim(slim@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 07/29/98
+ ****************************************************************************
+ */
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package pt2pt_ObjSer;
-
 
 import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
 import ibis.mpj.Status;
 
 class rsendO {
-  static public void main(String[] args) throws MPJException {
+    static public void main(String[] args) throws MPJException {
 
-    test a[] = new test[10];
-    test b[] = new test[10];
+        test a[] = new test[10];
+        test b[] = new test[10];
 
-    int tasks,me,i;
-    char buf[] = new char[10];
-    double time; 
-    Status status;
+        int tasks, me, i;
+        char buf[] = new char[10];
+        double time;
+        Status status;
 
-    for(i = 0; i < 10; i++){
-       a[i]   = new test();
-       b[i]   = new test();
-       a[i].a = i;
-       b[i].a = 0;
+        for (i = 0; i < 10; i++) {
+            a[i] = new test();
+            b[i] = new test();
+            a[i].a = i;
+            b[i].a = 0;
+        }
+
+        MPJ.init(args);
+        me = MPJ.COMM_WORLD.rank();
+        MPJ.COMM_WORLD.barrier();
+
+        if (me == 0) {
+            for (i = 0; i < 1000000; i++)
+                ;
+            MPJ.COMM_WORLD.rsend(a, 0, 10, MPJ.OBJECT, 1, 1);
+        } else if (me == 1) {
+            MPJ.COMM_WORLD.recv(b, 0, 10, MPJ.OBJECT, 0, 1);
+            for (i = 0; i < 10; i++)
+                if (b[i].a != i)
+                    System.out.println("Data " + b[i].a + " on index " + i
+                            + "should be " + i);
+        }
+
+        MPJ.COMM_WORLD.barrier();
+        if (me == 0)
+            System.out.println("RsendO TEST COMPLETE\n");
+        MPJ.finish();
     }
-
-    MPJ.init(args);
-    me = MPJ.COMM_WORLD.rank();
-    MPJ.COMM_WORLD.barrier();
-    
-    if(me == 0) {
-       for(i=0;i<1000000;i++) ;
-       MPJ.COMM_WORLD.rsend(a,0,10,MPJ.OBJECT,1,1);
-    } else if(me == 1) {
-         MPJ.COMM_WORLD.recv(b,0,10,MPJ.OBJECT,0,1);
-         for(i = 0; i < 10; i++)
-           if (b[i].a !=i)
-              System.out.println("Data "+b[i].a+" on index "+i+"should be "+i);
-    }
-
-    MPJ.COMM_WORLD.barrier();
-    if(me == 0)  System.out.println("RsendO TEST COMPLETE\n");
-    MPJ.finish();
-  }
 }

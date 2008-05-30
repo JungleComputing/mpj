@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,25 +31,26 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
-****************************************************************************
-*/
+ ****************************************************************************
+ */
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package pt2pt;
+
 import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
 import ibis.mpj.Request;
@@ -57,55 +58,52 @@ import ibis.mpj.Status;
 
 class waitany {
 
-  static public void test() throws MPJException {
+    static public void test() throws MPJException {
 
-    int me,tasks,i,index;
-    int mebuf[] = new int[1];
+        int me, tasks, i, index;
+        int mebuf[] = new int[1];
 
-    me = MPJ.COMM_WORLD.rank();
-    tasks = MPJ.COMM_WORLD.size(); 
- 
-    int data[] = new int[tasks];
-    Request req[] = new Request[tasks];
-    Status status;
- 
-    mebuf[0] = me;    
-    if(me > 0) 
-      MPJ.COMM_WORLD.send(mebuf,0,1,MPJ.INT,0,1);
-    else {
-      //req[0] = MPJ.REQUEST_NULL;
-      for(i=1;i<tasks;i++)  
-	req[i] = MPJ.COMM_WORLD.irecv(data,i,1,MPJ.INT,i,1);
+        me = MPJ.COMM_WORLD.rank();
+        tasks = MPJ.COMM_WORLD.size();
 
-      
-      for(i=1;i<tasks;i++)  {
-	status = Request.waitAny(req);
-	if(!req[status.getIndex()].isVoid())
-	  System.out.println
-	    ("ERROR(3) in MPJ_Waitany: reqest not set to NULL");
-	if(data[status.getIndex()] != status.getIndex())
-	  System.out.println("ERROR(4) in MPJ_Waitany: wrong data");
-      }
-      
-      /*** ??? mpich1.1.1
-	status = Request.Waitany(req);
-	if(status.index != MPI.UNDEFINED)
-	System.out.println
-	("ERROR(5) in MPI_Waitany: index not = MPI.UNDEFINED "+status.index);
-	******/
+        int data[] = new int[tasks];
+        Request req[] = new Request[tasks];
+        Status status;
+
+        mebuf[0] = me;
+        if (me > 0)
+            MPJ.COMM_WORLD.send(mebuf, 0, 1, MPJ.INT, 0, 1);
+        else {
+            // req[0] = MPJ.REQUEST_NULL;
+            for (i = 1; i < tasks; i++)
+                req[i] = MPJ.COMM_WORLD.irecv(data, i, 1, MPJ.INT, i, 1);
+
+            for (i = 1; i < tasks; i++) {
+                status = Request.waitAny(req);
+                if (!req[status.getIndex()].isVoid())
+                    System.out
+                            .println("ERROR(3) in MPJ_Waitany: reqest not set to NULL");
+                if (data[status.getIndex()] != status.getIndex())
+                    System.out.println("ERROR(4) in MPJ_Waitany: wrong data");
+            }
+
+            /*******************************************************************
+             * * ??? mpich1.1.1 status = Request.Waitany(req); if(status.index !=
+             * MPI.UNDEFINED) System.out.println ("ERROR(5) in MPI_Waitany:
+             * index not = MPI.UNDEFINED "+status.index);
+             ******************************************************************/
+        }
+
+        MPJ.COMM_WORLD.barrier();
+        if (me == 0)
+            System.out.println("Waitany TEST COMPLETE\n");
     }
 
-    MPJ.COMM_WORLD.barrier();
-    if(me == 0)  System.out.println("Waitany TEST COMPLETE\n");  
-  }
+    static public void main(String[] args) throws MPJException {
+        MPJ.init(args);
 
-  static public void main(String[] args) throws MPJException {
-    MPJ.init(args);
+        test();
 
-    test();
-    
-    MPJ.finish();
-  }
+        MPJ.finish();
+    }
 }
-
-

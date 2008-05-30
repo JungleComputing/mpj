@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,71 +31,73 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
  Object version :
-    Sang Lim(slim@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    08/3/98
-****************************************************************************
-*/
+ Sang Lim(slim@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 08/3/98
+ ****************************************************************************
+ */
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package pt2pt_ObjSer;
-
 
 import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
 import ibis.mpj.Status;
 
-class getcountO{
-  static public void main(String[] args) throws MPJException {
-    int me,count,i,j;
+class getcountO {
+    static public void main(String[] args) throws MPJException {
+        int me, count, i, j;
 
-    int   datatest[][]  = new int[7][4];
-    int   recdata[][]   = new int[7][4];
-    Status status;
+        int datatest[][] = new int[7][4];
+        int recdata[][] = new int[7][4];
+        Status status;
 
-    for(i = 0; i < 7; i++)
-      for (j = 0;j < 4; j++) {  
-       datatest[i][j] = j + i*4;
-       recdata [i][j] = 0;
+        for (i = 0; i < 7; i++)
+            for (j = 0; j < 4; j++) {
+                datatest[i][j] = j + i * 4;
+                recdata[i][j] = 0;
+            }
+        MPJ.init(args);
+
+        me = MPJ.COMM_WORLD.rank();
+
+        if (me == 0)
+            MPJ.COMM_WORLD.send(datatest, 0, 7, MPJ.OBJECT, 1, 1);
+
+        else if (me == 1) {
+            status = MPJ.COMM_WORLD.recv(recdata, 0, 7, MPJ.OBJECT, 0, 1);
+
+            for (i = 0; i < 7; i++)
+                for (j = 0; j < 4; j++) {
+                    if (recdata[i][j] != datatest[i][j])
+                        System.out.println("Recived data  " + recdata[i][j]
+                                + " at index [" + i + "][" + j
+                                + "] should be : " + datatest[i][j]);
+                }
+            count = status.getCount(MPJ.OBJECT);
+            if (count != 7)
+                System.out.println("ERROR(4) in MPJ_Get_count, count = "
+                        + count + ", should be 7");
+        }
+
+        MPJ.COMM_WORLD.barrier();
+        if (me == 0)
+            System.out.println("Get_countO TEST COMPLETE.\n");
+        MPJ.finish();
     }
-    MPJ.init(args);
-    
-    me=MPJ.COMM_WORLD.rank();
-
-    if(me == 0)  
-      MPJ.COMM_WORLD.send(datatest,0,7,MPJ.OBJECT,1,1);
-    
-    else if(me == 1)  {
-      status = MPJ.COMM_WORLD.recv(recdata,0,7,MPJ.OBJECT,0,1);
-    
-      for(i = 0; i < 7; i++)
-	  for (j = 0; j <4;j++){
-            if (recdata[i][j] != datatest[i][j])
-              System.out.println("Recived data  "+recdata[i][j]+" at index ["+i+"]["+j+"] should be : "+datatest[i][j]);
-	  }
-      count = status.getCount(MPJ.OBJECT);
-      if(count != 7) 
-	System.out.println
-	  ("ERROR(4) in MPJ_Get_count, count = "+count+", should be 7");
-    }
-
-    MPJ.COMM_WORLD.barrier();
-    if(me == 0)  System.out.println("Get_countO TEST COMPLETE.\n");
-    MPJ.finish();
-  }  
 }

@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,78 +31,81 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
-****************************************************************************
-*/
+ ****************************************************************************
+ */
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package pt2pt;
+
 import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
 import ibis.mpj.Request;
 import ibis.mpj.Status;
- 
 
 class test2 {
-  static public void test() throws MPJException {
+    static public void test() throws MPJException {
 
-    int numtask,taskid,rc;
-    int outmsg[] = new int[1];
-    int  inmsg[] = new int[1];
-    int i,dest = 0, type = 1;
-    int source, rtype = type, rbytes = -1,flag, dontcare = -1;
-    int msgid;
-    Status status;
-    Request req;
+        int numtask, taskid, rc;
+        int outmsg[] = new int[1];
+        int inmsg[] = new int[1];
+        int i, dest = 0, type = 1;
+        int source, rtype = type, rbytes = -1, flag, dontcare = -1;
+        int msgid;
+        Status status;
+        Request req;
 
+        taskid = MPJ.COMM_WORLD.rank();
+        numtask = MPJ.COMM_WORLD.size();
 
-    taskid = MPJ.COMM_WORLD.rank();
-    numtask =MPJ.COMM_WORLD.size(); 
- 
-    if(taskid == 1) {
-      MPJ.COMM_WORLD.barrier();
+        if (taskid == 1) {
+            MPJ.COMM_WORLD.barrier();
 
-      outmsg[0] = 5; type = 1;
-      MPJ.COMM_WORLD.send(outmsg,0,1,MPJ.INT, dest, type);
+            outmsg[0] = 5;
+            type = 1;
+            MPJ.COMM_WORLD.send(outmsg, 0, 1, MPJ.INT, dest, type);
+        }
+
+        if (taskid == 0) {
+            source = MPJ.ANY_SOURCE;
+            rtype = MPJ.ANY_TAG;
+            req = MPJ.COMM_WORLD.irecv(inmsg, 0, 1, MPJ.INT, source, rtype);
+            status = req.test();
+            if (status != null)
+                System.out.println("ERROR(1)");
+            MPJ.COMM_WORLD.barrier();
+
+            status = req.Wait();
+            if (inmsg[0] != 5 || status.getSource() != 1
+                    || status.getTag() != 1)
+                System.out.println("ERROR(2)");
+        }
+
+        if ((taskid != 1) && (taskid != 0)) {
+            MPJ.COMM_WORLD.barrier();
+        }
+        if (taskid == 0)
+            System.out.println("Test2 TEST COMPLETE\n");
     }
 
-    if(taskid == 0) {
-      source = MPJ.ANY_SOURCE; rtype = MPJ.ANY_TAG;
-      req = MPJ.COMM_WORLD.irecv(inmsg,0,1,MPJ.INT,source,rtype);
-      status = req.test();
-      if(status != null)  System.out.println("ERROR(1)");
-      MPJ.COMM_WORLD.barrier();
+    static public void main(String[] args) throws MPJException {
+        MPJ.init(args);
 
-      status = req.Wait();
-      if(inmsg[0] != 5 || status.getSource() != 1 || status.getTag() != 1)      
-	System.out.println("ERROR(2)");
+        test();
+
+        MPJ.finish();
     }
-
-    if ((taskid != 1) && (taskid != 0)) {
-    	MPJ.COMM_WORLD.barrier();
-    }
-    if(taskid == 0)  System.out.println("Test2 TEST COMPLETE\n");  
-  }
-
-  static public void main(String[] args) throws MPJException {
-    MPJ.init(args);
-
-    test();
-    
-    MPJ.finish();
-  }
 }
-

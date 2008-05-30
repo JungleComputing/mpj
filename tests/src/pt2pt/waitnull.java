@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,23 +31,23 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    09/10/99
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 09/10/99
 
-****************************************************************************
-*/
+ ****************************************************************************
+ */
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package pt2pt;
 
@@ -55,31 +55,30 @@ import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
 import ibis.mpj.Request;
 import ibis.mpj.Status;
- 
-class waitnull {
-  static public void test() throws MPJException {
-    int me,tasks,i;
-    Request request;
-    Status status;
-    
-    
-    tasks = MPJ.COMM_WORLD.size();
-    me = MPJ.COMM_WORLD.rank();
-    
-    
-    request = null;//MPI.REQUEST_NULL;
-    status = request.Wait();
-    
-    MPJ.COMM_WORLD.barrier();
-    if(me == 0)   System.out.println("Waitnull TEST COMPLETE\n");
-  
-  }
-  
-  static public void main(String[] args) throws MPJException {
-    MPJ.init(args);
 
-    test();
-        
-    MPJ.finish();
-  }
+class waitnull {
+    static public void test() throws MPJException {
+        int me, tasks, i;
+        Request request;
+        Status status;
+
+        tasks = MPJ.COMM_WORLD.size();
+        me = MPJ.COMM_WORLD.rank();
+
+        request = null;// MPI.REQUEST_NULL;
+        status = request.Wait();
+
+        MPJ.COMM_WORLD.barrier();
+        if (me == 0)
+            System.out.println("Waitnull TEST COMPLETE\n");
+
+    }
+
+    static public void main(String[] args) throws MPJException {
+        MPJ.init(args);
+
+        test();
+
+        MPJ.finish();
+    }
 }

@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,55 +31,52 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
-****************************************************************************
-*/
+ ****************************************************************************
+ */
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package env;
 
-
 import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
- 
+
 class procname {
-  static public void test() throws MPJException {
-    int me,len;
-    char tmp[]  = new char[256];
-    String procname;
+    static public void test() throws MPJException {
+        int me, len;
+        char tmp[] = new char[256];
+        String procname;
 
-    me=MPJ.COMM_WORLD.rank();
+        me = MPJ.COMM_WORLD.rank();
 
- 
-    procname = MPJ.getProcessorName();
+        procname = MPJ.getProcessorName();
 
-    System.out.println("Processor name is "+procname);
+        System.out.println("Processor name is " + procname);
 
+        MPJ.COMM_WORLD.barrier();
+        if (me == 0)
+            System.out.println("Procname TEST COMPLETE\n");
 
-    MPJ.COMM_WORLD.barrier();
-    if(me == 0)  System.out.println("Procname TEST COMPLETE\n");
-  
-  
-  }
-  
-  static public void main(String[] args) throws MPJException {
-    MPJ.init(args);
+    }
 
-    test();
-    
-    MPJ.finish();
-  }
+    static public void main(String[] args) throws MPJException {
+        MPJ.init(args);
+
+        test();
+
+        MPJ.finish();
+    }
 }

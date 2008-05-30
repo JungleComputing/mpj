@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,94 +31,88 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
-****************************************************************************
+ Richard Treumann
+ treumann@kgn.ibm.com
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    09/10/99
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 09/10/99
 
-****************************************************************************
-*/
+ ****************************************************************************
+ */
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package dtyp;
-
 
 import ibis.mpj.Datatype;
 import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
 import ibis.mpj.Status;
- 
+
 class zero1 {
-  static public void test() throws MPJException {
-    int myself,tasks;
- 
-    int ii[] = new int[1];
-    int numtasks, me;
-    int count1,count2,count3;
-    int len[] = new int[0];
-    int disp[] = new int[0];
+    static public void test() throws MPJException {
+        int myself, tasks;
 
+        int ii[] = new int[1];
+        int numtasks, me;
+        int count1, count2, count3;
+        int len[] = new int[0];
+        int disp[] = new int[0];
 
+        Datatype type[] = new Datatype[0];
+        Datatype newtype;
+        Status status;
 
-    Datatype type[] = new Datatype[0];
-    Datatype newtype;
-    Status status;
+        myself = MPJ.COMM_WORLD.rank();
+        numtasks = MPJ.COMM_WORLD.size();
+        me = MPJ.COMM_WORLD.rank();
 
-    myself = MPJ.COMM_WORLD.rank();
-    numtasks = MPJ.COMM_WORLD.size();
-    me = MPJ.COMM_WORLD.rank();
+        if ((numtasks < 2)) {
+            System.out.println("this testcase requires 2 tasks.");
+            MPJ.COMM_WORLD.abort(me);
+        }
 
-    if ((numtasks < 2)) {
-      System.out.println("this testcase requires 2 tasks.");
-      MPJ.COMM_WORLD.abort(me);
+        if ((numtasks > 2) && (me > 1)) {
+            System.out.println("Testcase uses two tasks, extraneous task #"
+                    + me + " exited.");
+            MPJ.finish();
+            System.exit(0);
+        }
+
+        newtype = Datatype.struct(len, disp, type);
+        newtype.commit();
+
+        if (myself == 0) {
+            ii[0] = 2;
+            MPJ.COMM_WORLD.send(ii, 0, 100, newtype, 1, 0);
+        } else if (myself == 1) {
+            ii[0] = 0;
+            status = MPJ.COMM_WORLD.recv(ii, 0, 100, newtype, 0, 0);
+            if (ii[0] != 0)
+                System.out.println("ERROR!");
+            count1 = status.getCount(newtype);
+            count2 = status.getElements(newtype);
+
+            if ((count1 == 100) && (count2 == MPJ.UNDEFINED))
+                System.out.println("Success\n");
+            else
+                System.out.println("Should be 100, MPJ.UNDEFINED but is "
+                        + count1 + ", " + count2);
+        }
+
     }
-    
-    if ((numtasks > 2) && (me > 1)) { 
-      System.out.println("Testcase uses two tasks, extraneous task #"+me+" exited.");
-      MPJ.finish();
-      System.exit(0);
+
+    static public void main(String[] args) throws MPJException {
+        MPJ.init(args);
+
+        test();
+
+        MPJ.finish();
     }
-
-
-    newtype = Datatype.struct(len,disp,type);
-    newtype.commit();
-
-    if(myself == 0)  {
-      ii[0] = 2;
-      MPJ.COMM_WORLD.send(ii,0,100,newtype,1,0);
-    } else if(myself == 1) {
-      ii[0] = 0;
-      status = MPJ.COMM_WORLD.recv(ii,0,100,newtype,0,0);
-      if(ii[0] != 0)
-	System.out.println("ERROR!");
-      count1 = status.getCount(newtype);
-      count2 = status.getElements(newtype);
-	    
-      if ( (count1==100) &&
-	  (count2==MPJ.UNDEFINED) )
-	System.out.println("Success\n");
-      else
-	System.out.println("Should be 100, MPJ.UNDEFINED but is "+count1+", "+count2);
-    } 
-
-
-  
-  }
-
-
-  static public void main(String[] args) throws MPJException {
-    MPJ.init(args);
-
-    test();
-    
-    MPJ.finish();
-  }
 }

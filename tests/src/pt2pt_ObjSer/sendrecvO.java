@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,30 +31,29 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
  Object version :
-    Sang Lim(slim@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    07/18/98
-****************************************************************************
-*/
+ Sang Lim(slim@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 07/18/98
+ ****************************************************************************
+ */
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package pt2pt_ObjSer;
-
 
 import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
@@ -62,74 +61,75 @@ import ibis.mpj.Status;
 
 class sendrecvO {
 
-  static public void main(String[] args) 
-    throws MPJException {
-      int src,dest,sendtag,recvtag,tasks,me,i;
-      Status status;
+    static public void main(String[] args) throws MPJException {
+        int src, dest, sendtag, recvtag, tasks, me, i;
+        Status status;
 
-      MPJ.init(args);
-      tasks=MPJ.COMM_WORLD.size();
-      me=MPJ.COMM_WORLD.rank();
- 
-      test   datatest[]  = new test[1000];
-      test   recdata[]   = new test[1000];
+        MPJ.init(args);
+        tasks = MPJ.COMM_WORLD.size();
+        me = MPJ.COMM_WORLD.rank();
 
-      for(i = 0; i < 1000; i++){
-         datatest[i]   = new test();
-         recdata [i]   = new test();
-         datatest[i].a = me;
-         recdata [i].a = 0;
-      }
+        test datatest[] = new test[1000];
+        test recdata[] = new test[1000];
 
-      if(me < 2)  {
-	src = dest = 1-me;
-	sendtag = me;
-	recvtag = src;
+        for (i = 0; i < 1000; i++) {
+            datatest[i] = new test();
+            recdata[i] = new test();
+            datatest[i].a = me;
+            recdata[i].a = 0;
+        }
 
-        status = MPJ.COMM_WORLD.sendrecv(datatest,0,100,MPJ.OBJECT,dest,sendtag,
-				       recdata, 0,100,MPJ.OBJECT,src, recvtag);
+        if (me < 2) {
+            src = dest = 1 - me;
+            sendtag = me;
+            recvtag = src;
 
-	for(i=0;i<2000000;i++);
+            status = MPJ.COMM_WORLD.sendrecv(datatest, 0, 100, MPJ.OBJECT,
+                    dest, sendtag, recdata, 0, 100, MPJ.OBJECT, src, recvtag);
 
-	for(i=0;i<100;i++) 
-	  if(recdata[i].a != src)  { 
-	    System.out.println("ERROR in MPJ.Sendrecv: incorrect data\n"); 
-	    break; 
-	  }
+            for (i = 0; i < 2000000; i++)
+                ;
 
-	if(status.getSource() != src)  
-	  System.out.println("ERROR in MPJ.Sendrecv: incorrect source\n");
-	if(status.getTag() != recvtag)  
-	  System.out.println
-	    ("ERROR in MPJ.Sendrecv: incorrect tag ("+status.getTag()+")");	  
-      }
+            for (i = 0; i < 100; i++)
+                if (recdata[i].a != src) {
+                    System.out
+                            .println("ERROR in MPJ.Sendrecv: incorrect data\n");
+                    break;
+                }
 
-      src = (me==0) ? tasks-1 : me-1;
-      dest = (me==tasks-1) ? 0 : me+1;
-      sendtag = me;
-      recvtag = src;
+            if (status.getSource() != src)
+                System.out.println("ERROR in MPJ.Sendrecv: incorrect source\n");
+            if (status.getTag() != recvtag)
+                System.out.println("ERROR in MPJ.Sendrecv: incorrect tag ("
+                        + status.getTag() + ")");
+        }
 
-      status = MPJ.COMM_WORLD.sendrecv(datatest,0,100,MPJ.OBJECT,dest,sendtag,
-				       recdata, 0,100,MPJ.OBJECT,src, recvtag);
+        src = (me == 0) ? tasks - 1 : me - 1;
+        dest = (me == tasks - 1) ? 0 : me + 1;
+        sendtag = me;
+        recvtag = src;
 
-      for(i=0;i<2000000;i++);
+        status = MPJ.COMM_WORLD.sendrecv(datatest, 0, 100, MPJ.OBJECT, dest,
+                sendtag, recdata, 0, 100, MPJ.OBJECT, src, recvtag);
 
-      for(i=0;i<100;i++) 
-	if(recdata[i].a != src)  { 
-	  System.out.println("ERROR in MPJ.Sendrecv: incorrect data\n"); 
-	  break; 
-	}
+        for (i = 0; i < 2000000; i++)
+            ;
 
-      if(status.getSource() != src)  
-	System.out.println("ERROR in MPJ.Sendrecv: incorrect source\n");
-      if(status.getTag() != recvtag)  
-	System.out.println
-	  ("ERROR in MPJ.Sendrecv: incorrect tag ("+status.getTag()+")");
+        for (i = 0; i < 100; i++)
+            if (recdata[i].a != src) {
+                System.out.println("ERROR in MPJ.Sendrecv: incorrect data\n");
+                break;
+            }
 
+        if (status.getSource() != src)
+            System.out.println("ERROR in MPJ.Sendrecv: incorrect source\n");
+        if (status.getTag() != recvtag)
+            System.out.println("ERROR in MPJ.Sendrecv: incorrect tag ("
+                    + status.getTag() + ")");
 
-       MPJ.COMM_WORLD.barrier();
-      if(me == 0)  System.out.println("SendRecvO TEST COMPLETE\n");
-      MPJ.finish();
+        MPJ.COMM_WORLD.barrier();
+        if (me == 0)
+            System.out.println("SendRecvO TEST COMPLETE\n");
+        MPJ.finish();
     }
 }
-

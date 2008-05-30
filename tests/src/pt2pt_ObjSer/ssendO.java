@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,94 +31,95 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
  Object version :
-    Sang Lim(slim@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    08/10/98
-****************************************************************************
-*/
+ Sang Lim(slim@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 08/10/98
+ ****************************************************************************
+ */
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package pt2pt_ObjSer;
-
 
 import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
 import ibis.mpj.Status;
 
 class ssendO {
-  static public void main(String[] args) throws MPJException {
-    
-    test a[] = new test[10];
-    test b[] = new test[10];
+    static public void main(String[] args) throws MPJException {
 
-    int len,tasks,me,i;
-    Status status;
-    double time, timeoffset;
-    double timeBuf[] = new double[1]; 
-    double timeoffsetBuf[] = new double[1];
+        test a[] = new test[10];
+        test b[] = new test[10];
 
-    /* This test makes assumptions about the global nature of MPI_WTIME that
-      are not required by MPI, and may falsely signal an error */
+        int len, tasks, me, i;
+        Status status;
+        double time, timeoffset;
+        double timeBuf[] = new double[1];
+        double timeoffsetBuf[] = new double[1];
 
-    len = a.length;
+        /*
+         * This test makes assumptions about the global nature of MPI_WTIME that
+         * are not required by MPI, and may falsely signal an error
+         */
 
-    MPJ.init(args);
-    me = MPJ.COMM_WORLD.rank();
-    MPJ.COMM_WORLD.barrier();
-    
-    for(i = 0; i < 10;i++){
-       a[i]   = new test();
-       b[i]   = new test();
-       a[i].a = i;
-       b[i].a = 0;
+        len = a.length;
+
+        MPJ.init(args);
+        me = MPJ.COMM_WORLD.rank();
+        MPJ.COMM_WORLD.barrier();
+
+        for (i = 0; i < 10; i++) {
+            a[i] = new test();
+            b[i] = new test();
+            a[i].a = i;
+            b[i].a = 0;
+        }
+        if (me == 0) {
+            /* First, roughly synchronize the clocks */
+            MPJ.COMM_WORLD.recv(timeoffsetBuf, 0, 1, MPJ.DOUBLE, 1, 1);
+            timeoffset = timeoffsetBuf[0];
+            timeoffset = MPJ.wtime() - timeoffset;
+
+            MPJ.COMM_WORLD.ssend(a, 0, len, MPJ.OBJECT, 1, 1);
+
+            time = MPJ.wtime() - timeoffset;
+            timeBuf[0] = time;
+
+        } else if (me == 1) {
+            time = MPJ.wtime();
+            timeBuf[0] = time;
+
+            MPJ.COMM_WORLD.ssend(timeBuf, 0, 1, MPJ.DOUBLE, 0, 1);
+
+            for (i = 0; i < 3000000; i++)
+                ;
+
+            MPJ.COMM_WORLD.recv(b, 0, len, MPJ.OBJECT, 0, 1);
+
+            time = timeBuf[0];
+            time = time - MPJ.wtime();
+            if (time < 0)
+                time = -time;
+        }
+
+        MPJ.COMM_WORLD.barrier();
+
+        if (me == 0)
+            System.out.println("SsendO TEST COMPLETE\n");
+        MPJ.finish();
     }
-    if(me==0) {
-      /* First, roughly synchronize the clocks */
-      MPJ.COMM_WORLD.recv(timeoffsetBuf,0,1,MPJ.DOUBLE,1,1);
-      timeoffset = timeoffsetBuf[0];
-      timeoffset = MPJ.wtime() - timeoffset;
-
-      MPJ.COMM_WORLD.ssend(a,0,len,MPJ.OBJECT,1,1);
-
-      time = MPJ.wtime() - timeoffset;
-      timeBuf[0] = time;
-
-    } else if(me == 1) {
-      time = MPJ.wtime();
-      timeBuf[0] = time;
-
-      MPJ.COMM_WORLD.ssend(timeBuf,0,1,MPJ.DOUBLE,0,1);
-
-      for(i=0;i<3000000;i++) ;
-
-      MPJ.COMM_WORLD.recv(b,0,len,MPJ.OBJECT,0,1);
-   
-      time = timeBuf[0];
-      time = time - MPJ.wtime();
-      if(time < 0) time = -time;
-    }
-
-    MPJ.COMM_WORLD.barrier();
-
-    if(me == 0)  System.out.println("SsendO TEST COMPLETE\n");
-    MPJ.finish();
-  }
 }
-
-
-

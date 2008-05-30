@@ -1,10 +1,14 @@
 /* $Id$ */
 
-
 package ccl_ObjSer;
 
 import java.io.Serializable;
-class complexNum implements Serializable{
-  float realPart;
-  float imaginPart;
+
+class complexNum implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    float realPart;
+
+    float imaginPart;
 }

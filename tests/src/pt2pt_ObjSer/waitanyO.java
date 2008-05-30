@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,81 +31,78 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
  Object version :
-    Sang Lim(slim@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    09/5/98
-****************************************************************************
-*/
+ Sang Lim(slim@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 09/5/98
+ ****************************************************************************
+ */
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package pt2pt_ObjSer;
-
 
 import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
 import ibis.mpj.Request;
 import ibis.mpj.Status;
- 
 
 class waitanyO {
-  static public void main(String[] args) throws MPJException {
+    static public void main(String[] args) throws MPJException {
 
-    int me,tasks,i,index;
+        int me, tasks, i, index;
 
-    test a[] = new test[1];
-    test b[] = new test[10];
+        test a[] = new test[1];
+        test b[] = new test[10];
 
-    MPJ.init(args);
-    me = MPJ.COMM_WORLD.rank();
-    tasks = MPJ.COMM_WORLD.size(); 
- 
-    int data[] = new int[tasks];
-    Request req[] = new Request[tasks];
-    Status status;
-  
-    for (i = 0; i < 10;i++){
-       b[i] = new test();
-       b[i].a = -1;
+        MPJ.init(args);
+        me = MPJ.COMM_WORLD.rank();
+        tasks = MPJ.COMM_WORLD.size();
+
+        int data[] = new int[tasks];
+        Request req[] = new Request[tasks];
+        Status status;
+
+        for (i = 0; i < 10; i++) {
+            b[i] = new test();
+            b[i].a = -1;
+        }
+
+        a[0] = new test();
+        a[0].a = me;
+
+        if (me == 1)
+            MPJ.COMM_WORLD.send(a, 0, 1, MPJ.OBJECT, 0, 1);
+        else {
+            req[0] = null;// MPI.REQUEST_NULL;
+            for (i = 1; i < tasks; i++)
+                req[i] = MPJ.COMM_WORLD.irecv(b, i, 1, MPJ.OBJECT, i, 1);
+
+            for (i = 1; i < tasks; i++) {
+                status = Request.waitAny(req);
+
+                if (!req[status.getIndex()].isVoid())
+                    System.out
+                            .println("ERROR(3) in MPJ_Waitany: reqest not set to NULL");
+            }
+        }
+
+        MPJ.COMM_WORLD.barrier();
+        if (me == 0)
+            System.out.println("WaitanyO TEST COMPLETE\n");
+        MPJ.finish();
     }
-
-    a[0] = new test();
-    a[0].a = me;
-
-    if(me == 1) 
-      MPJ.COMM_WORLD.send(a,0,1,MPJ.OBJECT,0,1);
-    else {
-      req[0] = null;//MPI.REQUEST_NULL;
-      for(i=1;i<tasks;i++)  
-	req[i] = MPJ.COMM_WORLD.irecv(b,i,1,MPJ.OBJECT,i,1);
-	
-      for(i=1;i<tasks;i++)  {
-	status = Request.waitAny(req);
-
-	if(!req[status.getIndex()].isVoid())
-	  System.out.println
-	    ("ERROR(3) in MPJ_Waitany: reqest not set to NULL");
-      }
-    }
-
-    MPJ.COMM_WORLD.barrier();
-    if(me == 0)  System.out.println("WaitanyO TEST COMPLETE\n");
-    MPJ.finish();
-  }
 }
-
-

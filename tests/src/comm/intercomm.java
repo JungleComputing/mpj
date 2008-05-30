@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,22 +31,22 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
-****************************************************************************/
+ ****************************************************************************/
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package comm;
 
@@ -59,109 +59,108 @@ import ibis.mpj.Status;
 
 class intercomm {
 
-  static int newsize,me,size,color,key,
-             local_lead,remote_lead,newme,othersum;
-  static int mebuf[] = new int[1];
-  static int sum[]  = new int[1];
-  static int newsum[] = new int[1];
-  static boolean flag;
-  static Intracomm comm,mergecomm;
-  static Intercomm intercomm; 
-  static Status status;
-  static Group newgid;
-  
+    static int newsize, me, size, color, key, local_lead, remote_lead, newme,
+            othersum;
 
+    static int mebuf[] = new int[1];
 
-  static void inter_tests() throws MPJException {
-    flag = intercomm.testInter();
-    if(flag != true)
-      System.out.println
-	("ERROR in MPJ_Comm_test_inter: flag = "+flag+", should be 1");
+    static int sum[] = new int[1];
 
-    
-    newsize = intercomm.remoteSize();    
-    if(newsize != size/2)
-      System.out.println
-	("ERROR in MPJ_Comm_remote_size: size = "+newsize+
-	 ", should be "+(size/2));
- 
-   
-    newgid = intercomm.remoteGroup();
-    newsize = newgid.size();
-    if(newsize != size/2)
-      System.out.println
-	("ERROR in MPJ_Comm_remote_group: size = "+newsize+
-	 ", should be "+(size/2));
+    static int newsum[] = new int[1];
 
- 
-    newsum[0] = sum[0];
-    status = intercomm.sendrecvReplace(newsum,0,1,MPJ.INT,newme,7,newme,7);
-    othersum = size/2*(size/2-1);
-    if(me%2 == 0)  othersum += size/2;
-    if(othersum != newsum[0])
-      System.out.println
-	("ERROR in Intercomm_create, sum = "+othersum+", should be "+newsum);
- 
+    static boolean flag;
 
-    boolean high = (color==1) ? true : false;
-    Intracomm mergecomm = intercomm.merge(high);
-    mebuf[0] = me;
-    mergecomm.allreduce(mebuf,0,newsum,0,1,MPJ.INT,MPJ.SUM);
-    if(newsum[0] != size*(size-1)/2)
-      System.out.println
-	("ERROR in MPJ_Intercomm_merge: sum = "+newsum[0]+
-	 ", should be "+size*(size-1)/2);
-  }
- 
-  ////////////////////////////////////////////////////////////
+    static Intracomm comm, mergecomm;
 
-  
-  static public void test() throws MPJException {
-    Intracomm comm1, comm2;
+    static Intercomm intercomm;
 
-    me = MPJ.COMM_WORLD.rank();
-    size = MPJ.COMM_WORLD.size(); 
- 
-    if(size%2==1) { 
-      System.out.println("MUST RUN WITH EVEN NUMBER OF TASKS"); 
-      System.exit(0); 
+    static Status status;
+
+    static Group newgid;
+
+    static void inter_tests() throws MPJException {
+        flag = intercomm.testInter();
+        if (flag != true)
+            System.out.println("ERROR in MPJ_Comm_test_inter: flag = " + flag
+                    + ", should be 1");
+
+        newsize = intercomm.remoteSize();
+        if (newsize != size / 2)
+            System.out.println("ERROR in MPJ_Comm_remote_size: size = "
+                    + newsize + ", should be " + (size / 2));
+
+        newgid = intercomm.remoteGroup();
+        newsize = newgid.size();
+        if (newsize != size / 2)
+            System.out.println("ERROR in MPJ_Comm_remote_group: size = "
+                    + newsize + ", should be " + (size / 2));
+
+        newsum[0] = sum[0];
+        status = intercomm.sendrecvReplace(newsum, 0, 1, MPJ.INT, newme, 7,
+                newme, 7);
+        othersum = size / 2 * (size / 2 - 1);
+        if (me % 2 == 0)
+            othersum += size / 2;
+        if (othersum != newsum[0])
+            System.out.println("ERROR in Intercomm_create, sum = " + othersum
+                    + ", should be " + newsum);
+
+        boolean high = (color == 1) ? true : false;
+        Intracomm mergecomm = intercomm.merge(high);
+        mebuf[0] = me;
+        mergecomm.allreduce(mebuf, 0, newsum, 0, 1, MPJ.INT, MPJ.SUM);
+        if (newsum[0] != size * (size - 1) / 2)
+            System.out.println("ERROR in MPJ_Intercomm_merge: sum = "
+                    + newsum[0] + ", should be " + size * (size - 1) / 2);
     }
- 
-    key = me;
-    color = me%2;
-    comm = MPJ.COMM_WORLD.split(color,key);
-    comm1 = comm;
-    flag = comm.testInter();
-    if(flag != false)
-      System.out.println
-	("ERROR in MPJ_Comm_test_inter: flag = "+flag+", should be false");
-    newme = comm.rank();
 
-    mebuf[0] = me;
-    comm.allreduce(mebuf,0,sum,0,1,MPJ.INT,MPJ.SUM);
- 
+    // //////////////////////////////////////////////////////////
 
-    local_lead = 0;
-    remote_lead = (color==1) ? 0 : 1;
-    intercomm = MPJ.COMM_WORLD.createIntercomm(comm,local_lead,remote_lead,5);
-    inter_tests();
- 
+    static public void test() throws MPJException {
+        Intracomm comm1, comm2;
 
-    Intercomm incomm = (Intercomm) intercomm.clone();
-    intercomm = incomm;
-    inter_tests();
- 
+        me = MPJ.COMM_WORLD.rank();
+        size = MPJ.COMM_WORLD.size();
 
-    MPJ.COMM_WORLD.barrier();
-    if(me == 0)  System.out.println("Intercomm TEST COMPLETE\n");
+        if (size % 2 == 1) {
+            System.out.println("MUST RUN WITH EVEN NUMBER OF TASKS");
+            System.exit(0);
+        }
 
-  }
-  
-  static public void main(String[] args) throws MPJException {
-    MPJ.init(args);    
+        key = me;
+        color = me % 2;
+        comm = MPJ.COMM_WORLD.split(color, key);
+        comm1 = comm;
+        flag = comm.testInter();
+        if (flag != false)
+            System.out.println("ERROR in MPJ_Comm_test_inter: flag = " + flag
+                    + ", should be false");
+        newme = comm.rank();
 
-    test();
-    
-    MPJ.finish();
-  }
+        mebuf[0] = me;
+        comm.allreduce(mebuf, 0, sum, 0, 1, MPJ.INT, MPJ.SUM);
+
+        local_lead = 0;
+        remote_lead = (color == 1) ? 0 : 1;
+        intercomm = MPJ.COMM_WORLD.createIntercomm(comm, local_lead,
+                remote_lead, 5);
+        inter_tests();
+
+        Intercomm incomm = (Intercomm) intercomm.clone();
+        intercomm = incomm;
+        inter_tests();
+
+        MPJ.COMM_WORLD.barrier();
+        if (me == 0)
+            System.out.println("Intercomm TEST COMPLETE\n");
+
+    }
+
+    static public void main(String[] args) throws MPJException {
+        MPJ.init(args);
+
+        test();
+
+        MPJ.finish();
+    }
 }

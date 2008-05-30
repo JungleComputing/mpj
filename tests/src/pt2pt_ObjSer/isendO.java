@@ -23,7 +23,7 @@
  CORP. HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
  ENHANCEMENTS, OR MODIFICATIONS.
 
-****************************************************************************
+ ****************************************************************************
 
  These test cases reflect an interpretation of the MPI Standard.  They are
  are, in most cases, unit tests of specific MPI behaviors.  If a user of any
@@ -31,30 +31,29 @@
  different than that implied by the test case we would appreciate feedback.
 
  Comments may be sent to:
-    Richard Treumann
-    treumann@kgn.ibm.com
+ Richard Treumann
+ treumann@kgn.ibm.com
 
-****************************************************************************
+ ****************************************************************************
 
  MPI-Java version :
-    Sung-Hoon Ko(shko@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    03/22/98
+ Sung-Hoon Ko(shko@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 03/22/98
 
  Object version :
-    Sang Lim(slim@npac.syr.edu)
-    Northeast Parallel Architectures Center at Syracuse University
-    07/23/98
-****************************************************************************
-*/
+ Sang Lim(slim@npac.syr.edu)
+ Northeast Parallel Architectures Center at Syracuse University
+ 07/23/98
+ ****************************************************************************
+ */
 /* Ported to MPJ:
-   Markus Bornemann
-   Vrije Universiteit Amsterdam Department of Computer Science
-   25/5/2005
-*/
+ Markus Bornemann
+ Vrije Universiteit Amsterdam Department of Computer Science
+ 25/5/2005
+ */
 
 package pt2pt_ObjSer;
-
 
 import ibis.mpj.MPJ;
 import ibis.mpj.MPJException;
@@ -63,78 +62,85 @@ import ibis.mpj.Status;
 
 class isendO {
 
-  static int tasks,bytes,i; 
-  static byte buf[] = new byte[10000];
-  static Request req[];
-  static Status stats[];
+    static int tasks, bytes, i;
 
-  static    test a[] = new test[1];
-  static    test b[] = new test[10];
-     
- 
-  static void wstart()
-  throws MPJException {
-    stats = Request.waitAll(req);
+    static byte buf[] = new byte[10000];
 
-    for(i=0;i<tasks;i++)
-      if(b[i].a != i)
-	System.out.println
-	  ("ERROR : data is"+b[i].a+", should be"+i);
-  }
-  
-  public static void main(String[] args) throws MPJException {
-    a[0] = new test();
-    for(i=0;i<10;i++)
-      b[i] = new test();
+    static Request req[];
 
-    MPJ.init(args);
-    a[0].a=MPJ.COMM_WORLD.rank();
-    tasks=MPJ.COMM_WORLD.size();
+    static Status stats[];
 
-    req = new Request[2*tasks];
-    stats = new Status[2*tasks];  
+    static test a[] = new test[1];
 
-    MPJ.bufferAttach(buf);
+    static test b[] = new test[10];
 
+    static void wstart() throws MPJException {
+        stats = Request.waitAll(req);
 
-    if(a[0].a == 0)  System.out.println("> Testing Isend/Irecv...");
-    for(i=0;i<tasks;i++)  b[i].a = -1;
-    for(i=0;i<tasks;i++)  {
-       req[2*i]=MPJ.COMM_WORLD.isend(a,0,1,MPJ.OBJECT,i,1);
-       req[2*i+1]=MPJ.COMM_WORLD.irecv(b,i,1,MPJ.OBJECT,i,1);
+        for (i = 0; i < tasks; i++)
+            if (b[i].a != i)
+                System.out.println("ERROR : data is" + b[i].a + ", should be"
+                        + i);
     }
-    wstart();
 
-    if(a[0].a == 0)  System.out.println("> Testing Issend/Irecv...");
-    for(i=0;i<tasks;i++)  b[i].a = -1;
-    for(i=0;i<tasks;i++)  {
-      req[2*i]=MPJ.COMM_WORLD.issend(a,0,1,MPJ.OBJECT,i,1);
-      req[2*i+1]=MPJ.COMM_WORLD.irecv(b,i,1,MPJ.OBJECT,i,1);
+    public static void main(String[] args) throws MPJException {
+        a[0] = new test();
+        for (i = 0; i < 10; i++)
+            b[i] = new test();
+
+        MPJ.init(args);
+        a[0].a = MPJ.COMM_WORLD.rank();
+        tasks = MPJ.COMM_WORLD.size();
+
+        req = new Request[2 * tasks];
+        stats = new Status[2 * tasks];
+
+        MPJ.bufferAttach(buf);
+
+        if (a[0].a == 0)
+            System.out.println("> Testing Isend/Irecv...");
+        for (i = 0; i < tasks; i++)
+            b[i].a = -1;
+        for (i = 0; i < tasks; i++) {
+            req[2 * i] = MPJ.COMM_WORLD.isend(a, 0, 1, MPJ.OBJECT, i, 1);
+            req[2 * i + 1] = MPJ.COMM_WORLD.irecv(b, i, 1, MPJ.OBJECT, i, 1);
+        }
+        wstart();
+
+        if (a[0].a == 0)
+            System.out.println("> Testing Issend/Irecv...");
+        for (i = 0; i < tasks; i++)
+            b[i].a = -1;
+        for (i = 0; i < tasks; i++) {
+            req[2 * i] = MPJ.COMM_WORLD.issend(a, 0, 1, MPJ.OBJECT, i, 1);
+            req[2 * i + 1] = MPJ.COMM_WORLD.irecv(b, i, 1, MPJ.OBJECT, i, 1);
+        }
+        wstart();
+
+        if (a[0].a == 0)
+            System.out.println("> Testing Irecv/Irsend...");
+        for (i = 0; i < tasks; i++)
+            b[i].a = -1;
+        for (i = 0; i < tasks; i++)
+            req[2 * i + 1] = MPJ.COMM_WORLD.irecv(b, i, 1, MPJ.OBJECT, i, 1);
+        MPJ.COMM_WORLD.barrier();
+        for (i = 0; i < tasks; i++)
+            req[2 * i] = MPJ.COMM_WORLD.irsend(a, 0, 1, MPJ.OBJECT, i, 1);
+        wstart();
+
+        if (a[0].a == 0)
+            System.out.println("> Testing Ibsend/Irecv...");
+        for (i = 0; i < tasks; i++)
+            b[i].a = -1;
+        for (i = 0; i < tasks; i++) {
+            req[2 * i] = MPJ.COMM_WORLD.ibsend(a, 0, 1, MPJ.OBJECT, i, 1);
+            req[2 * i + 1] = MPJ.COMM_WORLD.irecv(b, i, 1, MPJ.OBJECT, i, 1);
+        }
+        wstart();
+
+        MPJ.COMM_WORLD.barrier();
+        if (a[0].a == 0)
+            System.out.println("IsendO TEST COMPLETE\n");
+        MPJ.finish();
     }
-    wstart();
-
-    if(a[0].a == 0)  System.out.println("> Testing Irecv/Irsend..."); 
-    for(i=0;i<tasks;i++)  b[i].a = -1;
-    for(i=0;i<tasks;i++)
-      req[2*i+1]=MPJ.COMM_WORLD.irecv(b,i,1,MPJ.OBJECT,i,1);
-    MPJ.COMM_WORLD.barrier();
-    for(i=0;i<tasks;i++)
-      req[2*i]=MPJ.COMM_WORLD.irsend(a,0,1,MPJ.OBJECT,i,1);
-    wstart();
-
-    if(a[0].a == 0)  System.out.println("> Testing Ibsend/Irecv...");
-    for(i=0;i<tasks;i++)  b[i].a = -1;
-    for(i=0;i<tasks;i++)  {
-      req[2*i]=MPJ.COMM_WORLD.ibsend(a,0,1,MPJ.OBJECT,i,1);
-      req[2*i+1]=MPJ.COMM_WORLD.irecv(b,i,1,MPJ.OBJECT,i,1);
-    }
-    wstart(); 
-
-    MPJ.COMM_WORLD.barrier();
-    if(a[0].a == 0)  System.out.println("IsendO TEST COMPLETE\n");
-    MPJ.finish();
-  }
 }
-
-
-
