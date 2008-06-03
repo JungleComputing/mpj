@@ -10,6 +10,8 @@ set JAVACLASSPATH=%CLASSPATH%;
 for %%i in ("%MPJ_HOME%\lib\*.jar") do call "%MPJ_HOME%\bin\AddToMpjClassPath.bat" %%i
 
 set MPJC_ARGS=
+
+:setupArgs
 if ""%1""=="""" goto doneStart
 set MPJC_ARGS=%MPJC_ARGS% "%1"
 shift
