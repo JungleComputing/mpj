@@ -50,10 +50,6 @@ class RegEvtHandler implements RegistryEventHandler {
         }
     }
 
-    public void gotSignal(String signal) {
-        // ignored
-    }
-
     public void electionResult(String name, IbisIdentifier winner) {
         // ignored
     }
