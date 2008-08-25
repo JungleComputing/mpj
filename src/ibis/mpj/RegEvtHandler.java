@@ -57,4 +57,16 @@ class RegEvtHandler implements RegistryEventHandler {
     public void electionResult(String name, IbisIdentifier winner) {
         // ignored
     }
+
+    public void gotSignal(String signal, IbisIdentifier source) {
+        // ignored
+    }
+
+    public void poolClosed() {
+        // ignored
+    }
+
+    public void poolTerminated(IbisIdentifier source) {
+        // ignored
+    }
 }
