@@ -10,7 +10,8 @@ import java.io.EOFException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Object which will be sent and received by the basic point-to-point modes.
@@ -21,7 +22,7 @@ public class MPJObject implements Serializable {
      */
     private static final long serialVersionUID = 879088312956043084L;
 
-    static Logger logger = Logger.getLogger(MPJObject.class.getName());
+    static Logger logger = LoggerFactory.getLogger(MPJObject.class.getName());
 
     private static final int HEADER_SIZE = 5;
 

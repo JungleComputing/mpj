@@ -5,13 +5,14 @@
  */
 package ibis.mpj;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of the collective operation: allgather.
  */
 public class ColAllGather {
-    static Logger logger = Logger.getLogger(ColAllGather.class.getName());
+    static Logger logger = LoggerFactory.getLogger(ColAllGather.class.getName());
 
     private Object sendbuf = null;
 

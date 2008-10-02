@@ -15,7 +15,8 @@ import ibis.ipl.WriteMessage;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Holds all information about a connection between two nodes.
@@ -25,7 +26,7 @@ public class Connection {
 
     // private MPJObject readObj = new MPJObject();
 
-    static Logger logger = Logger.getLogger(Connection.class.getName());
+    static Logger logger = LoggerFactory.getLogger(Connection.class.getName());
 
     private ReceivePort receiver = null;
 

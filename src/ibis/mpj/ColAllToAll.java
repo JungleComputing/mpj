@@ -5,13 +5,14 @@
  */
 package ibis.mpj;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of the collective operation: alltoall.
  */
 public class ColAllToAll {
-    static Logger logger = Logger.getLogger(ColAllToAll.class.getName());
+    static Logger logger = LoggerFactory.getLogger(ColAllToAll.class.getName());
 
     private Object sendbuf = null;
 

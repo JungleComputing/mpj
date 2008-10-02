@@ -8,7 +8,8 @@ package ibis.mpj;
 import ibis.ipl.IbisIdentifier;
 import ibis.ipl.ReadMessage;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of the basic point-to-point communication modes on top of
@@ -16,7 +17,7 @@ import org.apache.log4j.Logger;
  */
 public class IbisMPJComm extends Thread {
 
-    static Logger logger = Logger.getLogger(IbisMPJComm.class.getName());
+    static Logger logger = LoggerFactory.getLogger(IbisMPJComm.class.getName());
 
     protected final static int OP_IRECV = 1;
 
@@ -822,35 +823,35 @@ public class IbisMPJComm extends Thread {
             try {
                 doIrecv(false);
             } catch (MPJException e) {
-                logger.fatal("got exception", e);
+                logger.error("got fatal exception", e);
                 System.exit(-1);
             }
         } else if (mode == OP_ISEND) {
             try {
                 doIsend();
             } catch (MPJException e) {
-                logger.fatal("got exception", e);
+                logger.error("got fatal exception", e);
                 System.exit(-1);
             }
         } else if (mode == OP_IBSEND) {
             try {
                 doIbsend();
             } catch (MPJException e) {
-                logger.fatal("got exception", e);
+                logger.error("got fatal exception", e);
                 System.exit(-1);
             }
         } else if (mode == OP_ISSEND) {
             try {
                 doIssend();
             } catch (MPJException e) {
-                logger.fatal("got exception", e);
+                logger.error("got fatal exception", e);
                 System.exit(-1);
             }
         } else if (mode == OP_IRSEND) {
             try {
                 doIrsend();
             } catch (MPJException e) {
-                logger.fatal("got exception", e);
+                logger.error("got fatal exception", e);
                 System.exit(-1);
             }
         }

@@ -12,30 +12,21 @@ import ibis.ipl.IbisIdentifier;
 import ibis.ipl.PortType;
 import ibis.ipl.Registry;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.WriterAppender;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Main MPJ class.
  */
 public class MPJ {
 
-    static {
-        Logger ibisLogger = Logger.getLogger("ibis");
-        Logger rootLogger = Logger.getRootLogger();
-        if (!rootLogger.getAllAppenders().hasMoreElements()
-                && !ibisLogger.getAllAppenders().hasMoreElements()) {
-            // No appenders defined, print to standard err by default
-            PatternLayout layout = new PatternLayout("%d{HH:mm:ss} %-5p %m%n");
-            WriterAppender appender = new WriterAppender(layout, System.err);
-            ibisLogger.addAppender(appender);
-            ibisLogger.setLevel(Level.WARN);
-        }
-    }
-
-    private static Logger logger = Logger.getLogger(MPJ.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(MPJ.class.getName());
 
     static boolean LOCALCOPYIBIS = true;
 
