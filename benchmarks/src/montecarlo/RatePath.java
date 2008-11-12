@@ -483,9 +483,9 @@ public class RatePath extends PathId {
         this.pathDate = new int[nLines];
         nAcceptedPathValue = 0;
         iLine = 0;
-        for (java.util.Enumeration enu = allLines.elements(); enu
+        for (java.util.Enumeration<String> enu = allLines.elements(); enu
                 .hasMoreElements();) {
-            aLine = (String) enu.nextElement();
+            aLine = enu.nextElement();
             String[] field = Utilities.splitString(",", aLine);
             int aDate = Integer.parseInt("19" + field[0]);
             //

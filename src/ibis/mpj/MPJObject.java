@@ -307,7 +307,7 @@ public class MPJObject implements Serializable {
                     count--;
                     if (((Object[]) destBuf)[i] == null) {
 
-                        Class cl = ((Object[]) destBuf)[offset].getClass();
+                        Class<?> cl = ((Object[]) destBuf)[offset].getClass();
                         ((Object[]) destBuf)[i] = cl.newInstance();
                     }
                 }
