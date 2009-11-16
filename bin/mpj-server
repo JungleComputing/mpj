@@ -9,4 +9,4 @@ if [ -z "$MPJ_HOME" ];  then
     exit 1
 fi
 
-exec "$MPJ_HOME"/bin/mpj-run -Xmx256M ibis.server.Server "$@"
+exec "$MPJ_HOME"/bin/mpj-run -Xmx256M ibis.ipl.server.Server "$@"
