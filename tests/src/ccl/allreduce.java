@@ -55,7 +55,7 @@ import ibis.mpj.MPJException;
 
 class allreduce {
     static public void test() throws MPJException {
-        final int MAXLEN = 10000;
+        final int MAXLEN = 1000000;
 
         int i, j, k;
         int out[] = new int[MAXLEN];
