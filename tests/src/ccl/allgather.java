@@ -55,7 +55,7 @@ import ibis.mpj.MPJException;
 
 class allgather {
     static public void test() throws MPJException {
-        final int MAXLEN = 10000;
+        final int MAXLEN = 1000000;
 
         int root, i, j, k;
         int myself, tasks;

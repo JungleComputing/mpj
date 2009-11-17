@@ -1,4 +1,4 @@
-4 ccl.allgather {net.gm}
+4 ccl.allgather
 2 ccl.allgatherv
 2 ccl.allreduce
 2 ccl.allreduce_maxminloc
@@ -9,9 +9,9 @@
 3 ccl.gather
 3 ccl.gatherv
 2 ccl.reduce
-2 ccl.reduce_scatter {net.gm}
+2 ccl.reduce_scatter
 2 ccl.scan
-3 ccl.scatter {net.gm}
+3 ccl.scatter
 3 ccl.scatterv
 2 ccl_ObjSer.allgatherO
 2 ccl_ObjSer.allgathervO
