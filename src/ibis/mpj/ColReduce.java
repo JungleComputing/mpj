@@ -8,6 +8,8 @@ package ibis.mpj;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Array;
+
 /**
  * Implementation of the collective operation: reduce
  */
@@ -73,26 +75,9 @@ public class ColReduce {
                     + " groupsize = " + size + " counter<< = " + this.tag);
         }
 
-        Object recv = null;
-        if (sendbuf instanceof byte[]) {
-            recv = new byte[((byte[]) this.recvbuf).length];
-        } else if (sendbuf instanceof char[]) {
-            recv = new char[((char[]) this.recvbuf).length];
-        } else if (sendbuf instanceof short[]) {
-            recv = new short[((short[]) this.recvbuf).length];
-        } else if (sendbuf instanceof boolean[]) {
-            recv = new boolean[((boolean[]) this.recvbuf).length];
-        } else if (sendbuf instanceof int[]) {
-            recv = new int[((int[]) this.recvbuf).length];
-        } else if (sendbuf instanceof long[]) {
-            recv = new long[((long[]) this.recvbuf).length];
-        } else if (sendbuf instanceof float[]) {
-            recv = new float[((float[]) this.recvbuf).length];
-        } else if (sendbuf instanceof double[]) {
-            recv = new double[((double[]) this.recvbuf).length];
-        } else {
-            recv = new Object[((Object[]) this.recvbuf).length];
-        }
+        Class<?> componentType = this.recvbuf.getClass().getComponentType();
+        Object recv = Array.newInstance(componentType, Array.getLength(this.recvbuf));
+
         this.comm.localcopy1type(this.sendbuf, this.sendOffset, this.recvbuf,
                 this.recvOffset, this.count, this.datatype);
 
