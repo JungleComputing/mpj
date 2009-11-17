@@ -5,6 +5,8 @@
  */
 package ibis.mpj;
 
+import java.lang.reflect.Array;
+
 import java.util.Vector;
 
 /**
@@ -69,45 +71,9 @@ public class MPJObjectQueue {
             status = new Status();
             if (obj.getObjectData() != null) {
                 status.setTag(obj.getTag());
-
-                if (obj.getObjectData() instanceof byte[]) {
-                    status.setCount(((byte[]) obj.getObjectData()).length);
-                    status.setSize(status.getCount(null));
-                    return (status);
-                } else if (obj.getObjectData() instanceof char[]) {
-                    status.setCount(((char[]) obj.getObjectData()).length);
-                    status.setSize(status.getCount(null));
-                    return (status);
-                } else if (obj.getObjectData() instanceof short[]) {
-                    status.setCount(((short[]) obj.getObjectData()).length);
-                    status.setSize(status.getCount(null));
-                    return (status);
-                } else if (obj.getObjectData() instanceof boolean[]) {
-                    status.setCount(((boolean[]) obj.getObjectData()).length);
-                    status.setSize(status.getCount(null));
-                    return (status);
-                } else if (obj.getObjectData() instanceof int[]) {
-                    status.setCount(((int[]) obj.getObjectData()).length);
-                    status.setSize(status.getCount(null));
-                    return (status);
-                } else if (obj.getObjectData() instanceof long[]) {
-                    status.setCount(((long[]) obj.getObjectData()).length);
-                    status.setSize(status.getCount(null));
-                    return (status);
-                } else if (obj.getObjectData() instanceof float[]) {
-                    status.setCount(((float[]) obj.getObjectData()).length);
-                    status.setSize(status.getCount(null));
-                    return (status);
-                } else if (obj.getObjectData() instanceof double[]) {
-                    status.setCount(((double[]) obj.getObjectData()).length);
-                    status.setSize(status.getCount(null));
-                    return (status);
-                } else {
-                    status.setCount(((Object[]) obj.getObjectData()).length);
-                    status.setSize(status.getCount(null));
-                    return (status);
-                }
-
+                status.setCount(Array.getLength(obj.getObjectData()));
+                status.setSize(status.getCount(null));
+                return (status);
             }
         }
         return (status);
