@@ -69,53 +69,8 @@ public class ColAllreduce {
         Class<?> componentType = this.recvbuf.getClass().getComponentType();
         Object tempbuf = Array.newInstance(componentType, Array.getLength(this.recvbuf));
 
-        /*
-        Object tempbuf = null;
-        if (sendbuf instanceof byte[]) {
-            tempbuf = new byte[((byte[]) this.recvbuf).length];
-            System.arraycopy(this.sendbuf, this.sendoffset, this.recvbuf,
-                    this.recvoffset, this.count * this.datatype.extent());
-
-        } else if (sendbuf instanceof char[]) {
-            tempbuf = new char[((char[]) this.recvbuf).length];
-            System.arraycopy(this.sendbuf, this.sendoffset, this.recvbuf,
-                    this.recvoffset, this.count * this.datatype.extent());
-
-        } else if (sendbuf instanceof short[]) {
-            tempbuf = new short[((short[]) this.recvbuf).length];
-            System.arraycopy(this.sendbuf, this.sendoffset, this.recvbuf,
-                    this.recvoffset, this.count * this.datatype.extent());
-
-        } else if (sendbuf instanceof boolean[]) {
-            tempbuf = new boolean[((boolean[]) this.recvbuf).length];
-            System.arraycopy(this.sendbuf, this.sendoffset, this.recvbuf,
-                    this.recvoffset, this.count * this.datatype.extent());
-
-        } else if (sendbuf instanceof int[]) {
-            tempbuf = new int[((int[]) this.recvbuf).length];
-            System.arraycopy(this.sendbuf, this.sendoffset, this.recvbuf,
-                    this.recvoffset, this.count * this.datatype.extent());
-
-        } else if (sendbuf instanceof long[]) {
-            tempbuf = new long[((long[]) this.recvbuf).length];
-            System.arraycopy(this.sendbuf, this.sendoffset, this.recvbuf,
-                    this.recvoffset, this.count * this.datatype.extent());
-
-        } else if (sendbuf instanceof float[]) {
-            tempbuf = new float[((float[]) this.recvbuf).length];
-            System.arraycopy(this.sendbuf, this.sendoffset, this.recvbuf,
-                    this.recvoffset, this.count * this.datatype.extent());
-
-        } else if (sendbuf instanceof double[]) {
-            tempbuf = new double[((double[]) this.recvbuf).length];
-            System.arraycopy(this.sendbuf, this.sendoffset, this.recvbuf,
-                    this.recvoffset, this.count * this.datatype.extent());
-
-        } else {
-        */
         if (sendbuf instanceof Object[]) {
 
-            // tempbuf = new Object[((Object[]) this.recvbuf).length];
             StoreBuffer stBuf = new StoreBuffer();
 
             // StoreArrayInputStream sin = null;
@@ -199,7 +154,7 @@ public class ColAllreduce {
                  * tmp_buf
                  */
 
-                if (this.comm.rank() < dst) {
+                if (rank < dst) {
                     this.comm.send(recvbuf, recvoffset, count, datatype, dst,
                             this.tag);
                     this.comm.recv(tempbuf, tempoffset, count, datatype, dst,
