@@ -17,72 +17,67 @@ public class OpProd extends Op {
     public void call(Object invec, int inoffset, Object inoutvec,
             int outoffset, int count, Datatype datatype) throws MPJException {
         if (datatype == MPJ.SHORT) {
-            if (((short[]) invec).length != ((short[]) inoutvec).length) {
+            short[] shortInvec = (short[]) invec;
+            short[] shortInoutvec = (short[]) inoutvec;
+            if (shortInvec.length != shortInoutvec.length) {
                 return;
             }
 
             for (int i = 0; i < count; i++) {
-
-                short o1 = ((short[]) invec)[i + inoffset];
-                short o2 = ((short[]) inoutvec)[i + outoffset];
-
-                ((short[]) inoutvec)[i + outoffset] = (short) (o1 * o2);
+                shortInoutvec[i + outoffset] *= shortInvec[i+inoffset];
             }
             return;
-        } else if (datatype == MPJ.INT) {
-            if (((int[]) invec).length != ((int[]) inoutvec).length) {
+        } 
+        if (datatype == MPJ.INT) {
+            int[] intInvec = (int[]) invec;
+            int[] intInoutvec = (int[]) inoutvec;
+            if (intInvec.length != intInoutvec.length) {
                 return;
             }
 
             for (int i = 0; i < count; i++) {
-
-                int o1 = ((int[]) invec)[i + inoffset];
-                int o2 = ((int[]) inoutvec)[i + outoffset];
-
-                ((int[]) inoutvec)[i + outoffset] = o1 * o2;
+                intInoutvec[i + outoffset] *= intInvec[i+inoffset];
             }
             return;
-        } else if (datatype == MPJ.LONG) {
-            if (((long[]) invec).length != ((long[]) inoutvec).length) {
+        }
+        if (datatype == MPJ.LONG) {
+            long[] longInvec = (long[]) invec;
+            long[] longInoutvec = (long[]) inoutvec;
+            if (longInvec.length != longInoutvec.length) {
                 return;
             }
 
             for (int i = 0; i < count; i++) {
-
-                long o1 = ((long[]) invec)[i + inoffset];
-                long o2 = ((long[]) inoutvec)[i + outoffset];
-
-                ((long[]) inoutvec)[i + outoffset] = o1 * o2;
+                longInoutvec[i + outoffset] *= longInvec[i+inoffset];
             }
             return;
-        } else if (datatype == MPJ.FLOAT) {
-            if (((float[]) invec).length != ((float[]) inoutvec).length) {
+        }
+        if (datatype == MPJ.FLOAT) {
+            float[] floatInvec = (float[]) invec;
+            float[] floatInoutvec = (float[]) inoutvec;
+            if (floatInvec.length != floatInoutvec.length) {
                 return;
             }
 
             for (int i = 0; i < count; i++) {
-
-                float o1 = ((float[]) invec)[i + inoffset];
-                float o2 = ((float[]) inoutvec)[i + outoffset];
-
-                ((float[]) inoutvec)[i + outoffset] = o1 * o2;
+                floatInoutvec[i + outoffset] *= floatInvec[i+inoffset];
             }
             return;
-        } else if (datatype == MPJ.DOUBLE) {
-            if (((double[]) invec).length != ((double[]) inoutvec).length) {
+        }
+        if (datatype == MPJ.DOUBLE) {
+            double[] doubleInvec = (double[]) invec;
+            double[] doubleInoutvec = (double[]) inoutvec;
+            if (doubleInvec.length != doubleInoutvec.length) {
                 return;
             }
 
             for (int i = 0; i < count; i++) {
-
-                double o1 = ((double[]) invec)[i + inoffset];
-                double o2 = ((double[]) inoutvec)[i + outoffset];
-
-                ((double[]) inoutvec)[i + outoffset] = o1 * o2;
+                doubleInoutvec[i + outoffset] *= doubleInvec[i+inoffset];
             }
             return;
         }
 
         throw new MPJException("Operation does not support this Datatype");
+
     }
 }

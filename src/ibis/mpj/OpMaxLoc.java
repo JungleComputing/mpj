@@ -17,9 +17,10 @@ public class OpMaxLoc extends Op {
 
     public void call(Object invec, int inoffset, Object inoutvec,
             int outoffset, int count, Datatype datatype) throws MPJException {
-
         if (datatype == MPJ.SHORT2) {
-            if (((short[]) invec).length != ((short[]) inoutvec).length) {
+            short[] shortInvec = (short[]) invec;
+            short[] shortInoutvec = (short[]) inoutvec;
+            if (shortInvec.length != shortInoutvec.length) {
                 return;
             }
 
@@ -27,49 +28,26 @@ public class OpMaxLoc extends Op {
             int dispIndexOut = outoffset;
 
             for (int i = 0; i < count; i++) {
-                short o1 = ((short[]) invec)[dispIndexIn];
-                short o2 = ((short[]) inoutvec)[dispIndexOut];
+                short o1 = shortInvec[dispIndexIn];
+                short o2 = shortInoutvec[dispIndexOut];
 
                 if (o1 > o2) {
-                    ((short[]) inoutvec)[dispIndexOut] = o1;
-                    ((short[]) inoutvec)[dispIndexOut + 1] = ((short[]) invec)[dispIndexIn + 1];
+                    shortInoutvec[dispIndexOut] = o1;
+                    shortInoutvec[dispIndexOut + 1] = shortInvec[dispIndexIn + 1];
                 } else if (o1 == o2) {
-                    if (((short[]) invec)[dispIndexIn + 1] < ((short[]) inoutvec)[dispIndexOut + 1]) {
-                        ((short[]) inoutvec)[dispIndexOut + 1] = ((short[]) invec)[dispIndexIn + 1];
+                    if (shortInvec[dispIndexIn + 1] > shortInoutvec[dispIndexOut + 1]) {
+                        shortInoutvec[dispIndexOut + 1] = shortInvec[dispIndexIn + 1];
                     }
                 }
                 dispIndexIn += 2;
                 dispIndexOut += 2;
             }
             return;
-        } else if (datatype == MPJ.INT2) {
-            if (((int[]) invec).length != ((int[]) inoutvec).length) {
-                throw new MPJException("invec.length != inoutvec.length");
-            }
-
-            int dispIndexIn = inoffset;
-            int dispIndexOut = outoffset;
-
-            for (int i = 0; i < count; i++) {
-
-                int o1 = ((int[]) invec)[dispIndexIn];
-                int o2 = ((int[]) inoutvec)[dispIndexOut];
-
-                if (o1 > o2) {
-                    ((int[]) inoutvec)[dispIndexOut] = o1;
-                    ((int[]) inoutvec)[dispIndexOut + 1] = ((int[]) invec)[dispIndexIn + 1];
-                } else if (o1 == o2) {
-                    if (((int[]) invec)[dispIndexIn + 1] < ((int[]) inoutvec)[dispIndexOut + 1]) {
-                        ((int[]) inoutvec)[dispIndexOut + 1] = ((int[]) invec)[dispIndexIn + 1];
-                    }
-                }
-                dispIndexIn += 2;
-                dispIndexOut += 2;
-            }
-
-            return;
-        } else if (datatype == MPJ.LONG2) {
-            if (((long[]) invec).length != ((long[]) inoutvec).length) {
+        }
+        if (datatype == MPJ.INT2) {
+            int[] intInvec = (int[]) invec;
+            int[] intInoutvec = (int[]) inoutvec;
+            if (intInvec.length != intInoutvec.length) {
                 return;
             }
 
@@ -77,23 +55,26 @@ public class OpMaxLoc extends Op {
             int dispIndexOut = outoffset;
 
             for (int i = 0; i < count; i++) {
-                long o1 = ((long[]) invec)[dispIndexIn];
-                long o2 = ((long[]) inoutvec)[dispIndexOut];
+                int o1 = intInvec[dispIndexIn];
+                int o2 = intInoutvec[dispIndexOut];
 
                 if (o1 > o2) {
-                    ((long[]) inoutvec)[dispIndexOut] = o1;
-                    ((long[]) inoutvec)[dispIndexOut + 1] = ((long[]) invec)[dispIndexIn + 1];
+                    intInoutvec[dispIndexOut] = o1;
+                    intInoutvec[dispIndexOut + 1] = intInvec[dispIndexIn + 1];
                 } else if (o1 == o2) {
-                    if (((long[]) invec)[dispIndexIn + 1] < ((long[]) inoutvec)[dispIndexOut + 1]) {
-                        ((long[]) inoutvec)[dispIndexOut + 1] = ((long[]) invec)[dispIndexIn + 1];
+                    if (intInvec[dispIndexIn + 1] > intInoutvec[dispIndexOut + 1]) {
+                        intInoutvec[dispIndexOut + 1] = intInvec[dispIndexIn + 1];
                     }
                 }
                 dispIndexIn += 2;
                 dispIndexOut += 2;
             }
             return;
-        } else if (datatype == MPJ.FLOAT2) {
-            if (((float[]) invec).length != ((float[]) inoutvec).length) {
+        }
+        if (datatype == MPJ.LONG2) {
+            long[] longInvec = (long[]) invec;
+            long[] longInoutvec = (long[]) inoutvec;
+            if (longInvec.length != longInoutvec.length) {
                 return;
             }
 
@@ -101,23 +82,26 @@ public class OpMaxLoc extends Op {
             int dispIndexOut = outoffset;
 
             for (int i = 0; i < count; i++) {
-                float o1 = ((float[]) invec)[dispIndexIn];
-                float o2 = ((float[]) inoutvec)[dispIndexOut];
+                long o1 = longInvec[dispIndexIn];
+                long o2 = longInoutvec[dispIndexOut];
 
                 if (o1 > o2) {
-                    ((float[]) inoutvec)[dispIndexOut] = o1;
-                    ((float[]) inoutvec)[dispIndexOut + 1] = ((float[]) invec)[dispIndexIn + 1];
+                    longInoutvec[dispIndexOut] = o1;
+                    longInoutvec[dispIndexOut + 1] = longInvec[dispIndexIn + 1];
                 } else if (o1 == o2) {
-                    if (((float[]) invec)[dispIndexIn + 1] < ((float[]) inoutvec)[dispIndexOut + 1]) {
-                        ((float[]) inoutvec)[dispIndexOut + 1] = ((float[]) invec)[dispIndexIn + 1];
+                    if (longInvec[dispIndexIn + 1] > longInoutvec[dispIndexOut + 1]) {
+                        longInoutvec[dispIndexOut + 1] = longInvec[dispIndexIn + 1];
                     }
                 }
                 dispIndexIn += 2;
                 dispIndexOut += 2;
             }
             return;
-        } else if (datatype == MPJ.DOUBLE2) {
-            if (((double[]) invec).length != ((double[]) inoutvec).length) {
+        }
+        if (datatype == MPJ.FLOAT2) {
+            float[] floatInvec = (float[]) invec;
+            float[] floatInoutvec = (float[]) inoutvec;
+            if (floatInvec.length != floatInoutvec.length) {
                 return;
             }
 
@@ -125,15 +109,42 @@ public class OpMaxLoc extends Op {
             int dispIndexOut = outoffset;
 
             for (int i = 0; i < count; i++) {
-                double o1 = ((double[]) invec)[dispIndexIn];
-                double o2 = ((double[]) inoutvec)[dispIndexOut];
+                float o1 = floatInvec[dispIndexIn];
+                float o2 = floatInoutvec[dispIndexOut];
 
                 if (o1 > o2) {
-                    ((double[]) inoutvec)[dispIndexOut] = o1;
-                    ((double[]) inoutvec)[dispIndexOut + 1] = ((double[]) invec)[dispIndexIn + 1];
+                    floatInoutvec[dispIndexOut] = o1;
+                    floatInoutvec[dispIndexOut + 1] = floatInvec[dispIndexIn + 1];
                 } else if (o1 == o2) {
-                    if (((double[]) invec)[dispIndexIn + 1] < ((double[]) inoutvec)[dispIndexOut + 1]) {
-                        ((double[]) inoutvec)[dispIndexOut + 1] = ((double[]) invec)[dispIndexIn + 1];
+                    if (floatInvec[dispIndexIn + 1] > floatInoutvec[dispIndexOut + 1]) {
+                        floatInoutvec[dispIndexOut + 1] = floatInvec[dispIndexIn + 1];
+                    }
+                }
+                dispIndexIn += 2;
+                dispIndexOut += 2;
+            }
+            return;
+        }
+        if (datatype == MPJ.DOUBLE2) {
+            double[] doubleInvec = (double[]) invec;
+            double[] doubleInoutvec = (double[]) inoutvec;
+            if (doubleInvec.length != doubleInoutvec.length) {
+                return;
+            }
+
+            int dispIndexIn = inoffset;
+            int dispIndexOut = outoffset;
+
+            for (int i = 0; i < count; i++) {
+                double o1 = doubleInvec[dispIndexIn];
+                double o2 = doubleInoutvec[dispIndexOut];
+
+                if (o1 > o2) {
+                    doubleInoutvec[dispIndexOut] = o1;
+                    doubleInoutvec[dispIndexOut + 1] = doubleInvec[dispIndexIn + 1];
+                } else if (o1 == o2) {
+                    if (doubleInvec[dispIndexIn + 1] > doubleInoutvec[dispIndexOut + 1]) {
+                        doubleInoutvec[dispIndexOut + 1] = doubleInvec[dispIndexIn + 1];
                     }
                 }
                 dispIndexIn += 2;

@@ -18,148 +18,130 @@ public class OpMin extends Op {
     public void call(Object invec, int inoffset, Object inoutvec,
             int outoffset, int count, Datatype datatype) throws MPJException {
         if (datatype == MPJ.BYTE) {
-            if (((byte[]) invec).length != ((byte[]) inoutvec).length) {
+            byte[] byteInvec = (byte[]) invec;
+            byte[] byteInoutvec = (byte[]) inoutvec;
+            if (byteInvec.length != byteInoutvec.length) {
                 return;
             }
 
             for (int i = 0; i < count; i++) {
-
-                byte o1 = ((byte[]) invec)[i + inoffset];
-                byte o2 = ((byte[]) inoutvec)[i + outoffset];
-
+                byte o1 = byteInvec[i + inoffset];
+                byte o2 = byteInoutvec[i + outoffset];
                 if (o1 < o2) {
-                    ((byte[]) inoutvec)[i + outoffset] = o1;
-                } else {
-                    ((byte[]) inoutvec)[i + outoffset] = o2;
+                     byteInoutvec[i + outoffset] = o1;
                 }
-
             }
             return;
 
-        } else if (datatype == MPJ.CHAR) {
-            if (((char[]) invec).length != ((char[]) inoutvec).length) {
+        }
+        if (datatype == MPJ.CHAR) {
+            char[] charInvec = (char[]) invec;
+            char[] charInoutvec = (char[]) inoutvec;
+            if (charInvec.length != charInoutvec.length) {
                 return;
             }
 
             for (int i = 0; i < count; i++) {
-
-                char o1 = ((char[]) invec)[i + inoffset];
-                char o2 = ((char[]) inoutvec)[i + outoffset];
-
+                char o1 = charInvec[i + inoffset];
+                char o2 = charInoutvec[i + outoffset];
                 if (o1 < o2) {
-                    ((char[]) inoutvec)[i + outoffset] = o1;
-                } else {
-                    ((char[]) inoutvec)[i + outoffset] = o2;
+                     charInoutvec[i + outoffset] = o1;
                 }
-
             }
             return;
-        } else if (datatype == MPJ.SHORT) {
-            if (((short[]) invec).length != ((short[]) inoutvec).length) {
+        }
+        if (datatype == MPJ.SHORT) {
+            short[] shortInvec = (short[]) invec;
+            short[] shortInoutvec = (short[]) inoutvec;
+            if (shortInvec.length != shortInoutvec.length) {
                 return;
             }
 
             for (int i = 0; i < count; i++) {
-
-                short o1 = ((short[]) invec)[i + inoffset];
-                short o2 = ((short[]) inoutvec)[i + outoffset];
-
+                short o1 = shortInvec[i + inoffset];
+                short o2 = shortInoutvec[i + outoffset];
                 if (o1 < o2) {
-                    ((short[]) inoutvec)[i + outoffset] = o1;
-                } else {
-                    ((short[]) inoutvec)[i + outoffset] = o2;
+                     shortInoutvec[i + outoffset] = o1;
                 }
-
             }
             return;
-        } else if (datatype == MPJ.BOOLEAN) {
-            if (((boolean[]) invec).length != ((boolean[]) inoutvec).length) {
+        }
+        if (datatype == MPJ.BOOLEAN) {
+            boolean[] booleanInvec = (boolean[]) invec;
+            boolean[] booleanInoutvec = (boolean[]) inoutvec;
+            if (booleanInvec.length != booleanInoutvec.length) {
                 return;
             }
 
             for (int i = 0; i < count; i++) {
-
-                boolean o1 = ((boolean[]) invec)[i + inoffset];
-                boolean o2 = ((boolean[]) inoutvec)[i + outoffset];
-
-                if (!o1) {
-                    ((boolean[]) inoutvec)[i + outoffset] = o1;
-                } else {
-                    ((boolean[]) inoutvec)[i + outoffset] = o2;
+                boolean o1 = booleanInvec[i + inoffset];
+                if (! o1) {
+                     booleanInoutvec[i + outoffset] = o1;
                 }
-
             }
             return;
-        } else if (datatype == MPJ.INT) {
-            if (((int[]) invec).length != ((int[]) inoutvec).length) {
+        }
+        if (datatype == MPJ.INT) {
+            int[] intInvec = (int[]) invec;
+            int[] intInoutvec = (int[]) inoutvec;
+            if (intInvec.length != intInoutvec.length) {
                 return;
             }
 
             for (int i = 0; i < count; i++) {
-
-                int o1 = ((int[]) invec)[i + inoffset];
-                int o2 = ((int[]) inoutvec)[i + outoffset];
-
+                int o1 = intInvec[i + inoffset];
+                int o2 = intInoutvec[i + outoffset];
                 if (o1 < o2) {
-                    ((int[]) inoutvec)[i + outoffset] = o1;
-                } else {
-                    ((int[]) inoutvec)[i + outoffset] = o2;
+                     intInoutvec[i + outoffset] = o1;
                 }
-
             }
             return;
-        } else if (datatype == MPJ.LONG) {
-            if (((long[]) invec).length != ((long[]) inoutvec).length) {
+        }
+        if (datatype == MPJ.LONG) {
+            long[] longInvec = (long[]) invec;
+            long[] longInoutvec = (long[]) inoutvec;
+            if (longInvec.length != longInoutvec.length) {
                 return;
             }
 
             for (int i = 0; i < count; i++) {
-
-                long o1 = ((long[]) invec)[i + inoffset];
-                long o2 = ((long[]) inoutvec)[i + outoffset];
-
+                long o1 = longInvec[i + inoffset];
+                long o2 = longInoutvec[i + outoffset];
                 if (o1 < o2) {
-                    ((long[]) inoutvec)[i + outoffset] = o1;
-                } else {
-                    ((long[]) inoutvec)[i + outoffset] = o2;
+                     longInoutvec[i + outoffset] = o1;
                 }
-
             }
             return;
-        } else if (datatype == MPJ.FLOAT) {
-            if (((float[]) invec).length != ((float[]) inoutvec).length) {
+        }
+        if (datatype == MPJ.FLOAT) {
+            float[] floatInvec = (float[]) invec;
+            float[] floatInoutvec = (float[]) inoutvec;
+            if (floatInvec.length != floatInoutvec.length) {
                 return;
             }
 
             for (int i = 0; i < count; i++) {
-
-                float o1 = ((float[]) invec)[i + inoffset];
-                float o2 = ((float[]) inoutvec)[i + outoffset];
-
+                float o1 = floatInvec[i + inoffset];
+                float o2 = floatInoutvec[i + outoffset];
                 if (o1 < o2) {
-                    ((float[]) inoutvec)[i + outoffset] = o1;
-                } else {
-                    ((float[]) inoutvec)[i + outoffset] = o2;
+                     floatInoutvec[i + outoffset] = o1;
                 }
-
             }
             return;
-        } else if (datatype == MPJ.DOUBLE) {
-            if (((double[]) invec).length != ((double[]) inoutvec).length) {
+        }
+        if (datatype == MPJ.DOUBLE) {
+            double[] doubleInvec = (double[]) invec;
+            double[] doubleInoutvec = (double[]) inoutvec;
+            if (doubleInvec.length != doubleInoutvec.length) {
                 return;
             }
 
             for (int i = 0; i < count; i++) {
-
-                double o1 = ((double[]) invec)[i + inoffset];
-                double o2 = ((double[]) inoutvec)[i + outoffset];
-
+                double o1 = doubleInvec[i + inoffset];
+                double o2 = doubleInoutvec[i + outoffset];
                 if (o1 < o2) {
-                    ((double[]) inoutvec)[i + outoffset] = o1;
-                } else {
-                    ((double[]) inoutvec)[i + outoffset] = o2;
+                     doubleInoutvec[i + outoffset] = o1;
                 }
-
             }
             return;
         }

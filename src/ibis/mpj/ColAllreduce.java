@@ -14,6 +14,8 @@ import ibis.io.SerializationOutput;
 
 import java.io.IOException;
 
+import java.lang.reflect.Array;
+
 /**
  * Implementation of the collective operation: allreduce.
  */
@@ -58,13 +60,16 @@ public class ColAllreduce {
             pof2 <<= 1;
         pof2 >>= 1;
         int rem = this.comm.size() - pof2;
-        int newrank = this.comm.rank() - rem;
-        int mask = 0x1;
-
         int rank = this.comm.rank();
+        int newrank = rank - rem;
+        int mask = 0x1;
 
         int tempoffset = 0;
 
+        Class<?> componentType = this.recvbuf.getClass().getComponentType();
+        Object tempbuf = Array.newInstance(componentType, Array.getLength(this.recvbuf));
+
+        /*
         Object tempbuf = null;
         if (sendbuf instanceof byte[]) {
             tempbuf = new byte[((byte[]) this.recvbuf).length];
@@ -107,8 +112,10 @@ public class ColAllreduce {
                     this.recvoffset, this.count * this.datatype.extent());
 
         } else {
+        */
+        if (sendbuf instanceof Object[]) {
 
-            tempbuf = new Object[((Object[]) this.recvbuf).length];
+            // tempbuf = new Object[((Object[]) this.recvbuf).length];
             StoreBuffer stBuf = new StoreBuffer();
 
             // StoreArrayInputStream sin = null;
