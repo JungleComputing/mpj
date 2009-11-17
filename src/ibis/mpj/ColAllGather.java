@@ -34,6 +34,8 @@ public class ColAllGather {
 
     private int tag = 0;
 
+    private int recvextent = 0;
+
     public ColAllGather(Object sendbuf, int sendoffset, int sendcount,
             Datatype sendtype, Object recvbuf, int recvoffset, int recvcount,
             Datatype recvtype, Intracomm comm, int tag) {
@@ -47,6 +49,7 @@ public class ColAllGather {
         this.recvtype = recvtype;
         this.comm = comm;
         this.tag = tag;
+        this.recvextent = recvtype.extent();
 
     }
 
@@ -57,69 +60,59 @@ public class ColAllGather {
 
         int leftRank = getPrevRank(1, rank, size);
         int rightRank = getNextRank(1, rank, size);
-        int nextRank = 0;
-        int prevRank = 0;
+        // int nextRank = 0;
+        // int prevRank = 0;
         // int myPosition = 0;
-        int nextPosition = 0;
-        int prevPosition = 0;
+        // int nextPosition = 0;
+        // int prevPosition = 0;
 
         int rounds = (size - 1) / 2;
         boolean add_half_round = (((size - 1) % 2) != 0);
 
         this.comm.localcopy2types(sendbuf, sendoffset, sendcount, sendtype,
-                recvbuf, recvoffset + rank * recvcount * recvtype.extent(),
+                recvbuf, recvoffset + rank * recvcount * recvextent,
                 recvcount, recvtype);
 
         try {
             for (int i = 0; i < rounds; i++) {
-                prevRank = getPrevRank(i, rank, size);
-                nextRank = getNextRank(i, rank, size);
 
-                nextPosition = this.recvoffset
-                        + (nextRank * (recvcount * recvtype.extent()));// +
+                int nextWritePosition = this.recvoffset
+                        + (getNextRank(i, rank, size) * (recvcount * recvextent));// +
                                                                         // displs[nextRank];
-                prevPosition = this.recvoffset
-                        + (prevRank * (recvcount * recvtype.extent()));// +
+                int prevWritePosition = this.recvoffset
+                        + (getPrevRank(i, rank, size) * (recvcount * recvextent));// +
                                                                         // displs[prevRank];
 
-                this.comm.send(recvbuf, nextPosition, this.recvcount,
-                        this.recvtype, leftRank, this.tag);
-                this.comm.send(recvbuf, prevPosition, this.recvcount,
-                        this.recvtype, rightRank, this.tag);
-
-                prevRank = getPrevRank(i + 1, rank, size);
-                nextRank = getNextRank(i + 1, rank, size);
-
-                nextPosition = this.recvoffset
-                        + (nextRank * (recvcount * recvtype.extent()));// +
+                int nextReadPosition = this.recvoffset
+                        + (getNextRank(i + 1, rank, size) * (recvcount * recvextent));// +
                                                                         // displs[nextRank];
-                prevPosition = this.recvoffset
-                        + (prevRank * (recvcount * recvtype.extent()));// +
+                int prevReadPosition = this.recvoffset
+                        + (getPrevRank(i + 1, rank, size) * (recvcount * recvextent));// +
                                                                         // displs[prevRank];
 
-                if (logger.isDebugEnabled()) {
-                    logger.debug("prevRank: " + prevRank + "; prevPos: "
-                            + prevPosition + "; rightRank: " + rightRank);
-                    logger.debug("nextRank: " + nextRank + "; nextPos: "
-                            + nextPosition + ";  leftRank: " + leftRank);
-                }
-
-                this.comm.recv(recvbuf, nextPosition, this.recvcount,
+                Request req1 = this.comm.irecv(recvbuf, nextReadPosition, this.recvcount,
                         this.recvtype, rightRank, this.tag);
-                this.comm.recv(recvbuf, prevPosition, this.recvcount,
+                Request req2 = this.comm.irecv(recvbuf, prevReadPosition, this.recvcount,
                         this.recvtype, leftRank, this.tag);
+                this.comm.send(recvbuf, nextWritePosition, this.recvcount,
+                        this.recvtype, leftRank, this.tag);
+                this.comm.send(recvbuf, prevWritePosition, this.recvcount,
+                        this.recvtype, rightRank, this.tag);
+                req1.Wait();
+                req2.Wait();
+
             }
             if (add_half_round) {
 
                 // just one send and one receive
-                prevRank = getPrevRank(rounds + 1, rank, size);
-                nextRank = getNextRank(rounds, rank, size);
+                int prevRank = getPrevRank(rounds + 1, rank, size);
+                int nextRank = getNextRank(rounds, rank, size);
 
-                nextPosition = this.recvoffset
-                        + (nextRank * (recvcount * recvtype.extent()));// +
+                int nextPosition = this.recvoffset
+                        + (nextRank * (recvcount * recvextent));// +
                                                                         // displs[nextRank];
-                prevPosition = this.recvoffset
-                        + (prevRank * (recvcount * recvtype.extent()));// +
+                int prevPosition = this.recvoffset
+                        + (prevRank * (recvcount * recvextent));// +
                                                                         // displs[prevRank];
 
                 if (logger.isDebugEnabled()) {
@@ -129,10 +122,11 @@ public class ColAllGather {
                             + nextPosition + ";  leftRank: " + leftRank);
                 }
 
+                Request req = this.comm.irecv(recvbuf, prevPosition, this.recvcount,
+                        this.recvtype, rightRank, this.tag);
                 this.comm.send(recvbuf, nextPosition, this.recvcount,
                         this.recvtype, leftRank, this.tag);
-                this.comm.recv(recvbuf, prevPosition, this.recvcount,
-                        this.recvtype, rightRank, this.tag);
+                req.Wait();
 
             }
         } catch (Exception e) {
