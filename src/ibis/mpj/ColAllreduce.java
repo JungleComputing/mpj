@@ -39,6 +39,8 @@ public class ColAllreduce {
 
     private int tag = 0;
 
+    private int extent;
+
     ColAllreduce(Object sendbuf, int sendoffset, Object recvbuf,
             int recvoffset, int count, Datatype datatype, Op op,
             Intracomm comm, int tag) throws MPJException {
@@ -51,6 +53,7 @@ public class ColAllreduce {
         this.op = op;
         this.comm = comm;
         this.tag = tag;
+        this.extent = datatype.extent();
     }
 
     // taken from MPICH
@@ -89,11 +92,11 @@ public class ColAllreduce {
                 mout = new IbisSerializationOutputStream(out);
                 min = new IbisSerializationInputStream(in);
 
-                for (int i = 0; i < count * datatype.extent(); i++) {
+                for (int i = 0; i < count * extent; i++) {
                     mout.writeObject(((Object[]) sendbuf)[i + sendoffset]);
                 }
                 mout.flush();
-                for (int i = 0; i < count * datatype.extent(); i++) {
+                for (int i = 0; i < count * extent; i++) {
                     ((Object[]) recvbuf)[i + recvoffset] = min.readObject();
                 }
 
@@ -107,6 +110,9 @@ public class ColAllreduce {
                         "IOException in Ibis serialization stream");
             }
 
+        } else {
+            System.arraycopy(this.sendbuf, this.sendoffset, this.recvbuf,
+                     this.recvoffset, this.count * extent);
         }
 
         if (rank < 2 * rem) {
