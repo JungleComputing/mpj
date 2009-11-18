@@ -31,14 +31,14 @@
 //2 comm.intercomm
 2 comm.split
 2 dtyp.hvec
-1 dtyp.lbub
-1 dtyp.lbub2
+//1 dtyp.lbub
+//1 dtyp.lbub2
 2 dtyp.pack
 1 dtyp.type_size
 2 dtyp.zero5
 2 dtyp_ObjSer.hvecO
-1 dtyp_ObjSer.lbub2O
-1 dtyp_ObjSer.lbubO
+//1 dtyp_ObjSer.lbub2O
+//1 dtyp_ObjSer.lbubO
 2 dtyp_ObjSer.packO
 1 env.abort
 2 env.initialized
@@ -88,4 +88,4 @@
 2 pt2pt_ObjSer.waitallO
 2 pt2pt_ObjSer.waitanyO
 2 pt2pt_ObjSer.waitsomeO
-2 topo.dimscreate
+//2 topo.dimscreate
