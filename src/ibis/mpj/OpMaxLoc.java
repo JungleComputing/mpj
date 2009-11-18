@@ -35,7 +35,7 @@ public class OpMaxLoc extends Op {
                     shortInoutvec[dispIndexOut] = o1;
                     shortInoutvec[dispIndexOut + 1] = shortInvec[dispIndexIn + 1];
                 } else if (o1 == o2) {
-                    if (shortInvec[dispIndexIn + 1] > shortInoutvec[dispIndexOut + 1]) {
+                    if (shortInvec[dispIndexIn + 1] < shortInoutvec[dispIndexOut + 1]) {
                         shortInoutvec[dispIndexOut + 1] = shortInvec[dispIndexIn + 1];
                     }
                 }
@@ -62,7 +62,7 @@ public class OpMaxLoc extends Op {
                     intInoutvec[dispIndexOut] = o1;
                     intInoutvec[dispIndexOut + 1] = intInvec[dispIndexIn + 1];
                 } else if (o1 == o2) {
-                    if (intInvec[dispIndexIn + 1] > intInoutvec[dispIndexOut + 1]) {
+                    if (intInvec[dispIndexIn + 1] < intInoutvec[dispIndexOut + 1]) {
                         intInoutvec[dispIndexOut + 1] = intInvec[dispIndexIn + 1];
                     }
                 }
@@ -89,7 +89,7 @@ public class OpMaxLoc extends Op {
                     longInoutvec[dispIndexOut] = o1;
                     longInoutvec[dispIndexOut + 1] = longInvec[dispIndexIn + 1];
                 } else if (o1 == o2) {
-                    if (longInvec[dispIndexIn + 1] > longInoutvec[dispIndexOut + 1]) {
+                    if (longInvec[dispIndexIn + 1] < longInoutvec[dispIndexOut + 1]) {
                         longInoutvec[dispIndexOut + 1] = longInvec[dispIndexIn + 1];
                     }
                 }
@@ -116,7 +116,7 @@ public class OpMaxLoc extends Op {
                     floatInoutvec[dispIndexOut] = o1;
                     floatInoutvec[dispIndexOut + 1] = floatInvec[dispIndexIn + 1];
                 } else if (o1 == o2) {
-                    if (floatInvec[dispIndexIn + 1] > floatInoutvec[dispIndexOut + 1]) {
+                    if (floatInvec[dispIndexIn + 1] < floatInoutvec[dispIndexOut + 1]) {
                         floatInoutvec[dispIndexOut + 1] = floatInvec[dispIndexIn + 1];
                     }
                 }
@@ -143,7 +143,7 @@ public class OpMaxLoc extends Op {
                     doubleInoutvec[dispIndexOut] = o1;
                     doubleInoutvec[dispIndexOut + 1] = doubleInvec[dispIndexIn + 1];
                 } else if (o1 == o2) {
-                    if (doubleInvec[dispIndexIn + 1] > doubleInoutvec[dispIndexOut + 1]) {
+                    if (doubleInvec[dispIndexIn + 1] < doubleInoutvec[dispIndexOut + 1]) {
                         doubleInoutvec[dispIndexOut + 1] = doubleInvec[dispIndexIn + 1];
                     }
                 }
