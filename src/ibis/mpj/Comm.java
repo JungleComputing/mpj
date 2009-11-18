@@ -18,6 +18,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
 import java.util.Vector;
 
 /**
@@ -830,44 +831,9 @@ public class Comm {
             Datatype datatype, int dest, int sendtag, int source, int recvtag)
             throws MPJException {
 
-        Object tempBuf = null;
-        if (buf instanceof byte[]) {
-            tempBuf = new byte[((byte[]) buf).length];
-            System.arraycopy(buf, offset, tempBuf, offset, count
-                    * datatype.extent());
-        } else if (buf instanceof char[]) {
-            tempBuf = new char[((char[]) buf).length];
-            System.arraycopy(buf, offset, tempBuf, offset, count
-                    * datatype.extent());
-        } else if (buf instanceof short[]) {
-            tempBuf = new short[((short[]) buf).length];
-            System.arraycopy(buf, offset, tempBuf, offset, count
-                    * datatype.extent());
-        } else if (buf instanceof boolean[]) {
-            tempBuf = new boolean[((boolean[]) buf).length];
-            System.arraycopy(buf, offset, tempBuf, offset, count
-                    * datatype.extent());
-        } else if (buf instanceof int[]) {
-            tempBuf = new int[((int[]) buf).length];
-            System.arraycopy(buf, offset, tempBuf, offset, count
-                    * datatype.extent());
-        } else if (buf instanceof long[]) {
-            tempBuf = new long[((long[]) buf).length];
-            System.arraycopy(buf, offset, tempBuf, offset, count
-                    * datatype.extent());
-        } else if (buf instanceof float[]) {
-            tempBuf = new float[((float[]) buf).length];
-            System.arraycopy(buf, offset, tempBuf, offset, count
-                    * datatype.extent());
-        } else if (buf instanceof double[]) {
-            tempBuf = new double[((double[]) buf).length];
-            System.arraycopy(buf, offset, tempBuf, offset, count
-                    * datatype.extent());
-        } else {
-            tempBuf = new Object[((Object[]) buf).length];
-            System.arraycopy(buf, offset, tempBuf, offset, count
-                    * datatype.extent());
-        }
+        Class<?> componentType = buf.getClass().getComponentType();
+        Object tempBuf =  Array.newInstance(componentType, Array.getLength(buf));
+        System.arraycopy(buf, offset, tempBuf, offset, count * datatype.extent());
 
         Request req = this.irecv(buf, offset, count, datatype, source, recvtag);
         this.send(tempBuf, offset, count, datatype, dest, sendtag);
@@ -900,31 +866,31 @@ public class Comm {
     public int pack(Object inbuf, int offset, int incount, Datatype datatype,
             byte[] outbuf, int position) throws MPJException {
         if (datatype == MPJ.BYTE) {
-            return (BufferOps.bufferByte(inbuf, outbuf, offset, incount,
+            return (BufferOps.bufferByte((byte[]) inbuf, outbuf, offset, incount,
                     position));
         } else if (datatype == MPJ.CHAR) {
-            return (BufferOps.bufferChar(inbuf, outbuf, offset, incount,
+            return (BufferOps.bufferChar((char[]) inbuf, outbuf, offset, incount,
                     position));
         } else if (datatype == MPJ.SHORT) {
-            return (BufferOps.bufferShort(inbuf, outbuf, offset, incount,
+            return (BufferOps.bufferShort((short[]) inbuf, outbuf, offset, incount,
                     position));
         } else if (datatype == MPJ.BOOLEAN) {
-            return (BufferOps.bufferBoolean(inbuf, outbuf, offset, incount,
+            return (BufferOps.bufferBoolean((boolean[]) inbuf, outbuf, offset, incount,
                     position));
         } else if (datatype == MPJ.INT) {
-            return (BufferOps.bufferInt(inbuf, outbuf, offset, incount,
+            return (BufferOps.bufferInt((int[]) inbuf, outbuf, offset, incount,
                     position));
         } else if (datatype == MPJ.LONG) {
-            return (BufferOps.bufferLong(inbuf, outbuf, offset, incount,
+            return (BufferOps.bufferLong((long[]) inbuf, outbuf, offset, incount,
                     position));
         } else if (datatype == MPJ.FLOAT) {
-            return (BufferOps.bufferFloat(inbuf, outbuf, offset, incount,
+            return (BufferOps.bufferFloat((float[]) inbuf, outbuf, offset, incount,
                     position));
         } else if (datatype == MPJ.DOUBLE) {
-            return (BufferOps.bufferDouble(inbuf, outbuf, offset, incount,
+            return (BufferOps.bufferDouble((double[]) inbuf, outbuf, offset, incount,
                     position));
         } else if (datatype == MPJ.OBJECT) {
-            return (BufferOps.bufferObject(inbuf, outbuf, offset, incount,
+            return (BufferOps.bufferObject((Object[]) inbuf, outbuf, offset, incount,
                     position));
         }
         return (0);
@@ -949,31 +915,31 @@ public class Comm {
         byte[] outbuf = new byte[incount * datatype.getByteSize()];
 
         if (datatype == MPJ.BYTE) {
-            BufferOps.bufferByte(inbuf, outbuf, offset, incount, 0);
+            BufferOps.bufferByte((byte[]) inbuf, outbuf, offset, incount, 0);
             return (outbuf);
         } else if (datatype == MPJ.CHAR) {
-            BufferOps.bufferChar(inbuf, outbuf, offset, incount, 0);
+            BufferOps.bufferChar((char[]) inbuf, outbuf, offset, incount, 0);
             return (outbuf);
         } else if (datatype == MPJ.SHORT) {
-            BufferOps.bufferShort(inbuf, outbuf, offset, incount, 0);
+            BufferOps.bufferShort((short[]) inbuf, outbuf, offset, incount, 0);
             return (outbuf);
         } else if (datatype == MPJ.BOOLEAN) {
-            BufferOps.bufferBoolean(inbuf, outbuf, offset, incount, 0);
+            BufferOps.bufferBoolean((boolean[]) inbuf, outbuf, offset, incount, 0);
             return (outbuf);
         } else if (datatype == MPJ.INT) {
-            BufferOps.bufferInt(inbuf, outbuf, offset, incount, 0);
+            BufferOps.bufferInt((int[]) inbuf, outbuf, offset, incount, 0);
             return (outbuf);
         } else if (datatype == MPJ.LONG) {
-            BufferOps.bufferLong(inbuf, outbuf, offset, incount, 0);
+            BufferOps.bufferLong((long[]) inbuf, outbuf, offset, incount, 0);
             return (outbuf);
         } else if (datatype == MPJ.FLOAT) {
-            BufferOps.bufferFloat(inbuf, outbuf, offset, incount, 0);
+            BufferOps.bufferFloat((float[]) inbuf, outbuf, offset, incount, 0);
             return (outbuf);
         } else if (datatype == MPJ.DOUBLE) {
-            BufferOps.bufferDouble(inbuf, outbuf, offset, incount, 0);
+            BufferOps.bufferDouble((double[]) inbuf, outbuf, offset, incount, 0);
             return (outbuf);
         } else if (datatype == MPJ.OBJECT) {
-            BufferOps.bufferObject(inbuf, outbuf, offset, incount, 0);
+            BufferOps.bufferObject((Object[]) inbuf, outbuf, offset, incount, 0);
             return (outbuf);
         }
         return (null);
@@ -1002,31 +968,31 @@ public class Comm {
     public int unpack(byte[] inbuf, int position, Object outbuf, int offset,
             int outcount, Datatype datatype) throws MPJException {
         if (datatype == MPJ.BYTE) {
-            return (BufferOps.unBufferByte(inbuf, position, outbuf, offset,
+            return (BufferOps.unBufferByte(inbuf, position, (byte[]) outbuf, offset,
                     outcount));
         } else if (datatype == MPJ.CHAR) {
-            return (BufferOps.unBufferChar(inbuf, position, outbuf, offset,
+            return (BufferOps.unBufferChar(inbuf, position, (char[]) outbuf, offset,
                     outcount));
         } else if (datatype == MPJ.SHORT) {
-            return (BufferOps.unBufferShort(inbuf, position, outbuf, offset,
+            return (BufferOps.unBufferShort(inbuf, position, (short[]) outbuf, offset,
                     outcount));
         } else if (datatype == MPJ.BOOLEAN) {
-            return (BufferOps.unBufferBoolean(inbuf, position, outbuf, offset,
+            return (BufferOps.unBufferBoolean(inbuf, position, (boolean[]) outbuf, offset,
                     outcount));
         } else if (datatype == MPJ.INT) {
-            return (BufferOps.unBufferInt(inbuf, position, outbuf, offset,
+            return (BufferOps.unBufferInt(inbuf, position, (int[]) outbuf, offset,
                     outcount));
         } else if (datatype == MPJ.LONG) {
-            return (BufferOps.unBufferLong(inbuf, position, outbuf, offset,
+            return (BufferOps.unBufferLong(inbuf, position, (long[]) outbuf, offset,
                     outcount));
         } else if (datatype == MPJ.FLOAT) {
-            return (BufferOps.unBufferFloat(inbuf, position, outbuf, offset,
+            return (BufferOps.unBufferFloat(inbuf, position, (float[]) outbuf, offset,
                     outcount));
         } else if (datatype == MPJ.DOUBLE) {
-            return (BufferOps.unBufferDouble(inbuf, position, outbuf, offset,
+            return (BufferOps.unBufferDouble(inbuf, position, (double[]) outbuf, offset,
                     outcount));
         } else if ((datatype == MPJ.OBJECT)) {
-            return (BufferOps.unBufferObject(inbuf, position, outbuf, offset,
+            return (BufferOps.unBufferObject(inbuf, position, (Object[]) outbuf, offset,
                     outcount));
         }
         return (0);
@@ -1082,28 +1048,7 @@ public class Comm {
 
     protected void localcopy1type(Object inbuf, int inoffset, Object outbuf,
             int outoffset, int count, Datatype datatype) throws MPJException {
-        if (inbuf instanceof byte[]) {
-            System.arraycopy(inbuf, inoffset, outbuf, outoffset, count
-                    * datatype.extent());
-        } else if (inbuf instanceof char[]) {
-            System.arraycopy(inbuf, inoffset, outbuf, outoffset, count
-                    * datatype.extent());
-        } else if (inbuf instanceof short[]) {
-            System.arraycopy(inbuf, inoffset, outbuf, outoffset, count
-                    * datatype.extent());
-        } else if (inbuf instanceof boolean[]) {
-            System.arraycopy(inbuf, inoffset, outbuf, outoffset, count
-                    * datatype.extent());
-        } else if (inbuf instanceof int[]) {
-            System.arraycopy(inbuf, inoffset, outbuf, outoffset, count
-                    * datatype.extent());
-        } else if (inbuf instanceof long[]) {
-            System.arraycopy(inbuf, inoffset, outbuf, outoffset, count
-                    * datatype.extent());
-        } else if (inbuf instanceof float[]) {
-            System.arraycopy(inbuf, inoffset, outbuf, outoffset, count
-                    * datatype.extent());
-        } else if (inbuf instanceof double[]) {
+        if (! (inbuf instanceof Object[])) {
             System.arraycopy(inbuf, inoffset, outbuf, outoffset, count
                     * datatype.extent());
         } else {
@@ -1181,40 +1126,19 @@ public class Comm {
         int outLength = 0;
         Object tmpbuf = null;
 
-        if (inbuf instanceof int[]) {
-            if (!(outbuf instanceof int[])) {
-                throw new MPJException(
-                        "inbuf and outbuf must be the same type.");
-            }
-
-            inLength = ((int[]) inbuf).length;
-            outLength = ((int[]) outbuf).length;
-
-            tmpbuf = new int[incount * inExtent];
-            while (inLength < inoffset + incount * inExtent) {
-                incount--;
-            }
-
-            while (outLength < outoffset + outcount * outExtent) {
-                outcount--;
-            }
-            System.arraycopy(inbuf, inoffset, tmpbuf, 0, incount
-                    * intype.extent());
-            System.arraycopy(tmpbuf, 0, outbuf, outoffset, outcount
-                    * outtype.extent());
-
+        if (! inbuf.getClass().equals(outbuf.getClass())) {
+            throw new MPJException(
+                    "inbuf and outbuf must be the same type.");
         }
 
-        if (inbuf instanceof byte[]) {
-            if (!(outbuf instanceof byte[])) {
-                throw new MPJException(
-                        "inbuf and outbuf must be of the same type.");
-            }
+        if (! (inbuf instanceof Object[])) {
 
-            inLength = ((byte[]) inbuf).length;
-            outLength = ((byte[]) outbuf).length;
+            Class<?> componentType = inbuf.getClass().getComponentType();
 
-            tmpbuf = new byte[incount * inExtent];
+            inLength = Array.getLength(inbuf);
+            outLength = Array.getLength(outbuf);
+            tmpbuf = Array.newInstance(componentType, incount * inExtent);
+
             while (inLength < inoffset + incount * inExtent) {
                 incount--;
             }
@@ -1222,154 +1146,7 @@ public class Comm {
             while (outLength < outoffset + outcount * outExtent) {
                 outcount--;
             }
-            System.arraycopy(inbuf, inoffset, tmpbuf, 0, incount
-                    * intype.extent());
-            System.arraycopy(tmpbuf, 0, outbuf, outoffset, outcount
-                    * outtype.extent());
-        } else if (inbuf instanceof char[]) {
-            if (!(outbuf instanceof char[])) {
-                throw new MPJException(
-                        "inbuf and outbuf must be of the same type.");
-            }
 
-            inLength = ((char[]) inbuf).length;
-            outLength = ((char[]) outbuf).length;
-
-            tmpbuf = new char[incount * inExtent];
-            while (inLength < inoffset + incount * inExtent) {
-                incount--;
-            }
-
-            while (outLength < outoffset + outcount * outExtent) {
-                outcount--;
-            }
-            System.arraycopy(inbuf, inoffset, tmpbuf, 0, incount
-                    * intype.extent());
-            System.arraycopy(tmpbuf, 0, outbuf, outoffset, outcount
-                    * outtype.extent());
-        } else if (inbuf instanceof short[]) {
-            if (!(outbuf instanceof short[])) {
-                throw new MPJException(
-                        "inbuf and outbuf must be of the same type.");
-            }
-
-            inLength = ((short[]) inbuf).length;
-            outLength = ((short[]) outbuf).length;
-
-            tmpbuf = new short[incount * inExtent];
-            while (inLength < inoffset + incount * inExtent) {
-                incount--;
-            }
-
-            while (outLength < outoffset + outcount * outExtent) {
-                outcount--;
-            }
-            System.arraycopy(inbuf, inoffset, tmpbuf, 0, incount
-                    * intype.extent());
-            System.arraycopy(tmpbuf, 0, outbuf, outoffset, outcount
-                    * outtype.extent());
-        } else if (inbuf instanceof boolean[]) {
-            if (!(outbuf instanceof boolean[])) {
-                throw new MPJException(
-                        "inbuf and outbuf must be of the same type.");
-            }
-
-            inLength = ((boolean[]) inbuf).length;
-            outLength = ((boolean[]) outbuf).length;
-
-            tmpbuf = new boolean[incount * inExtent];
-            while (inLength < inoffset + incount * inExtent) {
-                incount--;
-            }
-
-            while (outLength < outoffset + outcount * outExtent) {
-                outcount--;
-            }
-            System.arraycopy(inbuf, inoffset, tmpbuf, 0, incount
-                    * intype.extent());
-            System.arraycopy(tmpbuf, 0, outbuf, outoffset, outcount
-                    * outtype.extent());
-        } else if (inbuf instanceof int[]) {
-            if (!(outbuf instanceof int[])) {
-                throw new MPJException(
-                        "inbuf and outbuf must be of the same type.");
-            }
-
-            inLength = ((int[]) inbuf).length;
-            outLength = ((int[]) outbuf).length;
-
-            tmpbuf = new int[incount * inExtent];
-            while (inLength < inoffset + incount * inExtent) {
-                incount--;
-            }
-
-            while (outLength < outoffset + outcount * outExtent) {
-                outcount--;
-            }
-            System.arraycopy(inbuf, inoffset, tmpbuf, 0, incount
-                    * intype.extent());
-            System.arraycopy(tmpbuf, 0, outbuf, outoffset, outcount
-                    * outtype.extent());
-
-        } else if (inbuf instanceof long[]) {
-            if (!(outbuf instanceof long[])) {
-                throw new MPJException(
-                        "inbuf and outbuf must be of the same type.");
-            }
-
-            inLength = ((long[]) inbuf).length;
-            outLength = ((long[]) outbuf).length;
-
-            tmpbuf = new long[incount * inExtent];
-            while (inLength < inoffset + incount * inExtent) {
-                incount--;
-            }
-
-            while (outLength < outoffset + outcount * outExtent) {
-                outcount--;
-            }
-            System.arraycopy(inbuf, inoffset, tmpbuf, 0, incount
-                    * intype.extent());
-            System.arraycopy(tmpbuf, 0, outbuf, outoffset, outcount
-                    * outtype.extent());
-        } else if (inbuf instanceof float[]) {
-            if (!(outbuf instanceof float[])) {
-                throw new MPJException(
-                        "inbuf and outbuf must be of the same type.");
-            }
-
-            inLength = ((float[]) inbuf).length;
-            outLength = ((float[]) outbuf).length;
-
-            tmpbuf = new float[incount * inExtent];
-            while (inLength < inoffset + incount * inExtent) {
-                incount--;
-            }
-
-            while (outLength < outoffset + outcount * outExtent) {
-                outcount--;
-            }
-            System.arraycopy(inbuf, inoffset, tmpbuf, 0, incount
-                    * intype.extent());
-            System.arraycopy(tmpbuf, 0, outbuf, outoffset, outcount
-                    * outtype.extent());
-        } else if (inbuf instanceof double[]) {
-            if (!(outbuf instanceof double[])) {
-                throw new MPJException(
-                        "inbuf and outbuf must be of the same type.");
-            }
-
-            inLength = ((double[]) inbuf).length;
-            outLength = ((double[]) outbuf).length;
-
-            tmpbuf = new double[incount * inExtent];
-            while (inLength < inoffset + incount * inExtent) {
-                incount--;
-            }
-
-            while (outLength < outoffset + outcount * outExtent) {
-                outcount--;
-            }
             System.arraycopy(inbuf, inoffset, tmpbuf, 0, incount
                     * intype.extent());
             System.arraycopy(tmpbuf, 0, outbuf, outoffset, outcount

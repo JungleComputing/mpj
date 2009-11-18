@@ -5,6 +5,8 @@
  */
 package ibis.mpj;
 
+import java.lang.reflect.Array;
+
 /**
  * Implementation of the collective operation: scan.
  */
@@ -47,7 +49,6 @@ public class ColScan {
         int size = this.comm.size();
         int rank = this.comm.rank();
 
-        Object tempBuf = null;
         // Object origin = null;
 
         if (rank == 0) {
@@ -58,25 +59,9 @@ public class ColScan {
         else {
 
             if (!op.isCommute()) {
-                if (sendbuf instanceof byte[]) {
-                    tempBuf = new byte[((byte[]) this.recvbuf).length];
-                } else if (sendbuf instanceof char[]) {
-                    tempBuf = new byte[((char[]) this.recvbuf).length];
-                } else if (sendbuf instanceof short[]) {
-                    tempBuf = new byte[((short[]) this.recvbuf).length];
-                } else if (sendbuf instanceof boolean[]) {
-                    tempBuf = new byte[((boolean[]) this.recvbuf).length];
-                } else if (sendbuf instanceof int[]) {
-                    tempBuf = new int[((int[]) this.recvbuf).length];
-                } else if (sendbuf instanceof long[]) {
-                    tempBuf = new byte[((long[]) this.recvbuf).length];
-                } else if (sendbuf instanceof float[]) {
-                    tempBuf = new byte[((float[]) this.recvbuf).length];
-                } else if (sendbuf instanceof double[]) {
-                    tempBuf = new byte[((double[]) this.recvbuf).length];
-                } else {
-                    tempBuf = new Object[((Object[]) this.recvbuf).length];
-                }
+                Class<?> componentType = sendbuf.getClass().getComponentType();
+                Object tempBuf = Array.newInstance(componentType, Array.getLength(this.recvbuf));
+
                 this.comm.localcopy1type(this.sendbuf, this.sendoffset,
                         this.recvbuf, this.recvoffset, this.count, datatype);
 

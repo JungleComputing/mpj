@@ -563,31 +563,31 @@ public class IbisMPJComm extends Thread {
             throw new MPJException("No user space buffer attached to MPJ.");
 
         if (datatype.type == MPJ.BYTE.type) {
-            realcount = BufferOps.bufferByte(buf, sendBuf, this.offset,
+            realcount = BufferOps.bufferByte((byte[]) buf, sendBuf, this.offset,
                     this.count * this.datatype.extent(), 0);
         } else if (datatype.type == MPJ.CHAR.type) {
-            realcount = BufferOps.bufferChar(buf, sendBuf, this.offset,
+            realcount = BufferOps.bufferChar((char[]) buf, sendBuf, this.offset,
                     this.count * this.datatype.extent(), 0);
         } else if (datatype.type == MPJ.SHORT.type) {
-            realcount = BufferOps.bufferShort(buf, sendBuf, this.offset,
+            realcount = BufferOps.bufferShort((short[]) buf, sendBuf, this.offset,
                     this.count * this.datatype.extent(), 0);
         } else if (datatype.type == MPJ.BOOLEAN.type) {
-            realcount = BufferOps.bufferBoolean(buf, sendBuf, this.offset,
+            realcount = BufferOps.bufferBoolean((boolean[]) buf, sendBuf, this.offset,
                     this.count * this.datatype.extent(), 0);
         } else if (datatype.type == MPJ.INT.type) {
-            realcount = BufferOps.bufferInt(buf, sendBuf, this.offset,
+            realcount = BufferOps.bufferInt((int[]) buf, sendBuf, this.offset,
                     this.count * this.datatype.extent(), 0);
         } else if (datatype.type == MPJ.LONG.type) {
-            realcount = BufferOps.bufferLong(buf, sendBuf, this.offset,
+            realcount = BufferOps.bufferLong((long[]) buf, sendBuf, this.offset,
                     this.count * this.datatype.extent(), 0);
         } else if (datatype.type == MPJ.FLOAT.type) {
-            realcount = BufferOps.bufferFloat(buf, sendBuf, this.offset,
+            realcount = BufferOps.bufferFloat((float[]) buf, sendBuf, this.offset,
                     this.count * this.datatype.extent(), 0);
         } else if (datatype.type == MPJ.DOUBLE.type) {
-            realcount = BufferOps.bufferDouble(buf, sendBuf, this.offset,
+            realcount = BufferOps.bufferDouble((double[]) buf, sendBuf, this.offset,
                     this.count * this.datatype.extent(), 0);
         } else {
-            realcount = BufferOps.bufferObject(buf, sendBuf, this.offset,
+            realcount = BufferOps.bufferObject((Object[]) buf, sendBuf, this.offset,
                     this.count * this.datatype.extent(), 0);
         }
 

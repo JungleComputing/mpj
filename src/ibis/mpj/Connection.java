@@ -114,30 +114,21 @@ public class Connection {
 
                 if (buf instanceof byte[]) {
                     writeMessage.writeArray(((byte[]) buf), offset, count);
-                } else if ((buf instanceof char[])
-                        && (obj.getBaseDatatype() != Datatype.BASE_TYPE_OBJECT)) {
+                } else if (buf instanceof char[]) {
                     writeMessage.writeArray(((char[]) buf), offset, count);
-                } else if ((buf instanceof short[])
-                        && (obj.getBaseDatatype() != Datatype.BASE_TYPE_OBJECT)) {
+                } else if (buf instanceof short[]) {
                     writeMessage.writeArray(((short[]) buf), offset, count);
-                } else if ((buf instanceof boolean[])
-                        && (obj.getBaseDatatype() != Datatype.BASE_TYPE_OBJECT)) {
+                } else if (buf instanceof boolean[]) {
                     writeMessage.writeArray(((boolean[]) buf), offset, count);
-                } else if ((buf instanceof int[])
-                        && (obj.getBaseDatatype() != Datatype.BASE_TYPE_OBJECT)) {
+                } else if (buf instanceof int[]) {
                     writeMessage.writeArray(((int[]) buf), offset, count);
-                } else if ((buf instanceof long[])
-                        && (obj.getBaseDatatype() != Datatype.BASE_TYPE_OBJECT)) {
+                } else if (buf instanceof long[]) {
                     writeMessage.writeArray(((long[]) buf), offset, count);
-                } else if ((buf instanceof float[])
-                        && (obj.getBaseDatatype() != Datatype.BASE_TYPE_OBJECT)) {
+                } else if (buf instanceof float[]) {
                     writeMessage.writeArray(((float[]) buf), offset, count);
-                } else if ((buf instanceof double[])
-                        && (obj.getBaseDatatype() != Datatype.BASE_TYPE_OBJECT)) {
-
+                } else if (buf instanceof double[]) {
                     writeMessage.writeArray(((double[]) buf), offset, count);
                 } else {
-
                     writeMessage.writeArray(((Object[]) buf), offset, count);
                 }
 
@@ -188,7 +179,6 @@ public class Connection {
             int count) throws MPJException {
         try {
             if (buf instanceof byte[]) {
-
                 readMsg.readArray(((byte[]) buf), offset, count);
             } else if (buf instanceof char[]) {
                 readMsg.readArray(((char[]) buf), offset, count);

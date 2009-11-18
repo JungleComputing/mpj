@@ -125,51 +125,10 @@ public class ColReduce {
 
     private void executeFlat() throws MPJException {
         if (this.comm.rank() == root) {
-            Object recv = null;
-            if (sendbuf instanceof byte[]) {
-                recv = new byte[((byte[]) this.recvbuf).length];
-                System.arraycopy(this.sendbuf, this.sendOffset, this.recvbuf,
-                        this.recvOffset, this.count);
-            } else if (sendbuf instanceof char[]) {
-                recv = new char[((char[]) this.recvbuf).length];
-                System.arraycopy(this.sendbuf, this.sendOffset, this.recvbuf,
-                        this.recvOffset, this.count);
-            } else if (sendbuf instanceof short[]) {
-                recv = new short[((short[]) this.recvbuf).length];
-                System.arraycopy(this.sendbuf, this.sendOffset, this.recvbuf,
-                        this.recvOffset, this.count);
-            } else if (sendbuf instanceof boolean[]) {
-                recv = new boolean[((boolean[]) this.recvbuf).length];
-                System.arraycopy(this.sendbuf, this.sendOffset, this.recvbuf,
-                        this.recvOffset, this.count);
-            } else if (sendbuf instanceof int[]) {
-                recv = new int[((int[]) this.recvbuf).length];
-                System.arraycopy(this.sendbuf, this.sendOffset, this.recvbuf,
-                        this.recvOffset, this.count);
-            } else if (sendbuf instanceof long[]) {
-                recv = new long[((long[]) this.recvbuf).length];
-                System.arraycopy(this.sendbuf, this.sendOffset, this.recvbuf,
-                        this.recvOffset, this.count);
-            } else if (sendbuf instanceof float[]) {
-                recv = new float[((float[]) this.recvbuf).length];
-                System.arraycopy(this.sendbuf, this.sendOffset, this.recvbuf,
-                        this.recvOffset, this.count);
-            } else if (sendbuf instanceof double[]) {
-                recv = new double[((double[]) this.recvbuf).length];
-                System.arraycopy(this.sendbuf, this.sendOffset, this.recvbuf,
-                        this.recvOffset, this.count);
-            } else {
-
-                recv = new Object[((Object[]) this.recvbuf).length];
-
-                Object[] obj = (Object[]) sendbuf;
-
-                for (int j = 0; j < this.count; j++) {
-                    ((Object[]) recvbuf)[j + this.recvOffset] = obj[j
-                            + this.sendOffset];
-
-                }
-            }
+            Class<?> componentType = sendbuf.getClass().getComponentType();
+            Object recv = Array.newInstance(componentType, Array.getLength(this.recvbuf));
+            System.arraycopy(this.sendbuf, this.sendOffset, this.recvbuf,
+                    this.recvOffset, this.count);
 
             for (int i = 0; i < this.comm.size(); i++) {
                 if (i != root) {
@@ -182,8 +141,7 @@ public class ColReduce {
                 }
             }
         } else {
-            this.comm
-                    .send(sendbuf, sendOffset, count, datatype, root, this.tag);
+            this.comm.send(sendbuf, sendOffset, count, datatype, root, this.tag);
         }
     }
 }
