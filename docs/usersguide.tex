@@ -24,8 +24,8 @@ from Myrinet-based clusters to grids.
 
 \subsection{Virtual Topologies}
 
-Depending on the underlying algorithm logical communication structures, 
-like hypercubes or graphs, may appear, called virtual topologie in MPJ. 
+Depending on the underlying algorithm, logical communication structures 
+like hypercubes or graphs, may appear, called virtual topologies in MPJ. 
 At the moment, virtual topologies are not supported by Ibis MPJ. Only
 linear rank numbering is supported.
 
@@ -45,7 +45,7 @@ Nevertheless contigous derived datatypes are supported to obtain the
 functionality of the reduce operations \texttt{MPJ.MINLOC}
 and \texttt{MPJ.MAXLOC}, which 
 need at least a pair of values inside a given array. At the moment 
-Ibis MPJ supports one-dimensional arrays. Mutlidimensional arrays may 
+Ibis MPJ supports one-dimensional arrays. Multidimensional arrays may 
 be sent as an object, but in place receive is not possible in this case.
 
 \section{Compiling an example}
@@ -74,7 +74,7 @@ its subdirectories are processed.  The command sequence
 $ cd $MPJ_HOME/examples
 $ mkdir tmp
 $ javac -d tmp -g \
-     -classpath ../lib/mpj-2.1.jar \
+     -classpath ../lib/mpj-2.2.jar \
      src/*/*.java
 $ ../bin/mpjc -cp tmp tmp
 $ mkdir lib
@@ -167,7 +167,7 @@ with the \texttt{ibis.properties.file} system property.
 \subsubsection{Add jar files to the classpath}
 
 The Ibis MPJ implementation is provided in a single jar file: mpj.jar,
-appended with the version of Ibis MPJ, for instance \texttt{mpj-2.1.jar}.
+appended with the version of Ibis MPJ, for instance \texttt{mpj-2.2.jar}.
 Ibis MPJ interfaces to Ibis using the Ibis Portability Layer, or
 \emph{IPL}. Both Ibis MPJ and the IPL depend on various other libraries.
 All jar files in \$MPJ\_HOME/lib need to be on the classpath.
