@@ -857,10 +857,11 @@ public class IbisMPJComm extends Thread {
             }
         }
 
+        Waiter.enterRegion();
         synchronized(this) {
             this.finished = true;
         }
-        Waiter.doNotify();
+        Waiter.doNotifyAndExit();
     }
 
 }
