@@ -36,9 +36,6 @@ class Waiter {
             if (! inRegion) {
                 throw new Error("Something wrong, you can only notify from within a region");
             }
-             if (waiters == 0) {
-                return;
-            }
             inRegion = false;
             lock.notifyAll();
         }

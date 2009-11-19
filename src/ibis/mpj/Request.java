@@ -187,6 +187,7 @@ public class Request {
         }
 
         Waiter.enterRegion();
+        // System.out.println("waitAll entered region");
         int count = 1;
         while (count != 0) {
             count = 0;
@@ -202,10 +203,12 @@ public class Request {
                 }
             }
             if (count != 0) {
+                // System.out.println("waitAll entering doWait");
                 Waiter.doWait();
             }
         }
         Waiter.exitRegion();
+        // System.out.println("waitAll exited region");
         return (status);
 
     }
