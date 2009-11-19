@@ -100,31 +100,30 @@ public class Request {
         if ((arrayOfRequests == null) || (arrayOfRequests.length == 0)) {
             return (null);
         }
+        boolean hasActiveRequests = false;
+        // First, check if there are active requests.
+        for (int i = 0; i < arrayOfRequests.length; i++) {
+            if (arrayOfRequests[i] != null && ! arrayOfRequests[i].isVoid()) {
+                hasActiveRequests = true;
+                break;
+            }
+        }
+        if (! hasActiveRequests) {
+            return null;
+        }
 
         Status status = null;
 
-        boolean check = false;
-        while (!check) {
-            for (int i = 0; i < arrayOfRequests.length; i++) {
-                if (arrayOfRequests[i] != null) {
-                    status = arrayOfRequests[i].test();
-                    if (status != null) {
-                        status.setIndex(i);
-                        check = true;
-                        break;
-                    }
-                }
-            }
-
+        while (status == null) {
+            status = testAny(arrayOfRequests);
         }
-        return (status);
-
+        return status;
     }
 
     /**
      * Tests for completion of either one or none of the operations associated
      * with active requests. If some request completed, the index in
-     * arrayOfRequests of that request con be obtained from the status object.
+     * arrayOfRequests of that request can be obtained from the status object.
      * If no request completed, testAny returns a null reference.
      * 
      * @param arrayOfRequests
@@ -139,7 +138,7 @@ public class Request {
 
         Status status = null;
         for (int i = 0; i < arrayOfRequests.length; i++) {
-            if (arrayOfRequests[i] != null) {
+            if (arrayOfRequests[i] != null && ! arrayOfRequests[i].isVoid()) {
                 status = arrayOfRequests[i].test();
                 if (status != null) {
                     status.setIndex(i);
@@ -173,7 +172,9 @@ public class Request {
         // int tests = 0;
 
         for (int i = 0; i < arrayOfRequests.length; i++) {
-            status[i] = null;
+            if (arrayOfRequests[i].isVoid()) {
+                continue;
+            }
             while (status[i] == null)
                 status[i] = arrayOfRequests[i].test();
             Thread.yield();
@@ -202,24 +203,26 @@ public class Request {
         }
 
         Status[] status = new Status[arrayOfRequests.length];
+        boolean check = true;
         for (int i = 0; i < arrayOfRequests.length; i++) {
-            if (arrayOfRequests[i] != null) {
-                status[i] = arrayOfRequests[i].test();
+            if (arrayOfRequests[i] != null && ! arrayOfRequests[i].isVoid()) {
+                if (! arrayOfRequests[i].ibisMPJComm.isFinished()) {
+                    check = false;
+                    break;
+                }
             }
         }
 
-        boolean check = false;
-        for (int i = 0; i < arrayOfRequests.length; i++) {
-            if (status[i] != null) {
-                check = true;
+        if (check) {
+            for (int i = 0; i < arrayOfRequests.length; i++) {
+                if (arrayOfRequests[i] != null && ! arrayOfRequests[i].isVoid()) {
+                    status[i] = arrayOfRequests[i].test();
+                }
             }
+            return status;
         }
-
-        if (!check) {
-            status = null;
-        }
-
-        return (status);
+        
+        return null;
     }
 
     /**
@@ -236,54 +239,43 @@ public class Request {
     public static Status[] waitSome(Request[] arrayOfRequests)
             throws MPJException {
 
-        System.out.println("waitsome");
+        // System.out.println("waitsome");
         if ((arrayOfRequests == null) || (arrayOfRequests.length == 0)) {
             return (null);
         }
 
         Status[] status = new Status[arrayOfRequests.length];
         Status[] newStatus = null;
-        Status[] newerStatus = null;
-        boolean check = false;
-        while (!check) {
+        
+        int count2 = 0;
+        while (count2 == 0) {
             int count = 0;
             for (int i = 0; i < status.length; i++) {
-                if (arrayOfRequests[i] != null) {
-                    // if (!arrayOfRequests[i].isVoid()) {
+                if (arrayOfRequests[i] != null && !arrayOfRequests[i].isVoid()) {
                     status[i] = arrayOfRequests[i].test();
                     if (status[i] != null) {
                         status[i].setIndex(i);
+                        count2++;
                     }
                     count++;
-                    // }
                 }
             }
-            newStatus = new Status[count];
-
-            int count2 = 0;
-            for (int i = 0; i < count; i++) {
-                if (status[count] != null) {
-                    newStatus[count2] = status[count];
-                    count2++;
-                    check = true;
-                }
-            }
-
-            if (check) {
-                newerStatus = new Status[count2];
-                for (int i = 0; i < count2; i++) {
-                    newerStatus[i] = newStatus[i];
-                }
-            }
-
             if (count == 0) {
-                // newerStatus = null;
-                break;
+                return null;
             }
+        }
+            
+        newStatus = new Status[count2];
 
+        count2 = 0;
+        for (int i = 0; i < status.length; i++) {
+            if (status[i] != null) {
+                newStatus[count2] = status[i];
+                count2++;
+            }
         }
 
-        return (newerStatus);
+        return newStatus;
     }
 
     /**
@@ -307,7 +299,7 @@ public class Request {
 
         int count = 0;
         for (int i = 0; i < arrayOfRequests.length; i++) {
-            if (arrayOfRequests[i] != null) {
+            if (arrayOfRequests[i] != null && ! arrayOfRequests[i].isVoid()) {
                 status[count] = arrayOfRequests[i].test();
                 if (status[count] != null) {
                     status[count].setIndex(i);
