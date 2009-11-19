@@ -114,10 +114,15 @@ public class Request {
 
         Status status = null;
 
-        while (status == null) {
+        Waiter.enterRegion();
+        for (;;) {
             status = testAny(arrayOfRequests);
+            if (status != null) {
+                Waiter.exitRegion();
+                return status;
+            }
+            Waiter.doWait();
         }
-        return status;
     }
 
     /**
@@ -164,22 +169,43 @@ public class Request {
      */
     public static Status[] waitAll(Request[] arrayOfRequests)
             throws MPJException {
+
         if ((arrayOfRequests == null) || (arrayOfRequests.length == 0)) {
-            return (null);
+            return null;
         }
-
         Status[] status = new Status[arrayOfRequests.length];
-        // int tests = 0;
-
+        boolean hasActiveRequests = false;
+        // First, check if there are active requests.
         for (int i = 0; i < arrayOfRequests.length; i++) {
-            if (arrayOfRequests[i].isVoid()) {
-                continue;
+            if (arrayOfRequests[i] != null && ! arrayOfRequests[i].isVoid()) {
+                hasActiveRequests = true;
+                break;
             }
-            while (status[i] == null)
-                status[i] = arrayOfRequests[i].test();
-            Thread.yield();
+        }
+        if (! hasActiveRequests) {
+            return status;
         }
 
+        Waiter.enterRegion();
+        int count = 1;
+        while (count != 0) {
+            count = 0;
+            for (int i = 0; i < arrayOfRequests.length; i++) {
+                if (arrayOfRequests[i].isVoid()) {
+                    continue;
+                }
+                if (status[i] == null) {
+                    status[i] = arrayOfRequests[i].test();
+                }
+                if (status[i] == null) {
+                    count++;
+                }
+            }
+            if (count != 0) {
+                Waiter.doWait();
+            }
+        }
+        Waiter.exitRegion();
         return (status);
 
     }
@@ -248,6 +274,7 @@ public class Request {
         Status[] newStatus = null;
         
         int count2 = 0;
+        Waiter.enterRegion();
         while (count2 == 0) {
             int count = 0;
             for (int i = 0; i < status.length; i++) {
@@ -261,10 +288,15 @@ public class Request {
                 }
             }
             if (count == 0) {
+                Waiter.exitRegion();
                 return null;
             }
+            if (count2 == 0) {
+                Waiter.doWait();
+            }
         }
-            
+        Waiter.exitRegion();
+        
         newStatus = new Status[count2];
 
         count2 = 0;

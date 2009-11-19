@@ -35,43 +35,47 @@ public class IbisMPJComm extends Thread {
 
     private boolean buffered = false;
 
-    protected Request request;
+    private Request request;
 
-    protected Object buf;
+    private Object buf;
 
-    protected int offset;
+    private int offset;
 
-    protected int count;
+    private int count;
 
-    protected Datatype datatype;
+    private Datatype datatype;
 
-    protected int dest;
+    private int dest;
 
-    protected int source;
+    private int source;
 
-    protected int tag;
+    private int tag;
 
-    protected int opCode;
+    private int opCode;
 
-    protected Comm comm;
+    private Comm comm;
 
-    protected MPJObject m = null;
+    private int myRank;
 
-    protected int myRank;
+    private Status status = null;
 
-    protected Status status = null;
+    private int mode = -1;
 
-    protected int mode = -1;
+    private int contextId = -1;
 
-    protected int contextId = -1;
-
-    protected boolean finished = false;
+    private boolean finished = false;
 
     public IbisMPJComm() {
         // does nothing by default
     }
 
     public IbisMPJComm(Comm comm, int myRank, Object buf, int offset,
+            int count, Datatype datatype, int source, int dest, int tag,
+            int mode) {
+        init(comm, myRank, buf, offset, count, datatype, source, dest, tag, mode);
+    }
+    
+    protected void init(Comm comm, int myRank, Object buf, int offset,
             int count, Datatype datatype, int source, int dest, int tag,
             int mode) {
 
@@ -93,7 +97,6 @@ public class IbisMPJComm extends Thread {
         this.status.setCount(0);
         this.contextId = comm.contextId;
         this.finished = false;
-
     }
 
     protected Request getRequest() {
@@ -812,14 +815,12 @@ public class IbisMPJComm extends Thread {
 
     }
 
-    protected boolean isFinished() {
+    synchronized protected boolean isFinished() {
         return (this.finished);
     }
 
     public void run() {
-        this.finished = false;
         if (mode == OP_IRECV) {
-
             try {
                 doIrecv(false);
             } catch (MPJException e) {
@@ -856,7 +857,10 @@ public class IbisMPJComm extends Thread {
             }
         }
 
-        this.finished = true;
+        synchronized(this) {
+            this.finished = true;
+        }
+        Waiter.doNotify();
     }
 
 }

@@ -233,26 +233,9 @@ public class Comm {
             int dest, int tag) throws MPJException {
         // ibisMPJ. = setIbisMPJComm(this, this.rank(), buf, offset, count,
         // datatype, this.rank(), dest, tag, );
-
-        ibisMPJsend.buf = buf;
-        ibisMPJsend.offset = offset;
-        ibisMPJsend.count = count;
-        ibisMPJsend.datatype = datatype;
-        ibisMPJsend.dest = dest;
-        ibisMPJsend.source = this.rank();
-        ibisMPJsend.tag = tag;
-        ibisMPJsend.mode = IbisMPJComm.OP_ISEND;
-        ibisMPJsend.comm = this;
-        ibisMPJsend.myRank = this.rank();
-        ibisMPJsend.request = new Request();
-        ibisMPJsend.request.setIbisMPJComm(ibisMPJsend);
-        ibisMPJsend.status = new Status();
-        ibisMPJsend.status.setSource(0);
-        ibisMPJsend.status.setTag(0);
-        ibisMPJsend.status.setCount(0);
-        ibisMPJsend.contextId = this.contextId;
-        ibisMPJsend.finished = false;
-
+        
+        ibisMPJsend.init(this, this.rank(), buf, offset, count, datatype,
+                this.rank(), dest, tag, IbisMPJComm.OP_ISEND);
         ibisMPJsend.doIsend();
 
     }
@@ -282,26 +265,9 @@ public class Comm {
             int source, int tag) throws MPJException {
         // IbisMPJComm ibisMPJ = new IbisMPJComm(this, this.rank(), buf, offset,
         // count, datatype, source, this.rank(), tag, IbisMPJComm.OP_IRECV);
-
-        ibisMPJrecv.buf = buf;
-        ibisMPJrecv.offset = offset;
-        ibisMPJrecv.count = count;
-        ibisMPJrecv.datatype = datatype;
-        ibisMPJrecv.dest = this.rank();
-        ibisMPJrecv.source = source;
-        ibisMPJrecv.tag = tag;
-        ibisMPJrecv.mode = IbisMPJComm.OP_ISEND;
-        ibisMPJrecv.comm = this;
-        ibisMPJrecv.myRank = this.rank();
-        ibisMPJrecv.request = new Request();
-        ibisMPJrecv.request.setIbisMPJComm(ibisMPJsend);
-        ibisMPJrecv.status = new Status();
-        ibisMPJrecv.status.setSource(0);
-        ibisMPJrecv.status.setTag(0);
-        ibisMPJrecv.status.setCount(0);
-        ibisMPJrecv.contextId = this.contextId;
-        ibisMPJrecv.finished = false;
-
+        
+        ibisMPJrecv.init(this, this.rank(), buf, offset, count, datatype,
+                source, this.rank(), tag, IbisMPJComm.OP_IRECV);
         ibisMPJrecv.doIrecv(true);
         return (ibisMPJrecv.getStatus());
 
