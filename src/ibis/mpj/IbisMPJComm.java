@@ -863,7 +863,7 @@ public class IbisMPJComm extends Thread {
             this.finished = true;
         }
         // System.out.println("Thread notifying");
-        Waiter.doNotifyAndExit();
+        Waiter.doNotifyAndExitRegion();
     }
 
 }

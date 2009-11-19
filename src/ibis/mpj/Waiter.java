@@ -31,7 +31,7 @@ class Waiter {
         }
     }
     
-    static void doNotifyAndExit() {
+    static void doNotifyAndExitRegion() {
         synchronized(lock) {
             if (! inRegion) {
                 throw new Error("Something wrong, you can only notify from within a region");
