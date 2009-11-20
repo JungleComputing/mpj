@@ -109,6 +109,7 @@ public class AppDemo extends Universal {
     /**
      * temporary vector for MPJ
      */
+    @SuppressWarnings("unchecked")
     private Vector[] p_results = new Vector[1];
 
     public AppDemo(String dataDirname, String dataFilename, int nTimeStepsMC,
