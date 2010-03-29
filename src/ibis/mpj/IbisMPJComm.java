@@ -798,6 +798,9 @@ public class IbisMPJComm extends Thread {
 
                 queue.release();
             }
+            if (this.opCode == OP_IPROBE) {
+                msgFound = true;
+            }
         }
     }
 
