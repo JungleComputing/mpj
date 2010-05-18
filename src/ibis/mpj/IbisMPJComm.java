@@ -51,8 +51,6 @@ public class IbisMPJComm extends Thread {
 
     private int tag;
 
-    private int opCode;
-
     private Comm comm;
 
     private int myRank;
@@ -689,7 +687,7 @@ public class IbisMPJComm extends Thread {
                         msg = null;
                     }
 
-                    if (this.opCode == OP_IPROBE) {
+                    if (this.mode == OP_IPROBE) {
                         msgFound = true;
                     }
                 }
@@ -798,7 +796,7 @@ public class IbisMPJComm extends Thread {
 
                 queue.release();
             }
-            if (this.opCode == OP_IPROBE) {
+            if (this.mode == OP_IPROBE) {
                 msgFound = true;
             }
         }
