@@ -1,6 +1,8 @@
 /* $Id$ */
 package ibis.mpj;
 
+import java.nio.ByteBuffer;
+
 final class StoreBuffer {
     /* We have to copy, serialization reuses the buffers */
     int booleanLen = 0;
@@ -120,7 +122,7 @@ final class StoreBuffer {
         count += len;
     }
 
-    /* this is the smarter copying verstion that doubles the destination buffer */
+    /* this is the smarter copying version that doubles the destination buffer */
     public void writeArray(byte[] a, int off, int len) {
         if (byte_store == null) {
             byte_store = new byte[len];
@@ -141,7 +143,7 @@ final class StoreBuffer {
         count += len;
     }
 
-    /* this is the smarter copying verstion that doubles the destination buffer */
+    /* this is the smarter copying version that doubles the destination buffer */
     public void writeArray(short[] a, int off, int len) {
         if (short_store == null) {
             short_store = new short[len];
@@ -162,7 +164,7 @@ final class StoreBuffer {
         count += len * 2;
     }
 
-    /* this is the smarter copying verstion that doubles the destination buffer */
+    /* this is the smarter copying version that doubles the destination buffer */
     public void writeArray(char[] a, int off, int len) {
         if (char_store == null) {
             char_store = new char[len];
@@ -183,7 +185,7 @@ final class StoreBuffer {
         count += len * 2;
     }
 
-    /* this is the smarter copying verstion that doubles the destination buffer */
+    /* this is the smarter copying version that doubles the destination buffer */
     public void writeArray(int[] a, int off, int len) {
         if (int_store == null) {
             int_store = new int[len];
@@ -204,7 +206,7 @@ final class StoreBuffer {
         count += len * 4;
     }
 
-    /* this is the smarter copying verstion that doubles the destination buffer */
+    /* this is the smarter copying version that doubles the destination buffer */
     public void writeArray(long[] a, int off, int len) {
         if (long_store == null) {
             long_store = new long[len];
@@ -225,7 +227,7 @@ final class StoreBuffer {
         count += len * 8;
     }
 
-    /* this is the smarter copying verstion that doubles the destination buffer */
+    /* this is the smarter copying version that doubles the destination buffer */
     public void writeArray(float[] a, int off, int len) {
         if (float_store == null) {
             float_store = new float[len];
@@ -246,7 +248,7 @@ final class StoreBuffer {
         count += len * 4;
     }
 
-    /* this is the smarter copying verstion that doubles the destination buffer */
+    /* this is the smarter copying version that doubles the destination buffer */
     public void writeArray(double[] a, int off, int len) {
         if (double_store == null) {
             double_store = new double[len];
@@ -265,6 +267,27 @@ final class StoreBuffer {
             }
         }
         count += len * 8;
+    }
+    
+    public void writeByteBuffer(ByteBuffer b) {
+	int len = b.limit() - b.position();
+	if (byte_store == null) {
+	    byte_store = new byte[len];
+	    b.get(byte_store, 0, len);
+	    byteLen = len;
+	} else {
+	    if (byteLen + len < byte_store.length) { // it fits
+		b.get(byte_store, byteLen, len);
+		byteLen += len;
+	    } else { // it does not fit
+		byte[] temp = new byte[byteLen * 2];
+		System.arraycopy(byte_store, 0, temp, 0, byteLen);
+		b.get(byte_store, byteLen, len);
+		byte_store = temp;
+		byteLen += len;
+	    }
+	}
+	count += len;
     }
 
     public void clear() {

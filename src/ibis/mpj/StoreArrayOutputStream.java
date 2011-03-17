@@ -5,6 +5,7 @@ package ibis.mpj;
 import ibis.io.DataOutputStream;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 final class StoreArrayOutputStream extends DataOutputStream {
 
@@ -117,5 +118,10 @@ final class StoreArrayOutputStream extends DataOutputStream {
 
     public void resetBytesWritten() {
         buf.resetBytesWritten();
+    }
+
+    @Override
+    public void writeByteBuffer(ByteBuffer arg0) throws IOException {
+	buf.writeByteBuffer(arg0);
     }
 }
