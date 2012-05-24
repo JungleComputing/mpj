@@ -51,8 +51,9 @@ public class JGFPingPongBench implements JGFSection1 {
 
     private static final int SMIN = 4;
 
-    public JGFPingPongBench(int nprocess) {
+    public JGFPingPongBench(int rank, int nprocess) {
         JGFPingPongBench.nprocess = nprocess;
+        JGFPingPongBench.rank = rank;
     }
 
     public void JGFrun() throws MPJException {
@@ -224,7 +225,7 @@ public class JGFPingPongBench implements JGFSection1 {
         if (rank == 0) {
             JGFInstrumentor.printHeader(1, 0, nprocess);
         }
-        JGFPingPongBench pp = new JGFPingPongBench(nprocess);
+        JGFPingPongBench pp = new JGFPingPongBench(rank, nprocess);
         pp.JGFrun();
 
         /* Finalise MPJ */

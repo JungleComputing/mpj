@@ -49,25 +49,25 @@ public class JGFAll {
             JGFInstrumentor.printHeader(1, 0, nprocess);
         }
 
-        JGFAlltoallBench ata = new JGFAlltoallBench(nprocess);
+        JGFAlltoallBench ata = new JGFAlltoallBench(rank, nprocess);
         ata.JGFrun();
 
-        JGFBarrierBench ba = new JGFBarrierBench(nprocess);
+        JGFBarrierBench ba = new JGFBarrierBench(rank, nprocess);
         ba.JGFrun();
 
-        JGFBcastBench bc = new JGFBcastBench(nprocess);
+        JGFBcastBench bc = new JGFBcastBench(rank, nprocess);
         bc.JGFrun();
 
-        JGFGatherBench ga = new JGFGatherBench(nprocess);
+        JGFGatherBench ga = new JGFGatherBench(rank, nprocess);
         ga.JGFrun();
 
-        JGFPingPongBench pp = new JGFPingPongBench(nprocess);
+        JGFPingPongBench pp = new JGFPingPongBench(rank, nprocess);
         pp.JGFrun();
 
-        JGFReduceBench rd = new JGFReduceBench(nprocess);
+        JGFReduceBench rd = new JGFReduceBench(rank, nprocess);
         rd.JGFrun();
 
-        JGFScatterBench sc = new JGFScatterBench(nprocess);
+        JGFScatterBench sc = new JGFScatterBench(rank, nprocess);
         sc.JGFrun();
 
         /* Finalise MPJ */

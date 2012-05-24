@@ -51,8 +51,9 @@ public class JGFBcastBench implements JGFSection1 {
 
     private static final int SMIN = 4;
 
-    public JGFBcastBench(int nprocess) {
+    public JGFBcastBench(int rank, int nprocess) {
         JGFBcastBench.nprocess = nprocess;
+        JGFBcastBench.rank = rank;
     }
 
     public void JGFrun() throws MPJException {
@@ -233,7 +234,7 @@ public class JGFBcastBench implements JGFSection1 {
         if (rank == 0) {
             JGFInstrumentor.printHeader(1, 0, nprocess);
         }
-        JGFBcastBench bc = new JGFBcastBench(nprocess);
+        JGFBcastBench bc = new JGFBcastBench(rank, nprocess);
         bc.JGFrun();
 
         /* Finalise MPJ */

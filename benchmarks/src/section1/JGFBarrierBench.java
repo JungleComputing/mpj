@@ -45,8 +45,9 @@ public class JGFBarrierBench implements JGFSection1 {
 
     private static final double TARGETTIME = 10.0;
 
-    public JGFBarrierBench(int nprocess) {
+    public JGFBarrierBench(int rank, int nprocess) {
         JGFBarrierBench.nprocess = nprocess;
+        JGFBarrierBench.rank = rank;
     }
 
     public void JGFrun() throws MPJException {
@@ -107,7 +108,7 @@ public class JGFBarrierBench implements JGFSection1 {
         if (rank == 0) {
             JGFInstrumentor.printHeader(1, 0, nprocess);
         }
-        JGFBarrierBench ba = new JGFBarrierBench(nprocess);
+        JGFBarrierBench ba = new JGFBarrierBench(rank, nprocess);
         ba.JGFrun();
 
         /* Finalise MPJ */

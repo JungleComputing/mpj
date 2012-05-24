@@ -51,8 +51,9 @@ public class JGFAlltoallBench implements JGFSection1 {
 
     private static final int SMIN = 4;
 
-    public JGFAlltoallBench(int nprocess) {
+    public JGFAlltoallBench(int rank, int nprocess) {
         JGFAlltoallBench.nprocess = nprocess;
+        JGFAlltoallBench.rank = rank;
     }
 
     public void JGFrun() throws MPJException {
@@ -240,7 +241,7 @@ public class JGFAlltoallBench implements JGFSection1 {
         if (rank == 0) {
             JGFInstrumentor.printHeader(1, 0, nprocess);
         }
-        JGFAlltoallBench ata = new JGFAlltoallBench(nprocess);
+        JGFAlltoallBench ata = new JGFAlltoallBench(rank, nprocess);
         ata.JGFrun();
 
         /* Finalise MPJ */

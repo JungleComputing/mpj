@@ -51,8 +51,9 @@ public class JGFReduceBench implements JGFSection1 {
 
     private static final int SMIN = 4;
 
-    public JGFReduceBench(int nprocess) {
+    public JGFReduceBench(int rank, int nprocess) {
         JGFReduceBench.nprocess = nprocess;
+        JGFReduceBench.rank = rank;
     }
 
     public void JGFrun() throws MPJException {
@@ -156,7 +157,7 @@ public class JGFReduceBench implements JGFSection1 {
         if (rank == 0) {
             JGFInstrumentor.printHeader(1, 0, nprocess);
         }
-        JGFReduceBench rd = new JGFReduceBench(nprocess);
+        JGFReduceBench rd = new JGFReduceBench(rank, nprocess);
         rd.JGFrun();
 
         /* Finalise MPJ */
