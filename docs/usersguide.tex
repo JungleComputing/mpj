@@ -65,7 +65,7 @@ your application, or you have only class files or jar files available
 for parts of your application, it is also possible to compile
 your application to class files or jar files, and then process those
 using the \emph{mpjc} script. This script can be found in the Ibis MPJ
-bin directory. It takes either directories, class files, or jar files
+scripts directory. It takes either directories, class files, or jar files
 as parameter, and processes those, possibly rewriting them. In case
 of a directory, all class files and jar files in that directory or
 its subdirectories are processed.  The command sequence
@@ -76,7 +76,7 @@ $ mkdir tmp
 $ javac -d tmp -g \
      -classpath ../lib/mpj-2.2.jar \
      src/*/*.java
-$ ../bin/mpjc -cp tmp tmp
+$ ../scripts/mpjc -cp tmp tmp
 $ mkdir lib
 $ ( cd tmp ; jar c . ) > lib/mpj-examples.jar
 $ rm -rf tmp
@@ -119,7 +119,7 @@ possible between two instances due to firewalls or NAT boxes. This is
 done using the Smartsockets library of the Ibis project.
 
 The Ibis server is started with the \texttt{mpj-server} script which is
-located in the \texttt{bin} directory of the Ibis MPJ distribution.  Before
+located in the \texttt{scripts} directory of the Ibis MPJ distribution.  Before
 starting an Ibis MPJ application, an Ibis server needs to be running on a
 machine that is accessible from all nodes participating in the Ibis MPJ run.
 The server listens to a TCP port. The port number can be specified using
@@ -253,7 +253,7 @@ run the \texttt{mpj-server} script:
 \noindent
 {\small
 \begin{verbatim}
-$ $MPJ_HOME/bin/mpj-server --events
+$ $MPJ_HOME/scripts/mpj-server --events
 \end{verbatim}
 }
 \noindent
@@ -268,7 +268,7 @@ Run the following command in two different shells:
 {\small
 \begin{verbatim}
 $ CLASSPATH=$MPJ_HOME/examples/lib/mpj-examples.jar \
-    $MPJ_HOME/bin/mpj-run \
+    $MPJ_HOME/scripts/mpj-run \
     -Dibis.server.address=localhost \
     -Dibis.pool.size=2 -Dibis.pool.name=test \
     sor.Sor 512
@@ -326,7 +326,7 @@ run the \texttt{mpj-server} script:
 \noindent
 {\small
 \begin{verbatim}
-C:\DOCUME~1\Temp> "%MPJ_HOME%"\bin\mpj-server --events
+C:\DOCUME~1\Temp> "%MPJ_HOME%"\scripts\mpj-server --events
 \end{verbatim}
 }
 \noindent
@@ -344,7 +344,7 @@ Run the following commands in two different shells:
 \begin{verbatim}
 C:\DOCUME~1\Temp> cd %MPJ_HOME%\examples
 C:...> set CLASSPATH=lib\mpj-examples.jar
-C:...> "%MPJ_HOME%"\bin\mpj-run
+C:...> "%MPJ_HOME%"\scripts\mpj-run
     "-Dibis.server.address=localhost"
     "-Dibis.pool.size=2" "-Dibis.pool.name=test"
     sor.Sor 512
